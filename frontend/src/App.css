@@ -586,135 +586,26 @@ body::before {
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
 }
 
-/* Enhanced Hero Title with Advanced Effects */
+/* Clean and Visible Hero Title */
 .hero-title {
-  font-size: 4rem;
-  font-weight: 950;
+  font-size: 3.5rem;
+  font-weight: 900;
   line-height: 1.1;
   margin-bottom: 1.5rem;
   letter-spacing: -0.025em;
-  position: relative;
   
-  /* Advanced Gradient Text */
+  /* Simple gradient text for visibility */
   background: linear-gradient(135deg, 
     rgba(15, 23, 42, 1) 0%,
-    rgba(59, 130, 246, 1) 25%,
-    rgba(168, 85, 247, 1) 50%,
-    rgba(236, 72, 153, 1) 75%,
+    rgba(59, 130, 246, 1) 50%,
     rgba(15, 23, 42, 1) 100%
   );
-  background-size: 400% 400%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   
-  /* 3D Transformation */
-  transform-style: preserve-3d;
-  perspective: 1000px;
-  
-  /* Enhanced Text Shadow */
-  filter: drop-shadow(0 10px 20px rgba(59, 130, 246, 0.2))
-          drop-shadow(0 5px 10px rgba(168, 85, 247, 0.1));
-  
-  /* Advanced Animations */
-  animation: 
-    advancedTitleGradient 6s ease-in-out infinite,
-    titleFloat 8s ease-in-out infinite,
-    titlePulse 4s ease-in-out infinite;
-}
-
-/* Advanced Gradient Animation */
-@keyframes advancedTitleGradient {
-  0%, 100% { 
-    background-position: 0% 50%; 
-  }
-  25% { 
-    background-position: 100% 0%; 
-  }
-  50% { 
-    background-position: 100% 100%; 
-  }
-  75% { 
-    background-position: 0% 100%; 
-  }
-}
-
-/* Floating Effect */
-@keyframes titleFloat {
-  0%, 100% { 
-    transform: perspective(1000px) translateY(0px) rotateX(0deg);
-  }
-  50% { 
-    transform: perspective(1000px) translateY(-8px) rotateX(1deg);
-  }
-}
-
-/* Subtle Pulsing */
-@keyframes titlePulse {
-  0%, 100% { 
-    transform: perspective(1000px) scale(1);
-    filter: drop-shadow(0 10px 20px rgba(59, 130, 246, 0.2))
-            drop-shadow(0 5px 10px rgba(168, 85, 247, 0.1));
-  }
-  50% { 
-    transform: perspective(1000px) scale(1.01);
-    filter: drop-shadow(0 15px 30px rgba(59, 130, 246, 0.3))
-            drop-shadow(0 8px 15px rgba(168, 85, 247, 0.2));
-  }
-}
-
-/* Holographic Overlay */
-.hero-title::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.1),
-    transparent
-  );
-  animation: titleSweep 3s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes titleSweep {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-/* Enhanced Glow Effect */
-.hero-title::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 120%;
-  height: 120%;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(
-    ellipse,
-    rgba(59, 130, 246, 0.1) 0%,
-    rgba(168, 85, 247, 0.05) 50%,
-    transparent 100%
-  );
-  animation: titleGlow 4s ease-in-out infinite alternate;
-  pointer-events: none;
-  z-index: -1;
-}
-
-@keyframes titleGlow {
-  0% { 
-    opacity: 0.3;
-    transform: translate(-50%, -50%) scale(0.8);
-  }
-  100% { 
-    opacity: 0.6;
-    transform: translate(-50%, -50%) scale(1.2);
-  }
+  /* Simple text shadow for readability */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .hero-subtitle {
