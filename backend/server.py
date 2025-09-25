@@ -114,6 +114,40 @@ class ChatMessage(BaseModel):
     llm_model: str
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
+# ER Diagram Models
+class ERDiagramRequest(BaseModel):
+    sql_content: str
+    database_type: str = "mysql"  # mysql, postgresql, sqlserver, oracle
+
+class TableColumn(BaseModel):
+    name: str
+    data_type: str
+    is_primary_key: bool = False
+    is_foreign_key: bool = False
+    is_nullable: bool = True
+    foreign_table: Optional[str] = None
+    foreign_column: Optional[str] = None
+
+class ERTable(BaseModel):
+    name: str
+    columns: List[TableColumn]
+    x: Optional[float] = None  # Position for diagram
+    y: Optional[float] = None
+
+class ERRelationship(BaseModel):
+    from_table: str
+    from_column: str
+    to_table: str
+    to_column: str
+    relationship_type: str = "one-to-many"  # one-to-one, one-to-many, many-to-many
+
+class ERDiagramResponse(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    tables: List[ERTable]
+    relationships: List[ERRelationship]
+    database_type: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
 # SQL to Snowflake Converter Class (existing functionality)
 class SQLToSnowflakeConverter:
     def __init__(self):
