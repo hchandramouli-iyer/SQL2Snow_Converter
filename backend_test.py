@@ -803,7 +803,9 @@ def main():
                  ("Download Conversion", test_results[7][1]), ("Conversion History", test_results[-3][1]),
                  ("Invalid Database", test_results[-2][1]), ("Empty SQL", test_results[-1][1])]
     
-    ai_tests = [("AI Models Endpoint", test_results[1][1])] + test_results[8:15]
+    er_tests = [("ER Diagram Generate", test_results[8][1]), ("ER Diagram Generate File", test_results[9][1])]
+    
+    ai_tests = [("AI Models Endpoint", test_results[1][1])] + test_results[10:17]
     
     print("\n🔧 SQL CONVERSION TESTS:")
     for test_name, result in sql_tests:
