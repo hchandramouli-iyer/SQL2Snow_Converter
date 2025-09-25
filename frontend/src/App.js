@@ -306,6 +306,7 @@ function App() {
   const getToolIcon = (tool) => {
     const icons = {
       [AI_TOOLS.SQL_CONVERTER]: <Database className="h-5 w-5" />,
+      [AI_TOOLS.ER_DIAGRAM]: <Network className="h-5 w-5" />,
       [AI_TOOLS.CODE_GENERATOR]: <Wand2 className="h-5 w-5" />,
       [AI_TOOLS.CODE_ASSISTANT]: <Bot className="h-5 w-5" />,
       [AI_TOOLS.CODE_CONVERTER]: <ArrowRight className="h-5 w-5" />,
