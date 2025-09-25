@@ -338,6 +338,7 @@ function App() {
   const getToolShortName = (tool) => {
     const shortNames = {
       [AI_TOOLS.SQL_CONVERTER]: "SQL Converter",
+      [AI_TOOLS.ER_DIAGRAM]: "ER Diagram",
       [AI_TOOLS.CODE_GENERATOR]: "Code Generator",
       [AI_TOOLS.CODE_ASSISTANT]: "Code Assistant", 
       [AI_TOOLS.CODE_CONVERTER]: "Language Converter",
