@@ -469,6 +469,31 @@ function App() {
                 </div>
               </CardHeader>
               <CardContent>
+                {/* Applied Instructions Summary */}
+                {(targetDatabaseName || targetSchemaName || customInstructions) && (
+                  <Alert className="mb-6 bg-blue-50 border-blue-200" data-testid="applied-instructions-alert">
+                    <Settings className="h-4 w-4" />
+                    <AlertDescription>
+                      <div className="space-y-2">
+                        <p className="font-semibold">Applied Instructions:</p>
+                        <ul className="space-y-1 text-sm">
+                          {targetDatabaseName && (
+                            <li>• Target Database: <code className="bg-blue-100 px-1 rounded">{targetDatabaseName}</code></li>
+                          )}
+                          {targetSchemaName && (
+                            <li>• Target Schema: <code className="bg-blue-100 px-1 rounded">{targetSchemaName}</code></li>
+                          )}
+                          {customInstructions && (
+                            <li>• Custom Instructions: <span className="italic">{customInstructions}</span></li>
+                          )}
+                          <li>• Comments: {includeComments ? 'Included' : 'Excluded'}</li>
+                          <li>• Case: {preserveCase ? 'Preserved' : 'Standardized'}</li>
+                        </ul>
+                      </div>
+                    </AlertDescription>
+                  </Alert>
+                )}
+
                 {/* Warnings */}
                 {warnings.length > 0 && (
                   <Alert className="mb-6" data-testid="warnings-alert">
