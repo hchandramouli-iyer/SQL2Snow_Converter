@@ -417,6 +417,275 @@ class SQLToSnowflakeConverter:
         
         return converted_sql.strip(), warnings
 
+# ER Diagram Parser Class
+class ERDiagramParser:
+    def __init__(self):
+        pass
+    
+    def parse_sql_to_er(self, sql_content: str, database_type: str) -> ERDiagramResponse:
+        """Parse CREATE TABLE statements and generate ER diagram data"""
+        tables = []
+        relationships = []
+        
+        # Clean and split SQL statements
+        sql_statements = self._split_sql_statements(sql_content)
+        
+        # Parse each CREATE TABLE statement
+        for statement in sql_statements:
+            if self._is_create_table_statement(statement):
+                table = self._parse_create_table(statement, database_type)
+                if table:
+                    tables.append(table)
+        
+        # Extract relationships from foreign keys
+        relationships = self._extract_relationships(tables)
+        
+        # Auto-position tables for better visualization
+        tables = self._auto_position_tables(tables)
+        
+        return ERDiagramResponse(
+            tables=tables,
+            relationships=relationships,
+            database_type=database_type
+        )
+    
+    def _split_sql_statements(self, sql_content: str) -> List[str]:
+        """Split SQL content into individual statements"""
+        # Remove comments
+        sql_content = re.sub(r'--.*?\n', '\n', sql_content)
+        sql_content = re.sub(r'/\*.*?\*/', '', sql_content, flags=re.DOTALL)
+        
+        # Split by semicolons, but be careful with semicolons inside strings
+        statements = []
+        current_statement = ""
+        in_string = False
+        quote_char = None
+        
+        i = 0
+        while i < len(sql_content):
+            char = sql_content[i]
+            
+            if char in ["'", '"'] and not in_string:
+                in_string = True
+                quote_char = char
+            elif char == quote_char and in_string:
+                if i + 1 < len(sql_content) and sql_content[i + 1] == quote_char:
+                    # Escaped quote
+                    current_statement += char + char
+                    i += 1
+                else:
+                    in_string = False
+                    quote_char = None
+            elif char == ';' and not in_string:
+                current_statement += char
+                statement = current_statement.strip()
+                if statement:
+                    statements.append(statement)
+                current_statement = ""
+                i += 1
+                continue
+            
+            current_statement += char
+            i += 1
+        
+        # Add the last statement if it doesn't end with semicolon
+        if current_statement.strip():
+            statements.append(current_statement.strip())
+        
+        return statements
+    
+    def _is_create_table_statement(self, statement: str) -> bool:
+        """Check if statement is a CREATE TABLE statement"""
+        return re.search(r'\bCREATE\s+TABLE\b', statement, re.IGNORECASE) is not None
+    
+    def _parse_create_table(self, statement: str, database_type: str) -> Optional[ERTable]:
+        """Parse a CREATE TABLE statement into an ERTable object"""
+        try:
+            # Extract table name
+            table_match = re.search(r'CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?(?:`([^`]+)`|([^\s(]+))', statement, re.IGNORECASE)
+            if not table_match:
+                return None
+            
+            table_name = table_match.group(1) or table_match.group(2)
+            table_name = table_name.strip('`"[]')
+            
+            # Extract columns section
+            columns_match = re.search(r'\((.*)\)', statement, re.DOTALL)
+            if not columns_match:
+                return None
+            
+            columns_text = columns_match.group(1)
+            columns = self._parse_columns(columns_text, database_type)
+            
+            return ERTable(name=table_name, columns=columns)
+        
+        except Exception as e:
+            print(f"Error parsing CREATE TABLE statement: {e}")
+            return None
+    
+    def _parse_columns(self, columns_text: str, database_type: str) -> List[TableColumn]:
+        """Parse column definitions from CREATE TABLE statement"""
+        columns = []
+        
+        # Split by commas, but be careful with commas inside parentheses
+        column_definitions = self._split_column_definitions(columns_text)
+        
+        primary_keys = set()
+        foreign_keys = {}
+        
+        for col_def in column_definitions:
+            col_def = col_def.strip()
+            
+            # Skip constraint definitions
+            if re.match(r'\s*(PRIMARY\s+KEY|FOREIGN\s+KEY|CONSTRAINT|KEY|INDEX|UNIQUE)', col_def, re.IGNORECASE):
+                # Extract primary key information
+                pk_match = re.search(r'PRIMARY\s+KEY\s*\(([^)]+)\)', col_def, re.IGNORECASE)
+                if pk_match:
+                    pk_columns = [col.strip('`"[] ') for col in pk_match.group(1).split(',')]
+                    primary_keys.update(pk_columns)
+                
+                # Extract foreign key information
+                fk_match = re.search(r'FOREIGN\s+KEY\s*\(([^)]+)\)\s*REFERENCES\s+([^\s(]+)\s*\(([^)]+)\)', col_def, re.IGNORECASE)
+                if fk_match:
+                    local_col = fk_match.group(1).strip('`"[] ')
+                    foreign_table = fk_match.group(2).strip('`"[] ')
+                    foreign_col = fk_match.group(3).strip('`"[] ')
+                    foreign_keys[local_col] = (foreign_table, foreign_col)
+                
+                continue
+            
+            # Parse regular column definition
+            column = self._parse_single_column(col_def, database_type)
+            if column:
+                columns.append(column)
+        
+        # Apply primary key and foreign key information
+        for column in columns:
+            if column.name in primary_keys:
+                column.is_primary_key = True
+                column.is_nullable = False
+            
+            if column.name in foreign_keys:
+                column.is_foreign_key = True
+                foreign_table, foreign_col = foreign_keys[column.name]
+                column.foreign_table = foreign_table
+                column.foreign_column = foreign_col
+        
+        return columns
+    
+    def _split_column_definitions(self, columns_text: str) -> List[str]:
+        """Split column definitions by commas, respecting parentheses"""
+        definitions = []
+        current_def = ""
+        paren_depth = 0
+        in_string = False
+        quote_char = None
+        
+        i = 0
+        while i < len(columns_text):
+            char = columns_text[i]
+            
+            if char in ["'", '"'] and not in_string:
+                in_string = True
+                quote_char = char
+            elif char == quote_char and in_string:
+                if i + 1 < len(columns_text) and columns_text[i + 1] == quote_char:
+                    # Escaped quote
+                    current_def += char + char
+                    i += 1
+                else:
+                    in_string = False
+                    quote_char = None
+            elif not in_string:
+                if char == '(':
+                    paren_depth += 1
+                elif char == ')':
+                    paren_depth -= 1
+                elif char == ',' and paren_depth == 0:
+                    definition = current_def.strip()
+                    if definition:
+                        definitions.append(definition)
+                    current_def = ""
+                    i += 1
+                    continue
+            
+            current_def += char
+            i += 1
+        
+        # Add the last definition
+        if current_def.strip():
+            definitions.append(current_def.strip())
+        
+        return definitions
+    
+    def _parse_single_column(self, col_def: str, database_type: str) -> Optional[TableColumn]:
+        """Parse a single column definition"""
+        try:
+            # Extract column name and data type
+            col_match = re.match(r'(?:`([^`]+)`|([^\s]+))\s+([^\s,]+(?:\([^)]*\))?)', col_def.strip(), re.IGNORECASE)
+            if not col_match:
+                return None
+            
+            column_name = col_match.group(1) or col_match.group(2)
+            column_name = column_name.strip('`"[]')
+            data_type = col_match.group(3)
+            
+            # Check for constraints
+            is_nullable = 'NOT NULL' not in col_def.upper()
+            is_primary_key = 'PRIMARY KEY' in col_def.upper()
+            
+            return TableColumn(
+                name=column_name,
+                data_type=data_type,
+                is_primary_key=is_primary_key,
+                is_nullable=is_nullable
+            )
+        
+        except Exception as e:
+            print(f"Error parsing column definition: {e}")
+            return None
+    
+    def _extract_relationships(self, tables: List[ERTable]) -> List[ERRelationship]:
+        """Extract relationships from foreign key constraints"""
+        relationships = []
+        
+        for table in tables:
+            for column in table.columns:
+                if column.is_foreign_key and column.foreign_table:
+                    relationship = ERRelationship(
+                        from_table=table.name,
+                        from_column=column.name,
+                        to_table=column.foreign_table,
+                        to_column=column.foreign_column or column.name,
+                        relationship_type="many-to-one"
+                    )
+                    relationships.append(relationship)
+        
+        return relationships
+    
+    def _auto_position_tables(self, tables: List[ERTable]) -> List[ERTable]:
+        """Auto-position tables in a grid layout"""
+        import math
+        
+        num_tables = len(tables)
+        if num_tables == 0:
+            return tables
+        
+        # Calculate grid dimensions
+        cols = math.ceil(math.sqrt(num_tables))
+        rows = math.ceil(num_tables / cols)
+        
+        # Position tables
+        for i, table in enumerate(tables):
+            col = i % cols
+            row = i // cols
+            
+            # Spread tables across the canvas
+            table.x = col * 300 + 150  # 300px spacing, 150px offset
+            table.y = row * 200 + 100  # 200px spacing, 100px offset
+        
+        return tables
+
 # AI Assistant Class
 class AIAssistant:
     def __init__(self):
