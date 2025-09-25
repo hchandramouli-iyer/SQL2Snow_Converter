@@ -517,109 +517,43 @@ body::before {
   }
 }
 
-/* Enhanced Professional Cards with 3D Effects */
+/* Clean Professional Cards */
 .professional-card {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(25px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--gray-200);
   border-radius: var(--radius-xl);
-  box-shadow: 
-    0 20px 40px rgba(59, 130, 246, 0.1),
-    0 10px 20px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   margin-bottom: 2rem;
   position: relative;
   overflow: hidden;
-  
-  /* 3D Transformation */
-  transform-style: preserve-3d;
-  perspective: 1000px;
 }
 
-/* Dynamic Border Animation */
+/* Simple Border Animation */
 .professional-card::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, 
-    transparent,
-    rgba(59, 130, 246, 0.6),
-    rgba(168, 85, 247, 0.6),
-    rgba(236, 72, 153, 0.6),
-    transparent
-  );
-  background-size: 200% 100%;
-  animation: cardBorderFlow 4s ease-in-out infinite;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.4), transparent);
+  opacity: 0.5;
 }
 
-@keyframes cardBorderFlow {
-  0%, 100% { 
-    opacity: 0.4;
-    background-position: -200% 0;
-  }
-  50% { 
-    opacity: 1;
-    background-position: 200% 0;
-  }
-}
-
-/* Enhanced Hover Effects */
+/* Clean Hover Effects */
 .professional-card:hover {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(30px);
-  box-shadow: 
-    0 30px 60px rgba(59, 130, 246, 0.2),
-    0 15px 30px rgba(168, 85, 247, 0.1),
-    0 5px 15px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  transform: perspective(1000px) translateY(-8px) rotateX(2deg) scale(1.01);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
   border-color: rgba(59, 130, 246, 0.3);
 }
 
 .professional-card:hover::before {
-  height: 3px;
-  background: linear-gradient(90deg, 
-    rgba(59, 130, 246, 0.8),
-    rgba(168, 85, 247, 0.8),
-    rgba(236, 72, 153, 0.8),
-    rgba(59, 130, 246, 0.8)
-  );
-  animation-duration: 2s;
-}
-
-/* Interactive Glow Effect */
-.professional-card::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(59, 130, 246, 0.1) 0%,
-    rgba(168, 85, 247, 0.05) 50%,
-    transparent 100%
-  );
-  transform: translate(-50%, -50%);
-  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  pointer-events: none;
-}
-
-.professional-card:hover::after {
-  width: 120%;
-  height: 120%;
-  background: radial-gradient(
-    circle,
-    rgba(59, 130, 246, 0.15) 0%,
-    rgba(168, 85, 247, 0.1) 50%,
-    transparent 100%
-  );
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.6), transparent);
+  opacity: 1;
 }
 
 .card-header-professional {
