@@ -408,19 +408,38 @@ async def convert_sql_text(request: ConversionRequest):
         raise HTTPException(status_code=500, detail=f"Conversion failed: {str(e)}")
 
 @api_router.post("/convert-file", response_model=ConversionResponse)
-async def convert_sql_file(file: UploadFile = File(...), source_database: str = Form(...)):
+async def convert_sql_file(
+    file: UploadFile = File(...), 
+    source_database: str = Form(...),
+    target_database_name: str = Form(None),
+    target_schema_name: str = Form(None),
+    custom_instructions: str = Form(None),
+    include_comments: bool = Form(True),
+    preserve_case: bool = Form(False)
+):
     """Convert SQL file from various databases to Snowflake"""
     try:
         # Read file content
         content = await file.read()
         sql_content = content.decode('utf-8')
         
-        converted_sql, warnings = converter.convert_sql_to_snowflake(sql_content, source_database)
+        converted_sql, warnings = converter.convert_sql_to_snowflake(
+            sql_content, 
+            source_database,
+            target_database_name,
+            target_schema_name,
+            custom_instructions,
+            include_comments,
+            preserve_case
+        )
         
         response = ConversionResponse(
             original_sql=sql_content,
             converted_sql=converted_sql,
             source_database=source_database,
+            target_database_name=target_database_name,
+            target_schema_name=target_schema_name,
+            custom_instructions=custom_instructions,
             warnings=warnings
         )
         
