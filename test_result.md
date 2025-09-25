@@ -145,6 +145,18 @@
           agent: "testing"
           comment: "Comprehensive backend testing completed successfully. All 20 tests passed (100% success rate). Tested: 1) SQL conversion endpoints (/api/convert, /api/convert-file) for MySQL, PostgreSQL, SQL Server, Oracle - all working correctly with proper data type conversions. 2) AI tool processing endpoints (/api/ai/process) for code generation, assistance, conversion, explanation, enhancement, commenting, unit testing - all working correctly. 3) File upload/download functionality (/api/download) - working correctly. 4) Model availability endpoint (/api/ai/models) - working correctly, returns OpenAI, Anthropic, Gemini models. 5) Chat functionality (/api/ai/chat, /api/ai/chat-simple) with session management and history (/api/ai/chat-history) - all working correctly. Backend services running properly via supervisor. Visual enhancements did not affect backend functionality as expected."
 
+  - task: "ER Diagram Backend Endpoints"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "ER diagram endpoints testing completed successfully. Both endpoints working perfectly: 1) POST /api/er-diagram/generate - Successfully generates ER diagrams from SQL text with proper table structure parsing, column identification (including primary/foreign keys), and relationship extraction. Tested with MySQL CREATE TABLE statements containing users and orders tables with foreign key relationships. 2) POST /api/er-diagram/generate-file - Successfully processes uploaded SQL files and generates comprehensive ER diagrams. Tested with 4-table schema (users, orders, products, order_items) with multiple foreign key relationships. All 3 relationships correctly identified and stored. 3) Database storage verified - ER diagrams properly saved to MongoDB with correct structure including tables array, relationships array, and metadata. 4) Response structure validated - All required fields present (id, tables, relationships, database_type, created_at). 5) SQL parser correctly extracts table structures, identifies primary keys, foreign keys, and data types. 6) Auto-positioning functionality working for table layout. Both text and file upload endpoints fully functional with 100% test success rate."
+
 ## metadata:
   created_by: "main_agent"
   version: "1.0"
