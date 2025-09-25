@@ -33,6 +33,11 @@ class ConversionRequest(BaseModel):
     sql_content: str
     source_database: str  # mysql, postgresql, sqlserver, oracle
     conversion_type: str = "basic"  # basic, optimized
+    target_database_name: Optional[str] = None
+    target_schema_name: Optional[str] = None
+    custom_instructions: Optional[str] = None
+    include_comments: bool = True
+    preserve_case: bool = False
 
 class ConversionResponse(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
