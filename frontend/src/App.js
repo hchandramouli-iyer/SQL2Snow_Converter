@@ -248,6 +248,7 @@ function App() {
     setIsProcessing(true);
     try {
       const response = await axios.post(`${API}/ai/chat`, {
+        tool_type: 'chat',
         content: userMessage,
         llm_provider: llmProvider,
         llm_model: llmModel,
@@ -511,17 +512,17 @@ function App() {
         {activeMode === AI_TOOLS.SQL_CONVERTER ? (
           <div className="space-y-6">
             {/* SQL Converter Controls */}
-            <div className="professional-card">
-              <div className="card-header-professional">
-                <h3 className="card-title-professional">
+            <Card className="professional-card">
+              <CardHeader className="card-header-professional">
+                <CardTitle className="card-title-professional">
                   <Code2 className="h-5 w-5" />
                   Database Configuration
-                </h3>
-                <p className="card-description-professional">
+                </CardTitle>
+                <CardDescription className="card-description-professional">
                   Configure source database settings and conversion parameters
-                </p>
-              </div>
-              <div className="card-content-professional">
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="card-content-professional">
                 <div className="grid grid-2 gap-6">
                   <div className="form-group">
                     <label className="form-label">Source Database Type</label>
@@ -530,30 +531,10 @@ function App() {
                         <SelectValue placeholder="Choose database type" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="mysql">
-                          <div className="flex items-center gap-2">
-                            <Database className="h-4 w-4" />
-                            MySQL
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="postgresql">
-                          <div className="flex items-center gap-2">
-                            <Database className="h-4 w-4" />
-                            PostgreSQL
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="sqlserver">
-                          <div className="flex items-center gap-2">
-                            <Database className="h-4 w-4" />
-                            SQL Server
-                          </div>
-                        </SelectItem>
-                        <SelectItem value="oracle">
-                          <div className="flex items-center gap-2">
-                            <Database className="h-4 w-4" />
-                            Oracle
-                          </div>
-                        </SelectItem>
+                        <SelectItem value="mysql">MySQL</SelectItem>
+                        <SelectItem value="postgresql">PostgreSQL</SelectItem>
+                        <SelectItem value="sqlserver">SQL Server</SelectItem>
+                        <SelectItem value="oracle">Oracle</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -571,113 +552,21 @@ function App() {
                     </Button>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            {/* Advanced SQL Options */}
-            <div className="professional-card">
-              <Collapsible open={showAdvancedOptions} onOpenChange={setShowAdvancedOptions}>
-                <CollapsibleTrigger asChild>
-                  <div className="card-header-professional cursor-pointer hover:bg-gray-50 transition-colors">
-                    <div className="flex items-center justify-between w-full">
-                      <div>
-                        <h3 className="card-title-professional">
-                          <Settings className="h-5 w-5" />
-                          Advanced Database Settings
-                        </h3>
-                        <p className="card-description-professional">
-                          Configure source and target database details for precise conversion
-                        </p>
-                      </div>
-                      <ChevronDown className={`h-5 w-5 transition-transform ${showAdvancedOptions ? 'rotate-180' : ''}`} />
-                    </div>
-                  </div>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <div className="card-content-professional space-y-6">
-                    {/* Source Configuration */}
-                    <div>
-                      <h4 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                        <Database className="h-4 w-4" />
-                        Source Database Details
-                      </h4>
-                      <div className="grid grid-2 gap-4">
-                        <div className="form-group">
-                          <label className="form-label">Database Name</label>
-                          <Input
-                            placeholder="e.g., production_db, analytics_db"
-                            value={sourceDatabaseName}
-                            onChange={(e) => setSourceDatabaseName(e.target.value)}
-                            className="form-input"
-                          />
-                        </div>
-                        <div className="form-group">
-                          <label className="form-label">Schema Name</label>
-                          <Input
-                            placeholder="e.g., public, dbo, main"
-                            value={sourceSchemaName}
-                            onChange={(e) => setSourceSchemaName(e.target.value)}
-                            className="form-input"
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Target Configuration */}
-                    <div>
-                      <h4 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
-                        <ArrowRight className="h-4 w-4" />
-                        Snowflake Target Configuration
-                      </h4>
-                      <div className="grid grid-2 gap-4">
-                        <div className="form-group">
-                          <label className="form-label">Target Database</label>
-                          <Input
-                            placeholder="e.g., ANALYTICS_DB, DATA_WAREHOUSE"
-                            value={targetDatabaseName}
-                            onChange={(e) => setTargetDatabaseName(e.target.value)}
-                            className="form-input"
-                          />
-                        </div>
-                        <div className="form-group">
-                          <label className="form-label">Target Schema</label>
-                          <Input
-                            placeholder="e.g., PUBLIC, STAGING, PROD"
-                            value={targetSchemaName}
-                            onChange={(e) => setTargetSchemaName(e.target.value)}
-                            className="form-input"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="form-group">
-                      <label className="form-label">Custom Instructions</label>
-                      <Textarea
-                        placeholder="e.g., Use warehouse COMPUTE_WH, add clustering on date columns, optimize for analytics workload..."
-                        value={customInstructions}
-                        onChange={(e) => setCustomInstructions(e.target.value)}
-                        className="form-textarea"
-                        rows={3}
-                      />
-                    </div>
-                  </div>
-                </CollapsibleContent>
-              </Collapsible>
-            </div>
+              </CardContent>
+            </Card>
 
             {/* SQL Input */}
-            <div className="professional-card">
-              <div className="card-header-professional">
-                <h3 className="card-title-professional">
+            <Card className="professional-card">
+              <CardHeader className="card-header-professional">
+                <CardTitle className="card-title-professional">
                   <FileCode className="h-5 w-5" />
                   SQL Input
-                </h3>
-                <p className="card-description-professional">
+                </CardTitle>
+                <CardDescription className="card-description-professional">
                   Paste your SQL code for conversion to Snowflake syntax
-                </p>
-              </div>
-              <div className="card-content-professional">
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="card-content-professional">
                 <Textarea
                   data-testid="sql-input-textarea"
                   placeholder="-- Paste your SQL code here
@@ -712,50 +601,22 @@ CREATE TABLE users (
                     )}
                   </Button>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
             {/* SQL Results */}
             {convertedSql && (
-              <div className="professional-card animate-fade-in">
-                <div className="card-header-professional">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="card-title-professional text-green-600">
-                        <ArrowRight className="h-5 w-5" />
-                        Conversion Complete
-                      </h3>
-                      <p className="card-description-professional">
-                        Successfully converted {sourceDatabase?.toUpperCase()} to Snowflake syntax
-                      </p>
-                    </div>
-                    <Button
-                      variant="outline"
-                      onClick={() => navigator.clipboard.writeText(convertedSql)}
-                      className="btn-secondary"
-                    >
-                      <Download className="h-4 w-4" />
-                      Copy Result
-                    </Button>
-                  </div>
-                </div>
-                <div className="card-content-professional">
-                  {warnings.length > 0 && (
-                    <div className="alert alert-warning mb-6">
-                      <div>
-                        <div className="font-semibold">Conversion Notes:</div>
-                        <ul className="mt-2 space-y-1 text-sm">
-                          {warnings.map((warning, index) => (
-                            <li key={index} className="flex items-start gap-2">
-                              <span className="text-warning-600">•</span>
-                              {warning}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  )}
-
+              <Card className="professional-card animate-fade-in">
+                <CardHeader className="card-header-professional">
+                  <CardTitle className="card-title-professional text-green-600">
+                    <ArrowRight className="h-5 w-5" />
+                    Conversion Complete
+                  </CardTitle>
+                  <CardDescription className="card-description-professional">
+                    Successfully converted {sourceDatabase?.toUpperCase()} to Snowflake syntax
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="card-content-professional">
                   <div className="grid grid-2 gap-6">
                     <div>
                       <div className="flex items-center gap-2 mb-3">
@@ -774,22 +635,22 @@ CREATE TABLE users (
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             )}
           </div>
         ) : activeMode === AI_TOOLS.CHAT ? (
-          <div className="professional-card">
-            <div className="card-header-professional">
-              <h3 className="card-title-professional">
+          <Card className="professional-card">
+            <CardHeader className="card-header-professional">
+              <CardTitle className="card-title-professional">
                 <MessageCircle className="h-5 w-5" />
                 AI Coding Assistant
-              </h3>
-              <p className="card-description-professional">
+              </CardTitle>
+              <CardDescription className="card-description-professional">
                 Interactive chat with AI for real-time coding help and guidance
-              </p>
-            </div>
-            <div className="card-content-professional">
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="card-content-professional">
               <div className="chat-container">
                 <div className="chat-messages">
                   {chatMessages.length === 0 ? (
@@ -803,9 +664,6 @@ CREATE TABLE users (
                       {chatMessages.map((msg, index) => (
                         <div key={index} className={`chat-message ${msg.type}`}>
                           <pre className="whitespace-pre-wrap text-sm">{msg.content}</pre>
-                          <div className="text-xs opacity-70 mt-2">
-                            {new Date(msg.timestamp).toLocaleTimeString()}
-                          </div>
                         </div>
                       ))}
                     </div>
@@ -839,23 +697,22 @@ CREATE TABLE users (
                   </Button>
                 </div>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         ) : (
           <div className="space-y-6">
-          <div className="space-y-6">
             {/* AI Tool Configuration */}
-            <div className="professional-card">
-              <div className="card-header-professional">
-                <h3 className="card-title-professional">
+            <Card className="professional-card">
+              <CardHeader className="card-header-professional">
+                <CardTitle className="card-title-professional">
                   {getToolIcon(activeMode)}
                   {getToolTitle(activeMode)} Configuration
-                </h3>
-                <p className="card-description-professional">
+                </CardTitle>
+                <CardDescription className="card-description-professional">
                   Configure language, framework, and specific requirements for optimal AI assistance
-                </p>
-              </div>
-              <div className="card-content-professional">
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="card-content-professional">
                 <div className="grid grid-3 gap-6">
                   {/* Language Selection */}
                   {(activeMode === AI_TOOLS.CODE_GENERATOR || 
@@ -948,53 +805,29 @@ CREATE TABLE users (
                     data-testid="requirements-input"
                   />
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
             {/* AI Input/Output */}
-            <div className="professional-card">
-              <div className="card-header-professional">
-                <h3 className="card-title-professional">
+            <Card className="professional-card">
+              <CardHeader className="card-header-professional">
+                <CardTitle className="card-title-professional">
                   <FileCode className="h-5 w-5" />
                   {activeMode === AI_TOOLS.CODE_GENERATOR ? 'Requirements & Specifications' : 'Code Input'}
-                </h3>
-                <p className="card-description-professional">
+                </CardTitle>
+                <CardDescription className="card-description-professional">
                   {activeMode === AI_TOOLS.CODE_GENERATOR ? 
                     'Describe what you want to build and the AI will generate the code for you' :
-                    activeMode === AI_TOOLS.CODE_ASSISTANT ?
-                    'Paste your code that needs debugging, improvement, or assistance' :
-                    activeMode === AI_TOOLS.CODE_CONVERTER ?
-                    'Paste the source code you want to convert to another language' :
-                    activeMode === AI_TOOLS.CODE_EXPLAINER ?
-                    'Paste the code you want explained and analyzed in detail' :
-                    activeMode === AI_TOOLS.CODE_ENHANCER ?
-                    'Paste your code to receive optimization and enhancement suggestions' :
-                    activeMode === AI_TOOLS.COMMENT_GENERATOR ?
-                    'Paste your code to generate comprehensive documentation and comments' :
-                    activeMode === AI_TOOLS.UNIT_TEST_GENERATOR ?
-                    'Paste the function or class you want to generate unit tests for' :
-                    'Enter your code or requirements here'
+                    'Paste your code for AI analysis and assistance'
                   }
-                </p>
-              </div>
-              <div className="card-content-professional">
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="card-content-professional">
                 <Textarea
                   placeholder={
                     activeMode === AI_TOOLS.CODE_GENERATOR ? 
-                      'Example: Create a REST API endpoint that handles user registration with email validation, password hashing, and database storage. Include proper error handling and logging...' :
-                    activeMode === AI_TOOLS.CODE_ASSISTANT ?
-                      'Paste your code here and describe the issue you\'re facing or what you want to improve...' :
-                    activeMode === AI_TOOLS.CODE_CONVERTER ?
-                      'Paste the source code you want to convert...' :
-                    activeMode === AI_TOOLS.CODE_EXPLAINER ?
-                      'Paste the code you want explained...' :
-                    activeMode === AI_TOOLS.CODE_ENHANCER ?
-                      'Paste your code that needs optimization...' :
-                    activeMode === AI_TOOLS.COMMENT_GENERATOR ?
-                      'Paste your undocumented code here...' :
-                    activeMode === AI_TOOLS.UNIT_TEST_GENERATOR ?
-                      'Paste your function or class here...' :
-                      'Enter your content here...'
+                      'Example: Create a REST API endpoint that handles user registration with email validation...' :
+                      'Paste your code here...'
                   }
                   value={aiInput}
                   onChange={(e) => setAiInput(e.target.value)}
@@ -1018,70 +851,32 @@ CREATE TABLE users (
                     ) : (
                       <>
                         {getToolIcon(activeMode)}
-                        <span className="ml-2">
-                          {activeMode === AI_TOOLS.CODE_GENERATOR ? 'Generate Code' :
-                           activeMode === AI_TOOLS.CODE_ASSISTANT ? 'Get AI Assistance' :
-                           activeMode === AI_TOOLS.CODE_CONVERTER ? 'Convert Code' :
-                           activeMode === AI_TOOLS.CODE_EXPLAINER ? 'Explain Code' :
-                           activeMode === AI_TOOLS.CODE_ENHANCER ? 'Enhance Code' :
-                           activeMode === AI_TOOLS.COMMENT_GENERATOR ? 'Generate Documentation' :
-                           activeMode === AI_TOOLS.UNIT_TEST_GENERATOR ? 'Generate Tests' :
-                           'Process with AI'}
-                        </span>
+                        <span className="ml-2">Process with AI</span>
                       </>
                     )}
                   </Button>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
             {/* AI Output */}
             {aiOutput && (
-              <div className="professional-card animate-fade-in">
-                <div className="card-header-professional">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="card-title-professional text-green-600">
-                        {getToolIcon(activeMode)}
-                        {getToolTitle(activeMode)} - Result
-                      </h3>
-                      <p className="card-description-professional">
-                        {activeMode === AI_TOOLS.CODE_GENERATOR ? 
-                          `Generated ${language || 'code'} ${framework ? `using ${framework}` : ''}` :
-                         activeMode === AI_TOOLS.CODE_CONVERTER ?
-                          `Converted from ${language || 'source'} to ${targetLanguage || 'target language'}` :
-                         activeMode === AI_TOOLS.CODE_ASSISTANT ?
-                          'AI assistance and recommendations' :
-                         activeMode === AI_TOOLS.CODE_EXPLAINER ?
-                          'Detailed code explanation and analysis' :
-                         activeMode === AI_TOOLS.CODE_ENHANCER ?
-                          'Code optimizations and enhancements' :
-                         activeMode === AI_TOOLS.COMMENT_GENERATOR ?
-                          'Generated documentation and comments' :
-                         activeMode === AI_TOOLS.UNIT_TEST_GENERATOR ?
-                          `Generated unit tests ${framework ? `using ${framework}` : ''}` :
-                         'AI-generated output'
-                        }
-                      </p>
-                    </div>
-                    <div className="flex gap-3">
-                      <Button
-                        variant="outline"
-                        onClick={() => navigator.clipboard.writeText(aiOutput)}
-                        className="btn-secondary"
-                      >
-                        <FileCode className="h-4 w-4" />
-                        Copy Code
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-                <div className="card-content-professional">
+              <Card className="professional-card animate-fade-in">
+                <CardHeader className="card-header-professional">
+                  <CardTitle className="card-title-professional text-green-600">
+                    {getToolIcon(activeMode)}
+                    AI Generated Result
+                  </CardTitle>
+                  <CardDescription className="card-description-professional">
+                    Generated content based on your requirements
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="card-content-professional">
                   <div className="code-container">
                     <pre className="text-sm" data-testid="ai-output">{aiOutput}</pre>
                   </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             )}
           </div>
         )}
