@@ -297,6 +297,274 @@ class SQLConverterAPITester:
         )
         return success
 
+    def test_ai_models_endpoint(self):
+        """Test AI models availability endpoint"""
+        success, response = self.run_test(
+            "AI Models Endpoint",
+            "GET",
+            "ai/models",
+            200
+        )
+        
+        if success and 'models' in response:
+            models = response['models']
+            if isinstance(models, dict) and 'openai' in models and 'anthropic' in models:
+                print("   ✅ AI models properly structured")
+                print(f"   Available providers: {list(models.keys())}")
+            else:
+                print("   ⚠️  AI models structure unexpected")
+        
+        return success
+
+    def test_ai_code_generator(self):
+        """Test AI code generator tool"""
+        success, response = self.run_test(
+            "AI Code Generator",
+            "POST",
+            "ai/process",
+            200,
+            data={
+                "tool_type": "code_generator",
+                "content": "Create a Python function to calculate fibonacci numbers",
+                "language": "python",
+                "llm_provider": "openai",
+                "llm_model": "gpt-4o-mini"
+            }
+        )
+        
+        if success and 'generated_content' in response:
+            generated = response['generated_content']
+            if 'def' in generated and 'fibonacci' in generated.lower():
+                print("   ✅ Code generation appears successful")
+            else:
+                print("   ⚠️  Generated code may not match request")
+        
+        return success
+
+    def test_ai_code_assistant(self):
+        """Test AI code assistant tool"""
+        success, response = self.run_test(
+            "AI Code Assistant",
+            "POST",
+            "ai/process",
+            200,
+            data={
+                "tool_type": "code_assistant",
+                "content": "Help me fix this Python code: def add(a, b) return a + b",
+                "language": "python",
+                "llm_provider": "openai",
+                "llm_model": "gpt-4o-mini"
+            }
+        )
+        
+        if success and 'generated_content' in response:
+            generated = response['generated_content']
+            if ':' in generated:
+                print("   ✅ Code assistance appears successful")
+        
+        return success
+
+    def test_ai_code_converter(self):
+        """Test AI code converter tool"""
+        success, response = self.run_test(
+            "AI Code Converter",
+            "POST",
+            "ai/process",
+            200,
+            data={
+                "tool_type": "code_converter",
+                "content": "def hello(): print('Hello World')",
+                "language": "python",
+                "target_language": "javascript",
+                "llm_provider": "openai",
+                "llm_model": "gpt-4o-mini"
+            }
+        )
+        
+        if success and 'generated_content' in response:
+            generated = response['generated_content']
+            if 'function' in generated.lower() or 'console.log' in generated:
+                print("   ✅ Code conversion appears successful")
+        
+        return success
+
+    def test_ai_code_explainer(self):
+        """Test AI code explainer tool"""
+        success, response = self.run_test(
+            "AI Code Explainer",
+            "POST",
+            "ai/process",
+            200,
+            data={
+                "tool_type": "code_explainer",
+                "content": "def factorial(n): return 1 if n <= 1 else n * factorial(n-1)",
+                "language": "python",
+                "llm_provider": "openai",
+                "llm_model": "gpt-4o-mini"
+            }
+        )
+        
+        if success and 'generated_content' in response:
+            generated = response['generated_content']
+            if 'factorial' in generated.lower() and 'recursive' in generated.lower():
+                print("   ✅ Code explanation appears successful")
+        
+        return success
+
+    def test_ai_chat_endpoint(self):
+        """Test AI chat endpoint"""
+        success, response = self.run_test(
+            "AI Chat Endpoint",
+            "POST",
+            "ai/chat",
+            200,
+            data={
+                "content": "Hello, can you help me with Python programming?",
+                "llm_provider": "openai",
+                "llm_model": "gpt-4o-mini"
+            }
+        )
+        
+        if success and 'response' in response and 'session_id' in response:
+            print(f"   ✅ Chat successful, session_id: {response['session_id'][:8]}...")
+            self.chat_session_id = response['session_id']
+        
+        return success
+
+    def test_ai_chat_simple_endpoint(self):
+        """Test AI simple chat endpoint"""
+        # Test with form data
+        import requests
+        url = f"{self.api_url}/ai/chat-simple"
+        
+        self.tests_run += 1
+        print(f"\n🔍 Testing AI Simple Chat Endpoint...")
+        print(f"   URL: {url}")
+        
+        try:
+            data = {
+                'content': 'What is Python?',
+                'llm_provider': 'openai',
+                'llm_model': 'gpt-4o-mini'
+            }
+            
+            response = requests.post(url, data=data)
+            
+            success = response.status_code == 200
+            if success:
+                self.tests_passed += 1
+                print(f"✅ Passed - Status: {response.status_code}")
+                try:
+                    response_data = response.json()
+                    if 'response' in response_data and 'session_id' in response_data:
+                        print("   ✅ Simple chat response structure correct")
+                    return True
+                except:
+                    return True
+            else:
+                print(f"❌ Failed - Expected 200, got {response.status_code}")
+                try:
+                    error_detail = response.json()
+                    print(f"   Error: {error_detail}")
+                except:
+                    print(f"   Error: {response.text}")
+                return False
+
+        except Exception as e:
+            print(f"❌ Failed - Error: {str(e)}")
+            return False
+
+    def test_ai_chat_history(self):
+        """Test AI chat history endpoint"""
+        if not hasattr(self, 'chat_session_id') or not self.chat_session_id:
+            print("❌ No chat session ID available for history test")
+            return False
+
+        success, response = self.run_test(
+            "AI Chat History",
+            "GET",
+            f"ai/chat-history/{self.chat_session_id}",
+            200
+        )
+        
+        if success and isinstance(response, list):
+            print(f"   Chat history entries: {len(response)}")
+            if len(response) > 0:
+                print("   ✅ Chat history retrieved successfully")
+        
+        return success
+
+    def test_ai_unit_test_generator(self):
+        """Test AI unit test generator tool"""
+        success, response = self.run_test(
+            "AI Unit Test Generator",
+            "POST",
+            "ai/process",
+            200,
+            data={
+                "tool_type": "unit_test_generator",
+                "content": "def add_numbers(a, b): return a + b",
+                "language": "python",
+                "framework": "pytest",
+                "llm_provider": "openai",
+                "llm_model": "gpt-4o-mini"
+            }
+        )
+        
+        if success and 'generated_content' in response:
+            generated = response['generated_content']
+            if 'test_' in generated and 'assert' in generated:
+                print("   ✅ Unit test generation appears successful")
+        
+        return success
+
+    def test_ai_comment_generator(self):
+        """Test AI comment generator tool"""
+        success, response = self.run_test(
+            "AI Comment Generator",
+            "POST",
+            "ai/process",
+            200,
+            data={
+                "tool_type": "comment_generator",
+                "content": "def calculate_area(radius): return 3.14159 * radius * radius",
+                "language": "python",
+                "llm_provider": "openai",
+                "llm_model": "gpt-4o-mini"
+            }
+        )
+        
+        if success and 'generated_content' in response:
+            generated = response['generated_content']
+            if '"""' in generated or '#' in generated:
+                print("   ✅ Comment generation appears successful")
+        
+        return success
+
+    def test_ai_code_enhancer(self):
+        """Test AI code enhancer tool"""
+        success, response = self.run_test(
+            "AI Code Enhancer",
+            "POST",
+            "ai/process",
+            200,
+            data={
+                "tool_type": "code_enhancer",
+                "content": "def sort_list(lst): return sorted(lst)",
+                "language": "python",
+                "requirements": "Add error handling and type hints",
+                "llm_provider": "openai",
+                "llm_model": "gpt-4o-mini"
+            }
+        )
+        
+        if success and 'generated_content' in response:
+            generated = response['generated_content']
+            if 'try' in generated or 'except' in generated or ':' in generated:
+                print("   ✅ Code enhancement appears successful")
+        
+        return success
+
 def main():
     print("🚀 Starting SQL to Snowflake Converter API Tests")
     print("=" * 60)
