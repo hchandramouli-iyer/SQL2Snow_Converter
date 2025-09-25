@@ -291,6 +291,91 @@ function App() {
             </CardContent>
           </Card>
 
+          {/* Advanced Instructions Section */}
+          <Card className="mb-6">
+            <Collapsible open={showAdvancedOptions} onOpenChange={setShowAdvancedOptions}>
+              <CollapsibleTrigger asChild>
+                <CardHeader className="cursor-pointer hover:bg-gray-50 transition-colors">
+                  <CardTitle className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Settings className="h-5 w-5" />
+                      Advanced Options & Instructions
+                    </div>
+                    <ChevronDown className={`h-4 w-4 transition-transform ${showAdvancedOptions ? 'rotate-180' : ''}`} />
+                  </CardTitle>
+                  <CardDescription>
+                    Configure target database settings and provide custom conversion instructions
+                  </CardDescription>
+                </CardHeader>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <CardContent className="pt-0">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Target Database Name</label>
+                      <Input
+                        placeholder="e.g., PROD_DB, ANALYTICS_DB"
+                        value={targetDatabaseName}
+                        onChange={(e) => setTargetDatabaseName(e.target.value)}
+                        data-testid="target-database-input"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">Will add USE DATABASE statement</p>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Target Schema Name</label>
+                      <Input
+                        placeholder="e.g., PUBLIC, STAGING, PROD"
+                        value={targetSchemaName}
+                        onChange={(e) => setTargetSchemaName(e.target.value)}
+                        data-testid="target-schema-input"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">Will qualify table names with schema</p>
+                    </div>
+                  </div>
+                  
+                  <div className="mb-4">
+                    <label className="text-sm font-medium mb-2 block">Custom Instructions</label>
+                    <Textarea
+                      placeholder="e.g., Use warehouse COMPUTE_WH, Add clustering on date columns, Apply partitioning by year..."
+                      value={customInstructions}
+                      onChange={(e) => setCustomInstructions(e.target.value)}
+                      className="min-h-[80px]"
+                      data-testid="custom-instructions-textarea"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Provide specific requirements like warehouse settings, clustering, partitioning, etc.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex items-center justify-between p-3 border rounded-lg">
+                      <div>
+                        <label className="text-sm font-medium">Include Comments</label>
+                        <p className="text-xs text-gray-500">Preserve original comments in converted SQL</p>
+                      </div>
+                      <Switch
+                        checked={includeComments}
+                        onCheckedChange={setIncludeComments}
+                        data-testid="include-comments-switch"
+                      />
+                    </div>
+                    <div className="flex items-center justify-between p-3 border rounded-lg">
+                      <div>
+                        <label className="text-sm font-medium">Preserve Case</label>
+                        <p className="text-xs text-gray-500">Keep original object name casing</p>
+                      </div>
+                      <Switch
+                        checked={preserveCase}
+                        onCheckedChange={setPreserveCase}
+                        data-testid="preserve-case-switch"
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </CollapsibleContent>
+            </Collapsible>
+          </Card>
+
           {/* Input Methods */}
           <Card className="mb-6">
             <CardHeader>
