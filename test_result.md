@@ -183,8 +183,7 @@
 
 ## test_plan:
   current_focus:
-    - "Enhanced Visual Effects Implementation"
-    - "CodeCraft AI Brand Enhancement"
+    - "ER Diagram Frontend Implementation"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
