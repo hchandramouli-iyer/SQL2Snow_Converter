@@ -60,7 +60,7 @@ function App() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [language, setLanguage] = useState('');
   const [targetLanguage, setTargetLanguage] = useState('');
-  const [framework, setFramework] = useState('');
+  const [framework, setFramework] = useState('none');
   const [requirements, setRequirements] = useState('');
   const [llmProvider, setLlmProvider] = useState('openai');
   const [llmModel, setLlmModel] = useState('gpt-4o-mini');
