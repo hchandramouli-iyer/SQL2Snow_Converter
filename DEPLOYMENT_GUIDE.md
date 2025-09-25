@@ -128,33 +128,43 @@ npm run deploy
 
 ### **Phase 5: GitHub Actions Automation**
 
-Automated deployment workflow for continuous integration:
+Automated deployment workflow for continuous integration. **Note**: The project uses Yarn, so the workflow is configured accordingly:
+
 ```yaml
 # .github/workflows/deploy.yml
-name: Deploy CodeCraft AI
+name: Deploy CodeCraft AI to GitHub Pages
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
+          cache: 'yarn'
+          cache-dependency-path: frontend/yarn.lock
       - name: Install and Build
         run: |
           cd frontend
-          npm install
-          npm run build
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+          yarn install --frozen-lockfile
+          yarn build
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./frontend/build
+          path: './frontend/build'
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
 ```
+
+**Troubleshooting**: If you encounter cache dependency errors, use the backup workflow in `.github/workflows/deploy-no-cache.yml`
 
 ## 🔧 Configuration Files
 
