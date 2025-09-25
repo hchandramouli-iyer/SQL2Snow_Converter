@@ -828,9 +828,11 @@ def main():
     
     # Calculate category success rates
     sql_passed = sum(1 for _, result in sql_tests if result)
+    er_passed = sum(1 for _, result in er_tests if result)
     ai_passed = sum(1 for _, result in ai_tests if result)
     
     print(f"🔧 SQL Tests: {sql_passed}/{len(sql_tests)} passed ({(sql_passed/len(sql_tests)*100):.1f}%)")
+    print(f"📊 ER Diagram Tests: {er_passed}/{len(er_tests)} passed ({(er_passed/len(er_tests)*100):.1f}%)")
     print(f"🤖 AI Tests: {ai_passed}/{len(ai_tests)} passed ({(ai_passed/len(ai_tests)*100):.1f}%)")
     
     if success_rate >= 80:
