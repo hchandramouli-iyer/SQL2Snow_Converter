@@ -758,6 +758,136 @@ CREATE TABLE users (
               </Card>
             )}
           </div>
+        ) : activeMode === AI_TOOLS.ER_DIAGRAM ? (
+          <div className="space-y-6">
+            {/* ER Diagram Input */}
+            <Card className="professional-card">
+              <CardHeader className="card-header-professional">
+                <CardTitle className="card-title-professional">
+                  <Network className="h-5 w-5" />
+                  SQL Input Configuration
+                </CardTitle>
+                <CardDescription className="card-description-professional">
+                  Provide CREATE TABLE statements from your SQL database to generate an interactive ER diagram
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="card-content-professional">
+                <div className="grid grid-2 gap-6 mb-6">
+                  <div className="form-group">
+                    <label className="form-label">Database Type</label>
+                    <Select value={erDatabaseType} onValueChange={setErDatabaseType}>
+                      <SelectTrigger className="form-select">
+                        <SelectValue placeholder="Select database type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="mysql">MySQL</SelectItem>
+                        <SelectItem value="postgresql">PostgreSQL</SelectItem>
+                        <SelectItem value="sqlserver">SQL Server</SelectItem>
+                        <SelectItem value="oracle">Oracle</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Upload SQL File (Optional)</label>
+                    <Input
+                      type="file"
+                      accept=".sql,.txt"
+                      onChange={(e) => setErSelectedFile(e.target.files[0])}
+                      className="form-input"
+                    />
+                  </div>
+                </div>
+                
+                <div className="form-group">
+                  <label className="form-label">SQL CREATE TABLE Statements</label>
+                  <Textarea
+                    placeholder="Paste your CREATE TABLE statements here...
+
+Example:
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE orders (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    total DECIMAL(10,2),
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);"
+                    value={erSqlInput}
+                    onChange={(e) => setErSqlInput(e.target.value)}
+                    className="form-textarea"
+                    style={{ minHeight: '300px' }}
+                  />
+                </div>
+                
+                <div className="flex gap-4 mt-6">
+                  <Button 
+                    onClick={handleErDiagramGenerate}
+                    disabled={isGeneratingDiagram || !erSqlInput.trim()}
+                    className="btn-primary"
+                  >
+                    {isGeneratingDiagram ? (
+                      <>
+                        <div className="loading-spinner"></div>
+                        Generating Diagram...
+                      </>
+                    ) : (
+                      <>
+                        <Network className="h-5 w-5" />
+                        Generate ER Diagram
+                      </>
+                    )}
+                  </Button>
+                  
+                  {erSelectedFile && (
+                    <Button 
+                      onClick={handleErFileUpload}
+                      disabled={isGeneratingDiagram}
+                      className="btn-secondary"
+                    >
+                      {isGeneratingDiagram ? (
+                        <>
+                          <div className="loading-spinner"></div>
+                          Processing File...
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="h-5 w-5" />
+                          Process File
+                        </>
+                      )}
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* ER Diagram Visualization */}
+            {erDiagramData && (
+              <Card className="professional-card animate-fade-in">
+                <CardHeader className="card-header-professional">
+                  <CardTitle className="card-title-professional text-green-600">
+                    <Network className="h-5 w-5" />
+                    Interactive ER Diagram
+                  </CardTitle>
+                  <CardDescription className="card-description-professional">
+                    Interactive diagram with {erDiagramData.tables?.length || 0} tables and {erDiagramData.relationships?.length || 0} relationships. 
+                    Use mouse to zoom, pan, and click on elements for details.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="card-content-professional">
+                  <div className="er-diagram-container">
+                    <ERDiagramVisualization diagramData={erDiagramData} />
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
         ) : activeMode === AI_TOOLS.CHAT ? (
           <Card className="professional-card">
             <CardHeader className="card-header-professional">
