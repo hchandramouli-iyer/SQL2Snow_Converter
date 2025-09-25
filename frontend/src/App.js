@@ -322,6 +322,7 @@ function App() {
   const getToolTitle = (tool) => {
     const titles = {
       [AI_TOOLS.SQL_CONVERTER]: "SQL to Snowflake Converter",
+      [AI_TOOLS.ER_DIAGRAM]: "ER Diagram Generator",
       [AI_TOOLS.CODE_GENERATOR]: "AI Code Generator",
       [AI_TOOLS.CODE_ASSISTANT]: "Code Assistant & Debugger", 
       [AI_TOOLS.CODE_CONVERTER]: "Language Converter",
