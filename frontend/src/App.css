@@ -286,14 +286,21 @@ body::before {
 }
 
 .hero-title {
-  font-size: 3rem;
-  font-weight: 800;
+  font-size: 3.5rem;
+  font-weight: 900;
   line-height: 1.1;
   color: var(--gray-900);
   margin-bottom: 1rem;
-  background: linear-gradient(135deg, var(--gray-900) 0%, var(--gray-700) 100%);
+  background: linear-gradient(135deg, var(--gray-900) 0%, var(--primary-700) 50%, var(--gray-700) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  animation: titleGradient 4s ease-in-out infinite;
+  position: relative;
+}
+
+@keyframes titleGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 .hero-subtitle {
@@ -303,6 +310,18 @@ body::before {
   max-width: 48rem;
   margin: 0 auto 3rem;
   line-height: 1.6;
+  animation: fadeInUp 0.8s ease-out 0.3s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Professional Cards */
