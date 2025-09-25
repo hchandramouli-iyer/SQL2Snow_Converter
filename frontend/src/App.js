@@ -1087,7 +1087,7 @@ CREATE TABLE orders (
               <Card className="professional-card animate-fade-in">
                 <CardHeader className="card-header-professional">
                   <CardTitle className="card-title-professional text-green-600">
-                    <Network className="h-5 w-5" />
+                    <NetworkIcon className="h-5 w-5" />
                     Interactive ER Diagram
                   </CardTitle>
                   <CardDescription className="card-description-professional">
