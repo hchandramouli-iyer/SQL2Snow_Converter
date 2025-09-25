@@ -354,6 +354,7 @@ function App() {
   const getToolDescription = (tool) => {
     const descriptions = {
       [AI_TOOLS.SQL_CONVERTER]: "Transform SQL from MySQL, PostgreSQL, SQL Server, and Oracle to Snowflake-compatible syntax with advanced configuration options",
+      [AI_TOOLS.ER_DIAGRAM]: "Generate interactive Entity-Relationship diagrams from CREATE TABLE statements with clickable elements, zoom, pan, and export capabilities",
       [AI_TOOLS.CODE_GENERATOR]: "Generate efficient, clean, and custom code snippets based on your requirements with AI-powered assistance",
       [AI_TOOLS.CODE_ASSISTANT]: "Get instant help fixing bugs, improving code quality, debugging issues, and adding new features to your codebase",
       [AI_TOOLS.CODE_CONVERTER]: "Convert code seamlessly between different programming languages and frameworks while preserving functionality",
