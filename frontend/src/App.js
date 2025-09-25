@@ -207,7 +207,7 @@ function App() {
         content: aiInput,
         language: language || null,
         target_language: targetLanguage || null,
-        framework: framework || null,
+        framework: framework && framework !== 'none' ? framework : null,
         requirements: requirements || null,
         llm_provider: llmProvider,
         llm_model: llmModel,
