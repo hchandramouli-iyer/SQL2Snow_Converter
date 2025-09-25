@@ -38,6 +38,219 @@ const AI_TOOLS = {
   CHAT: "chat"
 };
 
+// ER Diagram Visualization Component
+const ERDiagramVisualization = ({ diagramData }) => {
+  const containerRef = useRef(null);
+  const networkRef = useRef(null);
+
+  useEffect(() => {
+    if (!diagramData || !containerRef.current) return;
+
+    // Prepare nodes (tables)
+    const nodes = new DataSet(
+      diagramData.tables.map(table => ({
+        id: table.name,
+        label: createTableLabel(table),
+        shape: 'box',
+        color: {
+          background: '#ffffff',
+          border: '#2563eb',
+          highlight: {
+            background: '#eff6ff',
+            border: '#1d4ed8'
+          }
+        },
+        font: {
+          face: 'monospace',
+          size: 12,
+          align: 'left'
+        },
+        margin: 10,
+        widthConstraint: { minimum: 200, maximum: 300 },
+        x: table.x || undefined,
+        y: table.y || undefined
+      }))
+    );
+
+    // Prepare edges (relationships)
+    const edges = new DataSet(
+      diagramData.relationships.map((rel, index) => ({
+        id: index,
+        from: rel.from_table,
+        to: rel.to_table,
+        label: `${rel.from_column} → ${rel.to_column}`,
+        arrows: 'to',
+        color: {
+          color: '#6b7280',
+          highlight: '#374151'
+        },
+        font: {
+          size: 10,
+          color: '#4b5563'
+        },
+        smooth: {
+          type: 'continuous'
+        }
+      }))
+    );
+
+    // Network options
+    const options = {
+      layout: {
+        improvedLayout: true,
+        randomSeed: 2
+      },
+      physics: {
+        enabled: true,
+        stabilization: {
+          enabled: true,
+          iterations: 200
+        },
+        barnesHut: {
+          gravitationalConstant: -2000,
+          centralGravity: 0.3,
+          springLength: 200,
+          springConstant: 0.04
+        }
+      },
+      nodes: {
+        borderWidth: 2,
+        shadow: true,
+        chosen: true
+      },
+      edges: {
+        width: 2,
+        shadow: true,
+        smooth: true
+      },
+      interaction: {
+        dragNodes: true,
+        dragView: true,
+        zoomView: true,
+        selectConnectedEdges: true,
+        hover: true
+      }
+    };
+
+    // Create network
+    networkRef.current = new Network(containerRef.current, { nodes, edges }, options);
+
+    // Add click event listener
+    networkRef.current.on('click', (event) => {
+      if (event.nodes.length > 0) {
+        const nodeId = event.nodes[0];
+        const table = diagramData.tables.find(t => t.name === nodeId);
+        if (table) {
+          showTableDetails(table);
+        }
+      }
+    });
+
+    // Cleanup
+    return () => {
+      if (networkRef.current) {
+        networkRef.current.destroy();
+        networkRef.current = null;
+      }
+    };
+  }, [diagramData]);
+
+  const createTableLabel = (table) => {
+    let label = `📊 ${table.name}\n${'─'.repeat(Math.max(20, table.name.length + 4))}\n`;
+    
+    table.columns.forEach(column => {
+      let icon = '📄';
+      if (column.is_primary_key) icon = '🔑';
+      else if (column.is_foreign_key) icon = '🔗';
+      
+      const nullable = column.is_nullable ? '' : ' NOT NULL';
+      label += `${icon} ${column.name}: ${column.data_type}${nullable}\n`;
+    });
+
+    return label;
+  };
+
+  const showTableDetails = (table) => {
+    const details = `
+Table: ${table.name}
+Columns: ${table.columns.length}
+
+Column Details:
+${table.columns.map(col => 
+  `• ${col.name} (${col.data_type})${col.is_primary_key ? ' [PK]' : ''}${col.is_foreign_key ? ' [FK]' : ''}${!col.is_nullable ? ' [NOT NULL]' : ''}`
+).join('\n')}
+    `;
+    
+    alert(details.trim());
+  };
+
+  const exportDiagram = (format) => {
+    if (!networkRef.current) return;
+
+    if (format === 'png') {
+      const canvas = networkRef.current.canvas.getContext().canvas;
+      const link = document.createElement('a');
+      link.download = 'er-diagram.png';
+      link.href = canvas.toDataURL();
+      link.click();
+    } else if (format === 'svg') {
+      // For SVG export, we'd need additional libraries
+      alert('SVG export requires additional setup. PNG export is available.');
+    }
+  };
+
+  return (
+    <div className="er-diagram-wrapper">
+      <div className="er-diagram-controls mb-4">
+        <div className="flex gap-2">
+          <Button onClick={() => exportDiagram('png')} className="btn-secondary">
+            <Download className="h-4 w-4" />
+            Export PNG
+          </Button>
+          <Button onClick={() => networkRef.current?.fit()} className="btn-secondary">
+            Fit to View
+          </Button>
+          <Button onClick={() => networkRef.current?.redraw()} className="btn-secondary">
+            Refresh
+          </Button>
+        </div>
+      </div>
+      <div 
+        ref={containerRef} 
+        className="er-diagram-canvas"
+        style={{ 
+          width: '100%', 
+          height: '600px', 
+          border: '1px solid #e5e7eb',
+          borderRadius: '8px',
+          background: '#fafafa'
+        }}
+      />
+      <div className="er-diagram-legend mt-4">
+        <div className="text-sm text-gray-600">
+          <div className="grid grid-3 gap-4">
+            <div className="flex items-center gap-2">
+              <span>🔑</span>
+              <span>Primary Key</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span>🔗</span>
+              <span>Foreign Key</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span>📄</span>
+              <span>Regular Column</span>
+            </div>
+          </div>
+          <p className="mt-2 text-xs">
+            💡 Click on tables for detailed information. Use mouse to zoom and pan around the diagram.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 function App() {
   const [activeMode, setActiveMode] = useState(AI_TOOLS.SQL_CONVERTER);
   
