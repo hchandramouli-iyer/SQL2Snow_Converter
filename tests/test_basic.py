@@ -86,7 +86,9 @@ class TestAIAssistant:
         from server import AIAssistant
         assistant = AIAssistant()
         assert assistant is not None
-        assert hasattr(assistant, 'available_models')
-        assert 'openai' in assistant.available_models
-        assert 'anthropic' in assistant.available_models
-        assert 'gemini' in assistant.available_models
+        assert hasattr(assistant, 'api_key')
+        assert hasattr(assistant, 'get_system_message')
+        # Test that get_system_message method works
+        message = assistant.get_system_message('code_generator')
+        assert message is not None
+        assert isinstance(message, str)
