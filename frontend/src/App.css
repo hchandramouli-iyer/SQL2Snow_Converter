@@ -367,6 +367,7 @@ body::before {
 .card-header-professional {
   padding: 2rem 2rem 1rem;
   border-bottom: 1px solid var(--gray-100);
+  position: relative;
 }
 
 .card-content-professional {
@@ -381,6 +382,7 @@ body::before {
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 0.5rem;
+  position: relative;
 }
 
 .card-description-professional {
