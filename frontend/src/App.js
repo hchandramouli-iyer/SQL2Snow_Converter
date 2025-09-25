@@ -77,6 +77,21 @@ function App() {
     gemini: ['gemini-2.0-flash', 'gemini-1.5-pro']
   });
 
+  // Programming languages and frameworks
+  const programmingLanguages = [
+    'JavaScript', 'TypeScript', 'Python', 'Java', 'C#', 'C++', 'C', 'Go', 'Rust',
+    'PHP', 'Ruby', 'Swift', 'Kotlin', 'Scala', 'R', 'MATLAB', 'HTML', 'CSS',
+    'SQL', 'Bash/Shell', 'PowerShell', 'Dart', 'Elixir', 'Haskell', 'Lua', 'Perl'
+  ];
+
+  const frameworks = [
+    'React', 'Angular', 'Vue.js', 'Next.js', 'Nuxt.js', 'Svelte', 'Express.js', 'Node.js',
+    'Django', 'Flask', 'FastAPI', 'Spring Boot', 'ASP.NET', 'Laravel', 'Ruby on Rails',
+    'React Native', 'Flutter', 'Xamarin', 'Unity', 'TensorFlow', 'PyTorch', 'Pandas',
+    'NumPy', 'jQuery', 'Bootstrap', 'Tailwind CSS', 'Material UI', 'Ant Design',
+    'Electron', 'Ionic', 'Cordova', 'GraphQL', 'Apollo', 'Redux', 'Vuex', 'MobX'
+  ];
+
   const { toast } = useToast();
 
   // Sample SQL for different databases
