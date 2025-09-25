@@ -722,7 +722,7 @@ body::before {
   color: var(--warning-800);
 }
 
-/* Loading States */
+/* Enhanced Loading States */
 .loading-spinner {
   display: inline-block;
   width: 1.25rem;
@@ -730,33 +730,57 @@ body::before {
   border: 2px solid var(--gray-300);
   border-top: 2px solid var(--primary-600);
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: spinGlow 1s linear infinite;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+@keyframes spinGlow {
+  0% { 
+    transform: rotate(0deg); 
+    box-shadow: 0 0 5px var(--primary-400);
+  }
+  100% { 
+    transform: rotate(360deg); 
+    box-shadow: 0 0 10px var(--primary-600);
+  }
 }
 
-/* Professional Badge */
+/* Enhanced Professional Badge */
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: 0.375rem 0.75rem;
+  padding: 0.5rem 1rem;
   font-size: 0.75rem;
   font-weight: 600;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   border: 1px solid;
+  position: relative;
+  overflow: hidden;
+}
+
+.badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: badgeGlow 2s infinite;
+}
+
+@keyframes badgeGlow {
+  0% { left: -100%; }
+  100% { left: 100%; }
 }
 
 .badge-primary {
-  background: var(--primary-50);
+  background: linear-gradient(135deg, var(--primary-50), var(--primary-100));
   color: var(--primary-700);
   border-color: var(--primary-200);
 }
 
 .badge-secondary {
-  background: var(--gray-100);
+  background: linear-gradient(135deg, var(--gray-100), var(--gray-200));
   color: var(--gray-700);
   border-color: var(--gray-300);
 }
