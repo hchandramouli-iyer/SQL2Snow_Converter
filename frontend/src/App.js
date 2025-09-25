@@ -771,7 +771,7 @@ CREATE TABLE users (
                           <SelectValue placeholder="Select framework" />
                         </SelectTrigger>
                         <SelectContent className="max-h-60">
-                          <SelectItem value="">No specific framework</SelectItem>
+                          <SelectItem value="none">No specific framework</SelectItem>
                           {frameworks.map((fw) => (
                             <SelectItem key={fw} value={fw.toLowerCase()}>{fw}</SelectItem>
                           ))}
