@@ -91,7 +91,12 @@ function App() {
       const response = await axios.post(`${API}/convert`, {
         sql_content: sqlInput,
         source_database: sourceDatabase,
-        conversion_type: 'basic'
+        conversion_type: 'basic',
+        target_database_name: targetDatabaseName || null,
+        target_schema_name: targetSchemaName || null,
+        custom_instructions: customInstructions || null,
+        include_comments: includeComments,
+        preserve_case: preserveCase
       });
 
       setConvertedSql(response.data.converted_sql);
