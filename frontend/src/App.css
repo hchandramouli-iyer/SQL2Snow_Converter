@@ -586,7 +586,7 @@ body::before {
   z-index: 1;
 }
 
-/* Professional Form Controls */
+/* Enhanced Professional Form Controls */
 .form-group {
   margin-bottom: 1.5rem;
 }
@@ -601,18 +601,20 @@ body::before {
 
 .form-input, .form-select, .form-textarea {
   width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--gray-300);
-  border-radius: var(--radius-md);
+  padding: 0.875rem 1rem;
+  border: 2px solid var(--gray-300);
+  border-radius: var(--radius-lg);
   font-size: 0.95rem;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background: white;
+  position: relative;
 }
 
 .form-input:focus, .form-select:focus, .form-textarea:focus {
   outline: none;
   border-color: var(--primary-500);
-  box-shadow: 0 0 0 3px var(--primary-100);
+  box-shadow: 0 0 0 4px var(--primary-100);
+  transform: translateY(-1px);
 }
 
 .form-textarea {
