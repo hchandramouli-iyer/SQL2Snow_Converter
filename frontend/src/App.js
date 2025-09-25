@@ -362,108 +362,150 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Brain className="h-8 w-8 text-blue-600" />
-            <div className="bg-blue-600 text-white px-3 py-1 rounded-lg font-semibold">AI Coding Assistant</div>
-          </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">AI-Powered Development Tools</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Complete suite of AI tools for code generation, conversion, enhancement, and SQL transformation
-          </p>
-        </div>
-
-        {/* Tool Selection */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Cpu className="h-5 w-5" />
-              Select AI Tool
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-              {Object.values(AI_TOOLS).map((tool) => (
-                <Button
-                  key={tool}
-                  variant={activeMode === tool ? "default" : "outline"}
-                  onClick={() => setActiveMode(tool)}
-                  className="flex flex-col items-center gap-2 h-auto py-4 text-xs hover:shadow-md transition-all"
-                  data-testid={`tool-${tool}`}
-                >
-                  {getToolIcon(tool)}
-                  <span className="text-center leading-tight font-medium">
-                    {getToolShortName(tool)}
-                  </span>
-                </Button>
-              ))}
+    <div className="min-h-screen">
+      {/* Professional Header */}
+      <header className="app-header">
+        <div className="container">
+          <div className="text-center">
+            <div className="brand-section">
+              <div className="brand-icon">
+                <Brain className="h-6 w-6" />
+              </div>
+              <div className="brand-text">CodeCraft AI</div>
             </div>
-          </CardContent>
-        </Card>
+            <h1 className="hero-title">AI-Powered Development Suite</h1>
+            <p className="hero-subtitle">
+              Professional-grade AI tools for code generation, conversion, enhancement, and SQL transformation. 
+              Streamline your development workflow with intelligent automation.
+            </p>
+          </div>
+        </div>
+      </header>
 
-        {/* AI Model Selection */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Settings className="h-5 w-5" />
+      {/* Main Content */}
+      <main className="container" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+        {/* AI Configuration Panel */}
+        <div className="professional-card">
+          <div className="card-header-professional">
+            <h2 className="card-title-professional">
+              <Settings className="h-6 w-6" />
               AI Configuration
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label className="text-sm font-medium mb-2 block">LLM Provider</label>
+            </h2>
+            <p className="card-description-professional">
+              Configure your AI assistant with preferred provider and model for optimal results
+            </p>
+          </div>
+          <div className="card-content-professional">
+            <div className="grid grid-3 gap-6">
+              <div className="form-group">
+                <label className="form-label">AI Provider</label>
                 <Select value={llmProvider} onValueChange={setLlmProvider}>
-                  <SelectTrigger data-testid="llm-provider-select">
-                    <SelectValue placeholder="Select provider" />
+                  <SelectTrigger className="form-select" data-testid="llm-provider-select">
+                    <SelectValue placeholder="Select AI provider" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="openai">OpenAI</SelectItem>
-                    <SelectItem value="anthropic">Anthropic (Claude)</SelectItem>
-                    <SelectItem value="gemini">Google (Gemini)</SelectItem>
+                    <SelectItem value="openai">
+                      <div className="flex items-center gap-2">
+                        <div className="status-dot status-online"></div>
+                        OpenAI (GPT)
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="anthropic">
+                      <div className="flex items-center gap-2">
+                        <div className="status-dot status-online"></div>
+                        Anthropic (Claude)
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="gemini">
+                      <div className="flex items-center gap-2">
+                        <div className="status-dot status-online"></div>
+                        Google (Gemini)
+                      </div>
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
-              <div>
-                <label className="text-sm font-medium mb-2 block">Model</label>
+              
+              <div className="form-group">
+                <label className="form-label">Model Version</label>
                 <Select value={llmModel} onValueChange={setLlmModel}>
-                  <SelectTrigger data-testid="llm-model-select">
+                  <SelectTrigger className="form-select" data-testid="llm-model-select">
                     <SelectValue placeholder="Select model" />
                   </SelectTrigger>
                   <SelectContent>
                     {availableModels[llmProvider]?.map((model) => (
-                      <SelectItem key={model} value={model}>{model}</SelectItem>
+                      <SelectItem key={model} value={model}>
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-sm">{model}</span>
+                          {model.includes('gpt-5') || model.includes('claude-4') || model.includes('2.0') ? (
+                            <span className="badge badge-primary text-xs">Latest</span>
+                          ) : null}
+                        </div>
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex items-end">
+
+              <div className="form-group">
+                <label className="form-label">Actions</label>
                 <Button 
                   variant="outline" 
                   onClick={clearAll}
-                  className="w-full"
+                  className="btn-secondary w-full"
                   data-testid="clear-all-btn"
                 >
-                  <RefreshCw className="h-4 w-4 mr-2" />
-                  Clear All
+                  <RefreshCw className="h-4 w-4" />
+                  Reset All Fields
                 </Button>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        {/* Current Tool Description */}
-        <Alert className="mb-6">
+        {/* Tool Selection */}
+        <div className="professional-card">
+          <div className="card-header-professional">
+            <h2 className="card-title-professional">
+              <Cpu className="h-6 w-6" />
+              Development Tools
+            </h2>
+            <p className="card-description-professional">
+              Select from our comprehensive suite of AI-powered development tools
+            </p>
+          </div>
+          <div className="card-content-professional">
+            <div className="tool-grid">
+              {Object.values(AI_TOOLS).map((tool) => (
+                <div
+                  key={tool}
+                  className={`tool-card ${activeMode === tool ? 'active' : ''}`}
+                  onClick={() => setActiveMode(tool)}
+                  data-testid={`tool-${tool}`}
+                >
+                  <div className="tool-icon">
+                    {getToolIcon(tool)}
+                  </div>
+                  <div className="tool-name">
+                    {getToolShortName(tool)}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Current Tool Information */}
+        <div className="alert alert-info animate-fade-in">
           <div className="flex items-center gap-2">
             {getToolIcon(activeMode)}
-            <AlertDescription className="font-medium">
-              {getToolTitle(activeMode)}: {getToolDescription(activeMode)}
-            </AlertDescription>
+            <div className="status-dot status-processing"></div>
           </div>
-        </Alert>
+          <div>
+            <div className="font-semibold">{getToolTitle(activeMode)}</div>
+            <div className="text-sm opacity-90">{getToolDescription(activeMode)}</div>
+          </div>
+        </div>
 
         {/* Tool-specific Content */}
         {activeMode === AI_TOOLS.SQL_CONVERTER ? (
