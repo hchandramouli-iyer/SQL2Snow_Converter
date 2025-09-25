@@ -391,12 +391,12 @@ function App() {
                   key={tool}
                   variant={activeMode === tool ? "default" : "outline"}
                   onClick={() => setActiveMode(tool)}
-                  className="flex flex-col items-center gap-2 h-auto py-3 text-xs"
+                  className="flex flex-col items-center gap-2 h-auto py-4 text-xs hover:shadow-md transition-all"
                   data-testid={`tool-${tool}`}
                 >
                   {getToolIcon(tool)}
-                  <span className="text-center leading-tight">
-                    {getToolTitle(tool).replace(/^(SQL to Snowflake |Code |Unit Test |Comment |AI Chat )/, '')}
+                  <span className="text-center leading-tight font-medium">
+                    {getToolShortName(tool)}
                   </span>
                 </Button>
               ))}
