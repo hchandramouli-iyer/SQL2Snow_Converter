@@ -425,137 +425,25 @@ body::before {
   position: relative;
 }
 
-/* Enhanced 3D Brand Icon */
+/* Clean Brand Icon */
 .brand-icon {
-  width: 4rem;
-  height: 4rem;
+  width: 3.5rem;
+  height: 3.5rem;
   background: linear-gradient(135deg, 
     rgba(59, 130, 246, 1) 0%,
-    rgba(147, 197, 253, 0.9) 25%,
-    rgba(168, 85, 247, 1) 50%,
-    rgba(236, 72, 153, 0.9) 75%,
-    rgba(59, 130, 246, 1) 100%
+    rgba(99, 102, 241, 1) 100%
   );
-  background-size: 400% 400%;
   border-radius: var(--radius-xl);
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  position: relative;
-  overflow: hidden;
   
-  /* Advanced 3D Effects */
-  transform-style: preserve-3d;
-  perspective: 1000px;
+  /* Clean shadow */
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
   
-  /* Enhanced Shadows */
-  box-shadow: 
-    0 15px 35px rgba(59, 130, 246, 0.4),
-    0 5px 15px rgba(168, 85, 247, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-  
-  /* Border */
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  
-  /* Animations */
-  animation: 
-    advanced3DPulse 3s ease-in-out infinite,
-    gradientRotate 8s linear infinite;
-}
-
-/* 3D Pulsing Animation */
-@keyframes advanced3DPulse {
-  0%, 100% { 
-    transform: perspective(1000px) scale(1) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
-    box-shadow: 
-      0 15px 35px rgba(59, 130, 246, 0.4),
-      0 5px 15px rgba(168, 85, 247, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  }
-  50% { 
-    transform: perspective(1000px) scale(1.08) rotateX(5deg) rotateY(5deg) rotateZ(2deg);
-    box-shadow: 
-      0 20px 45px rgba(59, 130, 246, 0.5),
-      0 8px 25px rgba(168, 85, 247, 0.4),
-      inset 0 1px 0 rgba(255, 255, 255, 0.4);
-  }
-}
-
-/* Gradient Rotation */
-@keyframes gradientRotate {
-  0% { background-position: 0% 50%; }
-  25% { background-position: 50% 100%; }
-  50% { background-position: 100% 50%; }
-  75% { background-position: 50% 0%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* Holographic Shine Effect */
-.brand-icon::before {
-  content: '';
-  position: absolute;
-  top: -100%;
-  left: -100%;
-  width: 300%;
-  height: 300%;
-  background: conic-gradient(
-    from 0deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
-  animation: holographicSpin 4s linear infinite;
-  pointer-events: none;
-}
-
-@keyframes holographicSpin {
-  0% { transform: rotate(0deg) scale(0.8); }
-  100% { transform: rotate(360deg) scale(1.2); }
-}
-
-/* Inner Glow Effect */
-.brand-icon::after {
-  content: '';
-  position: absolute;
-  top: 10%;
-  left: 10%;
-  right: 10%;
-  bottom: 10%;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle at 30% 30%,
-    rgba(255, 255, 255, 0.4) 0%,
-    rgba(255, 255, 255, 0.1) 50%,
-    transparent 100%
-  );
-  animation: innerGlow 2s ease-in-out infinite alternate;
-  pointer-events: none;
-}
-
-@keyframes innerGlow {
-  0% { opacity: 0.3; transform: scale(0.8); }
-  100% { opacity: 0.7; transform: scale(1.1); }
-}
-
-/* Icon SVG Enhancement */
-.brand-icon svg {
-  position: relative;
-  z-index: 2;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-  animation: iconFloat 4s ease-in-out infinite;
-}
-
-@keyframes iconFloat {
-  0%, 100% { 
-    transform: translateY(0px) rotate(0deg); 
-  }
-  50% { 
-    transform: translateY(-2px) rotate(5deg); 
-  }
+  /* Simple border */
+  border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 /* Clean and Visible CodeCraft AI Brand Text */
