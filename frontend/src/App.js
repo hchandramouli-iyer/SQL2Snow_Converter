@@ -364,6 +364,15 @@ function App() {
 
   return (
     <div className="min-h-screen">
+      {/* Floating Geometric Shapes */}
+      <div className="floating-shapes">
+        <div className="floating-shape"></div>
+        <div className="floating-shape"></div>
+        <div className="floating-shape"></div>
+        <div className="floating-shape"></div>
+        <div className="floating-shape"></div>
+      </div>
+      
       {/* Professional Header */}
       <header className="app-header">
         <div className="container">
