@@ -566,8 +566,8 @@ class SQLConverterAPITester:
         return success
 
 def main():
-    print("🚀 Starting SQL to Snowflake Converter API Tests")
-    print("=" * 60)
+    print("🚀 Starting AI-Powered SQL Converter & Coding Assistant API Tests")
+    print("=" * 70)
     
     tester = SQLConverterAPITester()
     
@@ -576,6 +576,9 @@ def main():
     
     # Basic API tests
     test_results.append(("Root Endpoint", tester.test_root_endpoint()))
+    
+    # AI Model availability
+    test_results.append(("AI Models Endpoint", tester.test_ai_models_endpoint()))
     
     # Database conversion tests
     test_results.append(("MySQL Conversion", tester.test_mysql_conversion()))
@@ -587,23 +590,59 @@ def main():
     test_results.append(("File Upload Conversion", tester.test_file_conversion()))
     test_results.append(("Download Conversion", tester.test_download_conversion()))
     
+    # AI Tool Processing Tests
+    test_results.append(("AI Code Generator", tester.test_ai_code_generator()))
+    test_results.append(("AI Code Assistant", tester.test_ai_code_assistant()))
+    test_results.append(("AI Code Converter", tester.test_ai_code_converter()))
+    test_results.append(("AI Code Explainer", tester.test_ai_code_explainer()))
+    test_results.append(("AI Code Enhancer", tester.test_ai_code_enhancer()))
+    test_results.append(("AI Comment Generator", tester.test_ai_comment_generator()))
+    test_results.append(("AI Unit Test Generator", tester.test_ai_unit_test_generator()))
+    
+    # Chat functionality with session management
+    test_results.append(("AI Chat Endpoint", tester.test_ai_chat_endpoint()))
+    test_results.append(("AI Simple Chat Endpoint", tester.test_ai_chat_simple_endpoint()))
+    test_results.append(("AI Chat History", tester.test_ai_chat_history()))
+    
     # History and edge cases
     test_results.append(("Conversion History", tester.test_conversion_history()))
     test_results.append(("Invalid Database", tester.test_invalid_database()))
     test_results.append(("Empty SQL", tester.test_empty_sql()))
     
     # Print final results
-    print("\n" + "=" * 60)
+    print("\n" + "=" * 70)
     print("📊 TEST RESULTS SUMMARY")
-    print("=" * 60)
+    print("=" * 70)
     
-    for test_name, result in test_results:
+    # Group results by category
+    sql_tests = [("Root Endpoint", test_results[0][1]), ("MySQL Conversion", test_results[2][1]), 
+                 ("PostgreSQL Conversion", test_results[3][1]), ("SQL Server Conversion", test_results[4][1]),
+                 ("Oracle Conversion", test_results[5][1]), ("File Upload Conversion", test_results[6][1]),
+                 ("Download Conversion", test_results[7][1]), ("Conversion History", test_results[-3][1]),
+                 ("Invalid Database", test_results[-2][1]), ("Empty SQL", test_results[-1][1])]
+    
+    ai_tests = [("AI Models Endpoint", test_results[1][1])] + test_results[8:15]
+    
+    print("\n🔧 SQL CONVERSION TESTS:")
+    for test_name, result in sql_tests:
         status = "✅ PASS" if result else "❌ FAIL"
-        print(f"{status} {test_name}")
+        print(f"  {status} {test_name}")
+    
+    print("\n🤖 AI TOOL PROCESSING TESTS:")
+    for test_name, result in ai_tests:
+        status = "✅ PASS" if result else "❌ FAIL"
+        print(f"  {status} {test_name}")
     
     print(f"\n📈 Overall: {tester.tests_passed}/{tester.tests_run} tests passed")
     success_rate = (tester.tests_passed / tester.tests_run) * 100 if tester.tests_run > 0 else 0
     print(f"📊 Success Rate: {success_rate:.1f}%")
+    
+    # Calculate category success rates
+    sql_passed = sum(1 for _, result in sql_tests if result)
+    ai_passed = sum(1 for _, result in ai_tests if result)
+    
+    print(f"🔧 SQL Tests: {sql_passed}/{len(sql_tests)} passed ({(sql_passed/len(sql_tests)*100):.1f}%)")
+    print(f"🤖 AI Tests: {ai_passed}/{len(ai_tests)} passed ({(ai_passed/len(ai_tests)*100):.1f}%)")
     
     if success_rate >= 80:
         print("🎉 Backend API tests mostly successful!")
