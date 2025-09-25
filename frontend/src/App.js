@@ -1091,6 +1091,7 @@ CREATE TABLE users (
     </div>
   );
 }
-}
+
+export default App;
 
 export default App;
