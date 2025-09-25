@@ -13,7 +13,7 @@ This guide will help you deploy a fully functional CodeCraft AI platform with:
 ### **1. GitHub Repository Setup**
 ```bash
 # Create repository exactly named:
-Repository name: DataWhiz.github.io
+Repository name: codecraft-ai (under hchandramouli-iyer)
 Description: CodeCraft AI - AI-Powered Database Development Platform
 Public repository (required for GitHub Pages)
 ```
@@ -32,7 +32,7 @@ Public repository (required for GitHub Pages)
 ```bash
 1. Go to GitHub.com
 2. Click "New Repository"
-3. Repository name: DataWhiz.github.io
+3. Repository name: codecraft-ai (under hchandramouli-iyer)
 4. Description: "CodeCraft AI - AI-Powered Database Development Platform"
 5. Public repository
 6. Initialize with README
