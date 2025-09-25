@@ -94,6 +94,8 @@ function App() {
         sql_content: sqlInput,
         source_database: sourceDatabase,
         conversion_type: 'basic',
+        source_database_name: sourceDatabaseName || null,
+        source_schema_name: sourceSchemaName || null,
         target_database_name: targetDatabaseName || null,
         target_schema_name: targetSchemaName || null,
         custom_instructions: customInstructions || null,
