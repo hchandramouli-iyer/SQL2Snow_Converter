@@ -320,7 +320,6 @@ class SQLToSnowflakeConverter:
         if target_schema_name:
             # Replace table references with schema-qualified names
             # Simple pattern matching for CREATE TABLE statements
-            import re
             pattern = r'CREATE TABLE\s+(["`]?)(\w+)\1'
             replacement = rf'CREATE TABLE \1{target_schema_name}.\2\1'
             converted_sql = re.sub(pattern, replacement, converted_sql, flags=re.IGNORECASE)
