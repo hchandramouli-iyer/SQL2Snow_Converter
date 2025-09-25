@@ -419,6 +419,7 @@ class SQLConverterAPITester:
             "ai/chat",
             200,
             data={
+                "tool_type": "chat",  # Required field
                 "content": "Hello, can you help me with Python programming?",
                 "llm_provider": "openai",
                 "llm_model": "gpt-4o-mini"
