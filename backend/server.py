@@ -381,13 +381,21 @@ async def convert_sql_text(request: ConversionRequest):
     try:
         converted_sql, warnings = converter.convert_sql_to_snowflake(
             request.sql_content, 
-            request.source_database
+            request.source_database,
+            request.target_database_name,
+            request.target_schema_name,
+            request.custom_instructions,
+            request.include_comments,
+            request.preserve_case
         )
         
         response = ConversionResponse(
             original_sql=request.sql_content,
             converted_sql=converted_sql,
             source_database=request.source_database,
+            target_database_name=request.target_database_name,
+            target_schema_name=request.target_schema_name,
+            custom_instructions=request.custom_instructions,
             warnings=warnings
         )
         
