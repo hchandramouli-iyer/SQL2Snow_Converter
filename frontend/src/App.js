@@ -216,6 +216,11 @@ function App() {
     setWarnings([]);
     setConversionId('');
     setSelectedFile(null);
+    setTargetDatabaseName('');
+    setTargetSchemaName('');
+    setCustomInstructions('');
+    setIncludeComments(true);
+    setPreserveCase(false);
   };
 
   return (
