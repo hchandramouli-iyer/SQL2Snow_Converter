@@ -71,6 +71,13 @@ function App() {
   const [chatMessages, setChatMessages] = useState([]);
   const [chatInput, setChatInput] = useState('');
   
+  // ER Diagram state
+  const [erSqlInput, setErSqlInput] = useState('');
+  const [erSelectedFile, setErSelectedFile] = useState(null);
+  const [erDatabaseType, setErDatabaseType] = useState('mysql');
+  const [erDiagramData, setErDiagramData] = useState(null);
+  const [isGeneratingDiagram, setIsGeneratingDiagram] = useState(false);
+  
   // Available models
   const [availableModels, setAvailableModels] = useState({
     openai: ['gpt-4o-mini', 'gpt-4o', 'gpt-5', 'o1-mini'],
