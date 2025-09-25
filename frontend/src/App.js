@@ -176,7 +176,7 @@ function App() {
     } finally {
       setIsConverting(false);
     }
-  }, [sourceDatabase, targetDatabaseName, targetSchemaName, customInstructions, includeComments, preserveCase, toast]);
+  }, [sourceDatabase, sourceDatabaseName, sourceSchemaName, targetDatabaseName, targetSchemaName, customInstructions, includeComments, preserveCase, toast]);
 
   const handleDownload = async () => {
     if (!conversionId) {
