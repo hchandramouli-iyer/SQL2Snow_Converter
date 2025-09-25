@@ -557,6 +557,192 @@ class SQLConverterAPITester:
         
         return success
 
+    def test_er_diagram_generate(self):
+        """Test ER diagram generation from SQL text"""
+        sample_sql = """CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE orders (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    total DECIMAL(10,2),
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);"""
+
+        success, response = self.run_test(
+            "ER Diagram Generation from SQL Text",
+            "POST",
+            "er-diagram/generate",
+            200,
+            data={
+                "sql_content": sample_sql,
+                "database_type": "mysql"
+            }
+        )
+        
+        if success:
+            # Verify response structure
+            required_fields = ['id', 'tables', 'relationships', 'database_type', 'created_at']
+            missing_fields = [field for field in required_fields if field not in response]
+            
+            if not missing_fields:
+                print("   ✅ Response structure correct")
+                
+                # Check tables
+                if 'tables' in response and isinstance(response['tables'], list):
+                    tables = response['tables']
+                    table_names = [table['name'] for table in tables if 'name' in table]
+                    
+                    if 'users' in table_names and 'orders' in table_names:
+                        print("   ✅ Tables correctly parsed (users, orders)")
+                        
+                        # Check table columns
+                        users_table = next((t for t in tables if t['name'] == 'users'), None)
+                        orders_table = next((t for t in tables if t['name'] == 'orders'), None)
+                        
+                        if users_table and 'columns' in users_table:
+                            user_columns = [col['name'] for col in users_table['columns']]
+                            if 'id' in user_columns and 'username' in user_columns:
+                                print("   ✅ Users table columns correctly parsed")
+                        
+                        if orders_table and 'columns' in orders_table:
+                            order_columns = [col['name'] for col in orders_table['columns']]
+                            if 'id' in order_columns and 'user_id' in order_columns:
+                                print("   ✅ Orders table columns correctly parsed")
+                    else:
+                        print(f"   ⚠️  Expected tables not found. Found: {table_names}")
+                
+                # Check relationships
+                if 'relationships' in response and isinstance(response['relationships'], list):
+                    relationships = response['relationships']
+                    if len(relationships) > 0:
+                        rel = relationships[0]
+                        if ('from_table' in rel and 'to_table' in rel and 
+                            rel['from_table'] == 'orders' and rel['to_table'] == 'users'):
+                            print("   ✅ Foreign key relationship correctly identified")
+                        else:
+                            print(f"   ⚠️  Relationship structure unexpected: {rel}")
+                    else:
+                        print("   ⚠️  No relationships found")
+                
+                # Store ER diagram ID for potential future tests
+                if 'id' in response:
+                    self.er_diagram_id = response['id']
+                    print(f"   ER Diagram ID: {self.er_diagram_id}")
+            else:
+                print(f"   ⚠️  Missing required fields: {missing_fields}")
+        
+        return success
+
+    def test_er_diagram_generate_file(self):
+        """Test ER diagram generation from uploaded SQL file"""
+        sample_sql = """CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE orders (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    total DECIMAL(10,2),
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE products (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    price DECIMAL(10,2),
+    category_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE order_items (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT,
+    product_id INT,
+    quantity INT DEFAULT 1,
+    price DECIMAL(10,2),
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);"""
+        
+        # Create a temporary SQL file
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.sql', delete=False) as temp_file:
+            temp_file.write(sample_sql)
+            temp_file_path = temp_file.name
+
+        try:
+            with open(temp_file_path, 'rb') as file:
+                files = {'file': ('er_test.sql', file, 'text/plain')}
+                data = {'database_type': 'mysql'}
+                
+                success, response = self.run_test(
+                    "ER Diagram Generation from SQL File",
+                    "POST",
+                    "er-diagram/generate-file",
+                    200,
+                    data=data,
+                    files=files
+                )
+                
+                if success:
+                    # Verify response structure
+                    required_fields = ['id', 'tables', 'relationships', 'database_type', 'created_at']
+                    missing_fields = [field for field in required_fields if field not in response]
+                    
+                    if not missing_fields:
+                        print("   ✅ File upload response structure correct")
+                        
+                        # Check tables
+                        if 'tables' in response and isinstance(response['tables'], list):
+                            tables = response['tables']
+                            table_names = [table['name'] for table in tables if 'name' in table]
+                            expected_tables = ['users', 'orders', 'products', 'order_items']
+                            
+                            found_tables = [name for name in expected_tables if name in table_names]
+                            if len(found_tables) == len(expected_tables):
+                                print(f"   ✅ All expected tables found: {found_tables}")
+                            else:
+                                print(f"   ⚠️  Expected {expected_tables}, found: {table_names}")
+                        
+                        # Check relationships
+                        if 'relationships' in response and isinstance(response['relationships'], list):
+                            relationships = response['relationships']
+                            if len(relationships) >= 3:  # Should have at least 3 relationships
+                                print(f"   ✅ Multiple relationships found: {len(relationships)}")
+                                
+                                # Check for specific relationships
+                                rel_pairs = [(r['from_table'], r['to_table']) for r in relationships]
+                                expected_rels = [('orders', 'users'), ('order_items', 'orders'), ('order_items', 'products')]
+                                
+                                found_rels = [rel for rel in expected_rels if rel in rel_pairs]
+                                if len(found_rels) >= 2:
+                                    print(f"   ✅ Key relationships identified: {found_rels}")
+                                else:
+                                    print(f"   ⚠️  Expected relationships not all found. Found: {rel_pairs}")
+                            else:
+                                print(f"   ⚠️  Expected multiple relationships, found: {len(relationships)}")
+                        
+                        # Store file ER diagram ID
+                        if 'id' in response:
+                            self.er_diagram_file_id = response['id']
+                            print(f"   File ER Diagram ID: {self.er_diagram_file_id}")
+                    else:
+                        print(f"   ⚠️  Missing required fields: {missing_fields}")
+                
+                return success
+        finally:
+            # Clean up temp file
+            os.unlink(temp_file_path)
+
 def main():
     print("🚀 Starting AI-Powered SQL Converter & Coding Assistant API Tests")
     print("=" * 70)
