@@ -287,6 +287,82 @@ function App() {
     }
   };
 
+  // ER Diagram Functions
+  const handleErDiagramGenerate = async () => {
+    if (!erSqlInput.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "Please provide SQL CREATE TABLE statements",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsGeneratingDiagram(true);
+    try {
+      const response = await axios.post(`${API}/er-diagram/generate`, {
+        sql_content: erSqlInput,
+        database_type: erDatabaseType
+      });
+
+      setErDiagramData(response.data);
+      
+      toast({
+        title: "Diagram Generated",
+        description: "ER diagram generated successfully",
+      });
+    } catch (error) {
+      console.error('ER diagram generation error:', error);
+      toast({
+        title: "Generation Failed",
+        description: error.response?.data?.detail || "Failed to generate ER diagram",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGeneratingDiagram(false);
+    }
+  };
+
+  const handleErFileUpload = async () => {
+    if (!erSelectedFile) {
+      toast({
+        title: "Validation Error", 
+        description: "Please select a SQL file",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsGeneratingDiagram(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', erSelectedFile);
+      formData.append('database_type', erDatabaseType);
+
+      const response = await axios.post(`${API}/er-diagram/generate-file`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      setErDiagramData(response.data);
+      
+      toast({
+        title: "Diagram Generated",
+        description: `ER diagram generated from ${erSelectedFile.name}`,
+      });
+    } catch (error) {
+      console.error('ER diagram file upload error:', error);
+      toast({
+        title: "Upload Failed",
+        description: error.response?.data?.detail || "Failed to process SQL file",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGeneratingDiagram(false);
+    }
+  };
+
   const clearAll = () => {
     setSqlInput('');
     setConvertedSql('');
