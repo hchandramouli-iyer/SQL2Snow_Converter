@@ -812,6 +812,11 @@ def main():
         status = "✅ PASS" if result else "❌ FAIL"
         print(f"  {status} {test_name}")
     
+    print("\n📊 ER DIAGRAM TESTS:")
+    for test_name, result in er_tests:
+        status = "✅ PASS" if result else "❌ FAIL"
+        print(f"  {status} {test_name}")
+    
     print("\n🤖 AI TOOL PROCESSING TESTS:")
     for test_name, result in ai_tests:
         status = "✅ PASS" if result else "❌ FAIL"
