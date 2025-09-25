@@ -364,13 +364,31 @@ function App() {
 
   return (
     <div className="min-h-screen">
-      {/* Floating Geometric Shapes */}
+      {/* Enhanced Floating Geometric Shapes */}
       <div className="floating-shapes">
         <div className="floating-shape"></div>
         <div className="floating-shape"></div>
         <div className="floating-shape"></div>
         <div className="floating-shape"></div>
         <div className="floating-shape"></div>
+        <div className="floating-shape"></div>
+        <div className="floating-shape"></div>
+        <div className="floating-shape"></div>
+      </div>
+      
+      {/* Particle System */}
+      <div className="particle-system">
+        {Array.from({ length: 50 }, (_, i) => (
+          <div 
+            key={i} 
+            className="particle" 
+            style={{
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 12}s`,
+              animationDuration: `${12 + Math.random() * 8}s`
+            }}
+          />
+        ))}
       </div>
       
       {/* Professional Header */}
