@@ -32,6 +32,7 @@ api_router = APIRouter(prefix="/api")
 # AI Tool Types
 class AITool:
     SQL_CONVERTER = "sql_converter"
+    ER_DIAGRAM = "er_diagram"
     CODE_GENERATOR = "code_generator"
     CODE_ASSISTANT = "code_assistant"
     CODE_CONVERTER = "code_converter"
