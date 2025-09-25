@@ -317,103 +317,18 @@ body::before {
   position: relative;
 }
 
-/* Enhanced Professional Header with Advanced Graphics */
+/* Clean Professional Header */
 .app-header {
-  background: 
-    linear-gradient(135deg, 
-      rgba(255, 255, 255, 0.98) 0%,
-      rgba(248, 250, 252, 0.95) 50%,
-      rgba(241, 245, 249, 0.98) 100%
-    );
-  backdrop-filter: blur(30px);
-  border-bottom: 2px solid transparent;
-  border-image: linear-gradient(90deg, 
-    rgba(59, 130, 246, 0.3),
-    rgba(168, 85, 247, 0.2),
-    rgba(236, 72, 153, 0.3)
-  ) 1;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--gray-200);
   position: sticky;
   top: 0;
   z-index: 50;
   padding: 2rem 0;
-  position: relative;
-  overflow: hidden;
   
-  /* 3D Effects */
-  transform-style: preserve-3d;
-  
-  /* Enhanced Shadow */
-  box-shadow: 
-    0 10px 30px rgba(59, 130, 246, 0.1),
-    0 4px 15px rgba(0, 0, 0, 0.05);
-}
-
-/* Animated Background Mesh */
-.app-header::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: 
-    radial-gradient(circle at 30% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 70% 80%, rgba(168, 85, 247, 0.04) 0%, transparent 50%),
-    linear-gradient(90deg, transparent 40%, rgba(59, 130, 246, 0.02) 50%, transparent 60%);
-  animation: headerMesh 8s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes headerMesh {
-  0%, 100% { 
-    transform: translateX(0) translateY(0) scale(1);
-    opacity: 0.6;
-  }
-  25% { 
-    transform: translateX(20px) translateY(-10px) scale(1.02);
-    opacity: 0.8;
-  }
-  50% { 
-    transform: translateX(-15px) translateY(15px) scale(0.98);
-    opacity: 1;
-  }
-  75% { 
-    transform: translateX(10px) translateY(-5px) scale(1.01);
-    opacity: 0.7;
-  }
-}
-
-/* Dynamic Shimmer Effect */
-.app-header::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, 
-    transparent,
-    rgba(255, 255, 255, 0.4),
-    rgba(59, 130, 246, 0.1),
-    rgba(255, 255, 255, 0.4),
-    transparent
-  );
-  animation: advancedShimmer 4s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes advancedShimmer {
-  0% { 
-    transform: translateX(-100%) skewX(-15deg);
-    opacity: 0;
-  }
-  50% { 
-    opacity: 1;
-  }
-  100% { 
-    transform: translateX(200%) skewX(-15deg);
-    opacity: 0;
-  }
+  /* Clean shadow */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .brand-section {
