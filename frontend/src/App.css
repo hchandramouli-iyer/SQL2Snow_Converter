@@ -624,15 +624,27 @@ body::before {
   line-height: 1.6;
 }
 
-/* Code Display */
+/* Enhanced Code Display */
 .code-container {
-  background: var(--gray-900);
-  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--gray-900), #1a1f35);
+  border-radius: var(--radius-xl);
   padding: 1.5rem;
   margin: 1rem 0;
   overflow: auto;
   max-height: 500px;
   border: 1px solid var(--gray-700);
+  position: relative;
+}
+
+.code-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-500), var(--success-500), var(--warning-500));
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
 }
 
 .code-container pre {
