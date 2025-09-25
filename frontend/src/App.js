@@ -222,6 +222,8 @@ function App() {
     setWarnings([]);
     setConversionId('');
     setSelectedFile(null);
+    setSourceDatabaseName('');
+    setSourceSchemaName('');
     setTargetDatabaseName('');
     setTargetSchemaName('');
     setCustomInstructions('');
