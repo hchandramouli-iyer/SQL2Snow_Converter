@@ -436,6 +436,8 @@ async def convert_sql_text(request: ConversionRequest):
 async def convert_sql_file(
     file: UploadFile = File(...), 
     source_database: str = Form(...),
+    source_database_name: str = Form(None),
+    source_schema_name: str = Form(None),
     target_database_name: str = Form(None),
     target_schema_name: str = Form(None),
     custom_instructions: str = Form(None),
@@ -451,6 +453,8 @@ async def convert_sql_file(
         converted_sql, warnings = converter.convert_sql_to_snowflake(
             sql_content, 
             source_database,
+            source_database_name,
+            source_schema_name,
             target_database_name,
             target_schema_name,
             custom_instructions,
@@ -462,6 +466,8 @@ async def convert_sql_file(
             original_sql=sql_content,
             converted_sql=converted_sql,
             source_database=source_database,
+            source_database_name=source_database_name,
+            source_schema_name=source_schema_name,
             target_database_name=target_database_name,
             target_schema_name=target_schema_name,
             custom_instructions=custom_instructions,
