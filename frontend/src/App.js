@@ -1093,5 +1093,3 @@ CREATE TABLE users (
 }
 
 export default App;
-
-export default App;
