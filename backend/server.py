@@ -609,6 +609,7 @@ async def chat_with_ai(request: AIRequest):
         if not request.session_id:
             request.session_id = str(uuid.uuid4())
             
+        # Override tool_type for chat regardless of what's sent
         request.tool_type = AITool.CHAT
         generated_content = await ai_assistant.process_ai_request(request)
         
@@ -618,6 +619,40 @@ async def chat_with_ai(request: AIRequest):
             response=generated_content,
             llm_provider=request.llm_provider,
             llm_model=request.llm_model
+        )
+        
+        # Save to chat history
+        chat_dict = chat_message.dict()
+        await db.chat_history.insert_one(chat_dict)
+        
+        return chat_message
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Chat failed: {str(e)}")
+
+# Alternative simplified chat endpoint
+@api_router.post("/ai/chat-simple")
+async def chat_simple(content: str = Form(...), llm_provider: str = Form("openai"), llm_model: str = Form("gpt-4o-mini"), session_id: str = Form(None)):
+    """Simplified chat endpoint"""
+    try:
+        if not session_id:
+            session_id = str(uuid.uuid4())
+            
+        request = AIRequest(
+            tool_type=AITool.CHAT,
+            content=content,
+            llm_provider=llm_provider,
+            llm_model=llm_model,
+            session_id=session_id
+        )
+        
+        generated_content = await ai_assistant.process_ai_request(request)
+        
+        chat_message = ChatMessage(
+            session_id=session_id,
+            message=content,
+            response=generated_content,
+            llm_provider=llm_provider,
+            llm_model=llm_model
         )
         
         # Save to chat history
