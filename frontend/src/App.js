@@ -843,20 +843,21 @@ CREATE TABLE users (
           </div>
         ) : (
           <div className="space-y-6">
+          <div className="space-y-6">
             {/* AI Tool Configuration */}
-            <Card className="mb-6">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+            <div className="professional-card">
+              <div className="card-header-professional">
+                <h3 className="card-title-professional">
                   {getToolIcon(activeMode)}
-                  Configuration for {getToolTitle(activeMode)}
-                </CardTitle>
-                <CardDescription>
+                  {getToolTitle(activeMode)} Configuration
+                </h3>
+                <p className="card-description-professional">
                   Configure language, framework, and specific requirements for optimal AI assistance
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {/* Language Selection - Always show for relevant tools */}
+                </p>
+              </div>
+              <div className="card-content-professional">
+                <div className="grid grid-3 gap-6">
+                  {/* Language Selection */}
                   {(activeMode === AI_TOOLS.CODE_GENERATOR || 
                     activeMode === AI_TOOLS.CODE_ASSISTANT ||
                     activeMode === AI_TOOLS.CODE_EXPLAINER ||
@@ -864,12 +865,12 @@ CREATE TABLE users (
                     activeMode === AI_TOOLS.COMMENT_GENERATOR ||
                     activeMode === AI_TOOLS.UNIT_TEST_GENERATOR ||
                     activeMode === AI_TOOLS.CODE_CONVERTER) && (
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">
+                    <div className="form-group">
+                      <label className="form-label">
                         {activeMode === AI_TOOLS.CODE_CONVERTER ? 'Source Language' : 'Programming Language'}
                       </label>
                       <Select value={language} onValueChange={setLanguage}>
-                        <SelectTrigger data-testid="language-select">
+                        <SelectTrigger className="form-select" data-testid="language-select">
                           <SelectValue placeholder="Select language" />
                         </SelectTrigger>
                         <SelectContent className="max-h-60">
@@ -883,10 +884,10 @@ CREATE TABLE users (
 
                   {/* Target Language for Code Converter */}
                   {activeMode === AI_TOOLS.CODE_CONVERTER && (
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">Target Language</label>
+                    <div className="form-group">
+                      <label className="form-label">Target Language</label>
                       <Select value={targetLanguage} onValueChange={setTargetLanguage}>
-                        <SelectTrigger data-testid="target-language-select">
+                        <SelectTrigger className="form-select" data-testid="target-language-select">
                           <SelectValue placeholder="Select target language" />
                         </SelectTrigger>
                         <SelectContent className="max-h-60">
@@ -904,12 +905,12 @@ CREATE TABLE users (
                     activeMode === AI_TOOLS.CODE_CONVERTER ||
                     activeMode === AI_TOOLS.CODE_ENHANCER ||
                     activeMode === AI_TOOLS.UNIT_TEST_GENERATOR) && (
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">
+                    <div className="form-group">
+                      <label className="form-label">
                         Framework/Library <span className="text-gray-400">(Optional)</span>
                       </label>
                       <Select value={framework} onValueChange={setFramework}>
-                        <SelectTrigger data-testid="framework-select">
+                        <SelectTrigger className="form-select" data-testid="framework-select">
                           <SelectValue placeholder="Select framework" />
                         </SelectTrigger>
                         <SelectContent className="max-h-60">
@@ -921,42 +922,43 @@ CREATE TABLE users (
                       </Select>
                     </div>
                   )}
-
-                  {/* Requirements/Instructions */}
-                  <div className={activeMode === AI_TOOLS.CODE_CONVERTER ? "md:col-span-1" : "md:col-span-2 lg:col-span-3"}>
-                    <label className="text-sm font-medium mb-2 block">
-                      {activeMode === AI_TOOLS.CODE_GENERATOR ? 'Additional Requirements' : 
-                       activeMode === AI_TOOLS.CODE_ASSISTANT ? 'Specific Focus Areas' :
-                       activeMode === AI_TOOLS.CODE_ENHANCER ? 'Enhancement Priorities' :
-                       activeMode === AI_TOOLS.UNIT_TEST_GENERATOR ? 'Testing Requirements' :
-                       'Special Instructions'} <span className="text-gray-400">(Optional)</span>
-                    </label>
-                    <Input
-                      placeholder={
-                        activeMode === AI_TOOLS.CODE_GENERATOR ? "e.g., Add error handling, use async/await" :
-                        activeMode === AI_TOOLS.CODE_ASSISTANT ? "e.g., Focus on performance, security issues" :
-                        activeMode === AI_TOOLS.CODE_ENHANCER ? "e.g., Performance, readability, security" :
-                        activeMode === AI_TOOLS.UNIT_TEST_GENERATOR ? "e.g., Include edge cases, mock external APIs" :
-                        activeMode === AI_TOOLS.CODE_CONVERTER ? "e.g., Preserve comments, optimize for target platform" :
-                        "e.g., Specific requirements or focus areas"
-                      }
-                      value={requirements}
-                      onChange={(e) => setRequirements(e.target.value)}
-                      data-testid="requirements-input"
-                    />
-                  </div>
                 </div>
-              </CardContent>
-            </Card>
+
+                {/* Requirements */}
+                <div className="form-group">
+                  <label className="form-label">
+                    {activeMode === AI_TOOLS.CODE_GENERATOR ? 'Additional Requirements' : 
+                     activeMode === AI_TOOLS.CODE_ASSISTANT ? 'Specific Focus Areas' :
+                     activeMode === AI_TOOLS.CODE_ENHANCER ? 'Enhancement Priorities' :
+                     activeMode === AI_TOOLS.UNIT_TEST_GENERATOR ? 'Testing Requirements' :
+                     'Special Instructions'} <span className="text-gray-400">(Optional)</span>
+                  </label>
+                  <Input
+                    placeholder={
+                      activeMode === AI_TOOLS.CODE_GENERATOR ? "e.g., Add error handling, use async/await, include logging" :
+                      activeMode === AI_TOOLS.CODE_ASSISTANT ? "e.g., Focus on performance, security issues, code clarity" :
+                      activeMode === AI_TOOLS.CODE_ENHANCER ? "e.g., Performance, readability, security, maintainability" :
+                      activeMode === AI_TOOLS.UNIT_TEST_GENERATOR ? "e.g., Include edge cases, mock external APIs, 100% coverage" :
+                      activeMode === AI_TOOLS.CODE_CONVERTER ? "e.g., Preserve comments, optimize for target platform" :
+                      "e.g., Specific requirements or focus areas"
+                    }
+                    value={requirements}
+                    onChange={(e) => setRequirements(e.target.value)}
+                    className="form-input"
+                    data-testid="requirements-input"
+                  />
+                </div>
+              </div>
+            </div>
 
             {/* AI Input/Output */}
-            <Card className="mb-6">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+            <div className="professional-card">
+              <div className="card-header-professional">
+                <h3 className="card-title-professional">
                   <FileCode className="h-5 w-5" />
                   {activeMode === AI_TOOLS.CODE_GENERATOR ? 'Requirements & Specifications' : 'Code Input'}
-                </CardTitle>
-                <CardDescription>
+                </h3>
+                <p className="card-description-professional">
                   {activeMode === AI_TOOLS.CODE_GENERATOR ? 
                     'Describe what you want to build and the AI will generate the code for you' :
                     activeMode === AI_TOOLS.CODE_ASSISTANT ?
@@ -973,13 +975,13 @@ CREATE TABLE users (
                     'Paste the function or class you want to generate unit tests for' :
                     'Enter your code or requirements here'
                   }
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
+                </p>
+              </div>
+              <div className="card-content-professional">
                 <Textarea
                   placeholder={
                     activeMode === AI_TOOLS.CODE_GENERATOR ? 
-                      'Example: Create a REST API endpoint that handles user registration with email validation, password hashing, and database storage...' :
+                      'Example: Create a REST API endpoint that handles user registration with email validation, password hashing, and database storage. Include proper error handling and logging...' :
                     activeMode === AI_TOOLS.CODE_ASSISTANT ?
                       'Paste your code here and describe the issue you\'re facing or what you want to improve...' :
                     activeMode === AI_TOOLS.CODE_CONVERTER ?
@@ -996,21 +998,21 @@ CREATE TABLE users (
                   }
                   value={aiInput}
                   onChange={(e) => setAiInput(e.target.value)}
-                  className="min-h-[250px] font-mono text-sm"
+                  className="form-textarea"
+                  style={{ minHeight: '300px' }}
                   data-testid="ai-input-textarea"
                 />
                 
-                <div className="flex justify-center pt-4">
+                <div className="text-center mt-6">
                   <Button 
                     onClick={handleAiProcess}
                     disabled={isProcessing || !aiInput.trim()}
-                    size="lg"
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3"
+                    className="btn-primary"
                     data-testid="process-ai-btn"
                   >
                     {isProcessing ? (
                       <>
-                        <RefreshCw className="h-5 w-5 mr-2 animate-spin" />
+                        <div className="loading-spinner"></div>
                         Processing with AI...
                       </>
                     ) : (
@@ -1030,20 +1032,20 @@ CREATE TABLE users (
                     )}
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
             {/* AI Output */}
             {aiOutput && (
-              <Card>
-                <CardHeader>
+              <div className="professional-card animate-fade-in">
+                <div className="card-header-professional">
                   <div className="flex items-center justify-between">
                     <div>
-                      <CardTitle className="text-green-600 flex items-center gap-2">
+                      <h3 className="card-title-professional text-green-600">
                         {getToolIcon(activeMode)}
-                        {getToolTitle(activeMode)} - Output
-                      </CardTitle>
-                      <CardDescription className="mt-2">
+                        {getToolTitle(activeMode)} - Result
+                      </h3>
+                      <p className="card-description-professional">
                         {activeMode === AI_TOOLS.CODE_GENERATOR ? 
                           `Generated ${language || 'code'} ${framework ? `using ${framework}` : ''}` :
                          activeMode === AI_TOOLS.CODE_CONVERTER ?
@@ -1060,32 +1062,31 @@ CREATE TABLE users (
                           `Generated unit tests ${framework ? `using ${framework}` : ''}` :
                          'AI-generated output'
                         }
-                      </CardDescription>
+                      </p>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-3">
                       <Button
                         variant="outline"
                         onClick={() => navigator.clipboard.writeText(aiOutput)}
-                        className="flex items-center gap-2"
+                        className="btn-secondary"
                       >
                         <FileCode className="h-4 w-4" />
                         Copy Code
                       </Button>
                     </div>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="bg-gray-50 border rounded-lg p-4 max-h-[500px] overflow-auto">
-                    <pre className="text-sm font-mono whitespace-pre-wrap text-gray-800" data-testid="ai-output">
-                      {aiOutput}
-                    </pre>
+                </div>
+                <div className="card-content-professional">
+                  <div className="code-container">
+                    <pre className="text-sm" data-testid="ai-output">{aiOutput}</pre>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             )}
           </div>
         )}
-      </div>
+      </main>
+      
       <Toaster />
     </div>
   );
