@@ -841,14 +841,52 @@ function App() {
             {/* AI Input/Output */}
             <Card className="mb-6">
               <CardHeader>
-                <CardTitle>Input</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <FileCode className="h-5 w-5" />
+                  {activeMode === AI_TOOLS.CODE_GENERATOR ? 'Requirements & Specifications' : 'Code Input'}
+                </CardTitle>
+                <CardDescription>
+                  {activeMode === AI_TOOLS.CODE_GENERATOR ? 
+                    'Describe what you want to build and the AI will generate the code for you' :
+                    activeMode === AI_TOOLS.CODE_ASSISTANT ?
+                    'Paste your code that needs debugging, improvement, or assistance' :
+                    activeMode === AI_TOOLS.CODE_CONVERTER ?
+                    'Paste the source code you want to convert to another language' :
+                    activeMode === AI_TOOLS.CODE_EXPLAINER ?
+                    'Paste the code you want explained and analyzed in detail' :
+                    activeMode === AI_TOOLS.CODE_ENHANCER ?
+                    'Paste your code to receive optimization and enhancement suggestions' :
+                    activeMode === AI_TOOLS.COMMENT_GENERATOR ?
+                    'Paste your code to generate comprehensive documentation and comments' :
+                    activeMode === AI_TOOLS.UNIT_TEST_GENERATOR ?
+                    'Paste the function or class you want to generate unit tests for' :
+                    'Enter your code or requirements here'
+                  }
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <Textarea
-                  placeholder={`Enter your ${activeMode === AI_TOOLS.CODE_GENERATOR ? 'requirements' : 'code'} here...`}
+                  placeholder={
+                    activeMode === AI_TOOLS.CODE_GENERATOR ? 
+                      'Example: Create a REST API endpoint that handles user registration with email validation, password hashing, and database storage...' :
+                    activeMode === AI_TOOLS.CODE_ASSISTANT ?
+                      'Paste your code here and describe the issue you\'re facing or what you want to improve...' :
+                    activeMode === AI_TOOLS.CODE_CONVERTER ?
+                      'Paste the source code you want to convert...' :
+                    activeMode === AI_TOOLS.CODE_EXPLAINER ?
+                      'Paste the code you want explained...' :
+                    activeMode === AI_TOOLS.CODE_ENHANCER ?
+                      'Paste your code that needs optimization...' :
+                    activeMode === AI_TOOLS.COMMENT_GENERATOR ?
+                      'Paste your undocumented code here...' :
+                    activeMode === AI_TOOLS.UNIT_TEST_GENERATOR ?
+                      'Paste your function or class here...' :
+                      'Enter your content here...'
+                  }
                   value={aiInput}
                   onChange={(e) => setAiInput(e.target.value)}
-                  className="min-h-[200px] font-mono text-sm"
+                  className="min-h-[250px] font-mono text-sm"
+                  data-testid="ai-input-textarea"
                 />
                 
                 <div className="flex justify-center pt-4">
@@ -856,17 +894,27 @@ function App() {
                     onClick={handleAiProcess}
                     disabled={isProcessing || !aiInput.trim()}
                     size="lg"
-                    className="bg-blue-600 hover:bg-blue-700"
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3"
+                    data-testid="process-ai-btn"
                   >
                     {isProcessing ? (
                       <>
-                        <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                        Processing...
+                        <RefreshCw className="h-5 w-5 mr-2 animate-spin" />
+                        Processing with AI...
                       </>
                     ) : (
                       <>
                         {getToolIcon(activeMode)}
-                        <span className="ml-2">Process with AI</span>
+                        <span className="ml-2">
+                          {activeMode === AI_TOOLS.CODE_GENERATOR ? 'Generate Code' :
+                           activeMode === AI_TOOLS.CODE_ASSISTANT ? 'Get AI Assistance' :
+                           activeMode === AI_TOOLS.CODE_CONVERTER ? 'Convert Code' :
+                           activeMode === AI_TOOLS.CODE_EXPLAINER ? 'Explain Code' :
+                           activeMode === AI_TOOLS.CODE_ENHANCER ? 'Enhance Code' :
+                           activeMode === AI_TOOLS.COMMENT_GENERATOR ? 'Generate Documentation' :
+                           activeMode === AI_TOOLS.UNIT_TEST_GENERATOR ? 'Generate Tests' :
+                           'Process with AI'}
+                        </span>
                       </>
                     )}
                   </Button>
