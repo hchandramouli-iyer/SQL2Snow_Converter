@@ -768,6 +768,10 @@ def main():
     test_results.append(("File Upload Conversion", tester.test_file_conversion()))
     test_results.append(("Download Conversion", tester.test_download_conversion()))
     
+    # ER Diagram Tests
+    test_results.append(("ER Diagram Generate", tester.test_er_diagram_generate()))
+    test_results.append(("ER Diagram Generate File", tester.test_er_diagram_generate_file()))
+    
     # AI Tool Processing Tests
     test_results.append(("AI Code Generator", tester.test_ai_code_generator()))
     test_results.append(("AI Code Assistant", tester.test_ai_code_assistant()))
