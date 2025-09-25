@@ -348,15 +348,15 @@ function App() {
 
   const getToolDescription = (tool) => {
     const descriptions = {
-      [AI_TOOLS.SQL_CONVERTER]: "Convert SQL from MySQL, PostgreSQL, SQL Server, and Oracle to Snowflake syntax",
-      [AI_TOOLS.CODE_GENERATOR]: "Generate efficient, clean, and custom code snippets based on your requirements",
-      [AI_TOOLS.CODE_ASSISTANT]: "Get help fixing issues, improving code quality, and adding features",
-      [AI_TOOLS.CODE_CONVERTER]: "Convert code between different programming languages and frameworks",
-      [AI_TOOLS.CODE_EXPLAINER]: "Understand code snippets and learn new concepts with detailed explanations",
-      [AI_TOOLS.CODE_ENHANCER]: "Get intelligent code suggestions and automatic enhancements",
-      [AI_TOOLS.COMMENT_GENERATOR]: "Generate detailed comments and documentation for your code",
-      [AI_TOOLS.UNIT_TEST_GENERATOR]: "Generate comprehensive unit tests to ensure code quality",
-      [AI_TOOLS.CHAT]: "Chat with AI assistant for instant help with coding queries"
+      [AI_TOOLS.SQL_CONVERTER]: "Transform SQL from MySQL, PostgreSQL, SQL Server, and Oracle to Snowflake-compatible syntax with advanced configuration options",
+      [AI_TOOLS.CODE_GENERATOR]: "Generate efficient, clean, and custom code snippets based on your requirements with AI-powered assistance",
+      [AI_TOOLS.CODE_ASSISTANT]: "Get instant help fixing bugs, improving code quality, debugging issues, and adding new features to your codebase",
+      [AI_TOOLS.CODE_CONVERTER]: "Convert code seamlessly between different programming languages and frameworks while preserving functionality",
+      [AI_TOOLS.CODE_EXPLAINER]: "Understand complex code snippets with detailed explanations, learn new concepts, and improve your coding skills",
+      [AI_TOOLS.CODE_ENHANCER]: "Receive intelligent suggestions for performance optimization, security improvements, and code quality enhancements",
+      [AI_TOOLS.COMMENT_GENERATOR]: "Generate comprehensive comments, documentation, and API references for better code maintainability",
+      [AI_TOOLS.UNIT_TEST_GENERATOR]: "Create thorough unit tests with edge cases and error handling to ensure robust, bug-free code",
+      [AI_TOOLS.CHAT]: "Interactive AI assistant for real-time coding help, explanations, and programming guidance"
     };
     return descriptions[tool];
   };
