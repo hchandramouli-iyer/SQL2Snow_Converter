@@ -190,6 +190,39 @@ body::before {
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.1));
 }
 
+.floating-shape:nth-child(6) {
+  width: 110px;
+  height: 110px;
+  top: 65%;
+  left: 50%;
+  border-radius: 25% 75% 50% 50% / 50% 25% 75% 50%;
+  animation-delay: -25s;
+  background: linear-gradient(225deg, rgba(251, 146, 60, 0.2), rgba(239, 68, 68, 0.1));
+  transform-style: preserve-3d;
+}
+
+.floating-shape:nth-child(7) {
+  width: 85px;
+  height: 85px;
+  top: 15%;
+  left: 40%;
+  border-radius: 40px 10px 40px 10px;
+  animation-delay: -18s;
+  background: linear-gradient(315deg, rgba(99, 102, 241, 0.25), rgba(139, 92, 246, 0.15));
+  transform: rotate(-30deg);
+}
+
+.floating-shape:nth-child(8) {
+  width: 95px;
+  height: 95px;
+  top: 85%;
+  left: 65%;
+  border-radius: 60% 40% 60% 40%;
+  animation-delay: -30s;
+  background: linear-gradient(45deg, rgba(14, 165, 233, 0.2), rgba(8, 145, 178, 0.1));
+  transform-style: preserve-3d;
+}
+
 /* Advanced Float Animation with 3D Transformations */
 @keyframes advancedFloat {
   0% { 
