@@ -296,11 +296,27 @@ class SQLToSnowflakeConverter:
         return converted_sql, warnings
 
     def convert_sql_to_snowflake(self, sql_content: str, source_database: str, 
+                               source_database_name: str = None, source_schema_name: str = None,
                                target_database_name: str = None, target_schema_name: str = None,
                                custom_instructions: str = None, include_comments: bool = True, 
                                preserve_case: bool = False):
-        """Main conversion method with enhanced options"""
+        """Main conversion method with enhanced source and target options"""
         warnings = []
+        
+        # Handle source schema qualification removal if specified
+        if source_schema_name:
+            # Remove source schema qualifications from SQL
+            # Pattern to match schema.table references
+            source_pattern = rf'\b{re.escape(source_schema_name)}\.(\w+)\b'
+            sql_content = re.sub(source_pattern, r'\1', sql_content, flags=re.IGNORECASE)
+            warnings.append(f"Removed source schema qualification: {source_schema_name}")
+        
+        if source_database_name:
+            # Remove source database qualifications if present
+            # Pattern to match database.schema.table or database.table references
+            db_pattern = rf'\b{re.escape(source_database_name)}\.(\w+\.)?(\w+)\b'
+            sql_content = re.sub(db_pattern, r'\2', sql_content, flags=re.IGNORECASE)
+            warnings.append(f"Removed source database qualification: {source_database_name}")
         
         # Database-specific conversions
         if source_database.lower() == 'mysql':
