@@ -308,6 +308,10 @@ function App() {
     setRequirements('');
     setChatMessages([]);
     setChatInput('');
+    setErSqlInput('');
+    setErSelectedFile(null);
+    setErDatabaseType('mysql');
+    setErDiagramData(null);
   };
 
   const getToolIcon = (tool) => {
