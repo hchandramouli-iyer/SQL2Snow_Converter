@@ -161,7 +161,7 @@ jobs:
 ### **Frontend Package.json Updates**
 ```json
 {
-  "homepage": "https://DataWhiz.github.io",
+  "homepage": "https://hchandramouli-iyer.github.io/codecraft-ai",
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
@@ -216,7 +216,7 @@ curl https://your-railway-app.up.railway.app/api/
 ### **2. Frontend Verification**
 ```bash
 # Visit deployed site
-https://DataWhiz.github.io
+https://hchandramouli-iyer.github.io/codecraft-ai
 # Should load CodeCraft AI interface
 ```
 
@@ -232,7 +232,7 @@ https://DataWhiz.github.io
 
 After successful deployment:
 
-1. **Live Demo URL**: https://DataWhiz.github.io
+1. **Live Demo URL**: https://hchandramouli-iyer.github.io/codecraft-ai
 2. **Full Functionality**: All CodeCraft AI features operational
 3. **Professional Presentation**: Production-ready interface
 4. **Scalable Infrastructure**: Can handle multiple users
@@ -272,4 +272,4 @@ This deployment strategy provides a professional, fully functional demo of CodeC
 4. **Update documentation** with live URLs
 5. **Share live demo** with stakeholders
 
-The result will be a production-ready CodeCraft AI platform accessible to anyone worldwide via https://DataWhiz.github.io!
+The result will be a production-ready CodeCraft AI platform accessible to anyone worldwide via https://hchandramouli-iyer.github.io/codecraft-ai!
