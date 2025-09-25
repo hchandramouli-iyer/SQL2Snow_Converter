@@ -289,8 +289,11 @@ class SQLToSnowflakeConverter:
 
         return converted_sql, warnings
 
-    def convert_sql_to_snowflake(self, sql_content: str, source_database: str):
-        """Main conversion method"""
+    def convert_sql_to_snowflake(self, sql_content: str, source_database: str, 
+                               target_database_name: str = None, target_schema_name: str = None,
+                               custom_instructions: str = None, include_comments: bool = True, 
+                               preserve_case: bool = False):
+        """Main conversion method with enhanced options"""
         warnings = []
         
         # Database-specific conversions
@@ -308,13 +311,63 @@ class SQLToSnowflakeConverter:
         
         warnings.extend(db_warnings)
 
+        # Apply database and schema names
+        if target_database_name:
+            # Add USE DATABASE statement at the beginning
+            converted_sql = f"USE DATABASE {target_database_name};\n\n{converted_sql}"
+            warnings.append(f"Added USE DATABASE {target_database_name} statement")
+        
+        if target_schema_name:
+            # Replace table references with schema-qualified names
+            # Simple pattern matching for CREATE TABLE statements
+            import re
+            pattern = r'CREATE TABLE\s+(["`]?)(\w+)\1'
+            replacement = rf'CREATE TABLE \1{target_schema_name}.\2\1'
+            converted_sql = re.sub(pattern, replacement, converted_sql, flags=re.IGNORECASE)
+            
+            # Handle other statements that might reference tables
+            pattern = r'(FROM|JOIN|INTO|UPDATE|TABLE)\s+(["`]?)(\w+)\2'
+            replacement = rf'\1 \2{target_schema_name}.\3\2'
+            converted_sql = re.sub(pattern, replacement, converted_sql, flags=re.IGNORECASE)
+            
+            warnings.append(f"Added schema qualification: {target_schema_name}")
+
+        # Apply custom instructions
+        if custom_instructions:
+            converted_sql = f"-- Custom Instructions: {custom_instructions}\n{converted_sql}"
+            
+            # Parse and apply some common custom instructions
+            instructions_lower = custom_instructions.lower()
+            
+            if 'clustering' in instructions_lower:
+                warnings.append("Consider adding CLUSTER BY clause for better performance")
+            
+            if 'partition' in instructions_lower:
+                warnings.append("Consider partitioning large tables by date or other key columns")
+            
+            if 'warehouse' in instructions_lower:
+                match = re.search(r'warehouse[:\s]+(\w+)', instructions_lower)
+                if match:
+                    warehouse_name = match.group(1).upper()
+                    converted_sql = f"USE WAREHOUSE {warehouse_name};\n{converted_sql}"
+                    warnings.append(f"Added USE WAREHOUSE {warehouse_name} statement")
+
+        # Handle case preservation
+        if not preserve_case:
+            # Convert object names to uppercase (Snowflake default)
+            converted_sql = re.sub(r'CREATE TABLE\s+"([^"]+)"', 
+                                 lambda m: f'CREATE TABLE "{m.group(1).upper()}"', 
+                                 converted_sql, flags=re.IGNORECASE)
+
         # General Snowflake optimizations and cleanups
-        # Remove trailing semicolons from individual statements in multi-statement blocks
         converted_sql = re.sub(r';\s*\n\s*(?=CREATE|ALTER|DROP|INSERT|UPDATE|DELETE)', ';\n\n', converted_sql, flags=re.IGNORECASE)
         
-        # Add common Snowflake best practices comment
+        # Add common Snowflake best practices comment if table creation detected
         if 'CREATE TABLE' in converted_sql.upper():
-            warnings.append("Consider adding clustering keys for large tables in Snowflake")
+            if not target_schema_name:
+                warnings.append("Consider specifying a schema name for better organization")
+            if 'clustering' not in custom_instructions.lower() if custom_instructions else True:
+                warnings.append("Consider adding clustering keys for large tables in Snowflake")
         
         return converted_sql.strip(), warnings
 
