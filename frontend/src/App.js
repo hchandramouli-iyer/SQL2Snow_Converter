@@ -509,233 +509,302 @@ function App() {
 
         {/* Tool-specific Content */}
         {activeMode === AI_TOOLS.SQL_CONVERTER ? (
-          <div>
+          <div className="space-y-6">
             {/* SQL Converter Controls */}
-            <Card className="mb-6">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+            <div className="professional-card">
+              <div className="card-header-professional">
+                <h3 className="card-title-professional">
                   <Code2 className="h-5 w-5" />
-                  SQL Conversion Settings
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-end">
-                  <div className="flex-1">
-                    <label className="text-sm font-medium mb-2 block">Source Database</label>
+                  Database Configuration
+                </h3>
+                <p className="card-description-professional">
+                  Configure source database settings and conversion parameters
+                </p>
+              </div>
+              <div className="card-content-professional">
+                <div className="grid grid-2 gap-6">
+                  <div className="form-group">
+                    <label className="form-label">Source Database Type</label>
                     <Select value={sourceDatabase} onValueChange={setSourceDatabase}>
-                      <SelectTrigger data-testid="source-database-select">
-                        <SelectValue placeholder="Select source database" />
+                      <SelectTrigger className="form-select" data-testid="source-database-select">
+                        <SelectValue placeholder="Choose database type" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="mysql">MySQL</SelectItem>
-                        <SelectItem value="postgresql">PostgreSQL</SelectItem>
-                        <SelectItem value="sqlserver">SQL Server</SelectItem>
-                        <SelectItem value="oracle">Oracle</SelectItem>
+                        <SelectItem value="mysql">
+                          <div className="flex items-center gap-2">
+                            <Database className="h-4 w-4" />
+                            MySQL
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="postgresql">
+                          <div className="flex items-center gap-2">
+                            <Database className="h-4 w-4" />
+                            PostgreSQL
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="sqlserver">
+                          <div className="flex items-center gap-2">
+                            <Database className="h-4 w-4" />
+                            SQL Server
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="oracle">
+                          <div className="flex items-center gap-2">
+                            <Database className="h-4 w-4" />
+                            Oracle
+                          </div>
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="flex gap-2">
+                  
+                  <div className="form-group">
                     <Button 
                       variant="outline" 
                       onClick={loadSampleSql}
                       disabled={!sourceDatabase}
+                      className="btn-secondary w-full mt-6"
                       data-testid="load-sample-btn"
                     >
-                      <FileText className="h-4 w-4 mr-2" />
-                      Load Sample
+                      <FileText className="h-4 w-4" />
+                      Load Sample SQL
                     </Button>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
-            {/* SQL Advanced Options */}
-            <Card className="mb-6">
+            {/* Advanced SQL Options */}
+            <div className="professional-card">
               <Collapsible open={showAdvancedOptions} onOpenChange={setShowAdvancedOptions}>
                 <CollapsibleTrigger asChild>
-                  <CardHeader className="cursor-pointer hover:bg-gray-50 transition-colors">
-                    <CardTitle className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Settings className="h-5 w-5" />
-                        Advanced Options & Instructions
+                  <div className="card-header-professional cursor-pointer hover:bg-gray-50 transition-colors">
+                    <div className="flex items-center justify-between w-full">
+                      <div>
+                        <h3 className="card-title-professional">
+                          <Settings className="h-5 w-5" />
+                          Advanced Database Settings
+                        </h3>
+                        <p className="card-description-professional">
+                          Configure source and target database details for precise conversion
+                        </p>
                       </div>
-                      <ChevronDown className={`h-4 w-4 transition-transform ${showAdvancedOptions ? 'rotate-180' : ''}`} />
-                    </CardTitle>
-                  </CardHeader>
+                      <ChevronDown className={`h-5 w-5 transition-transform ${showAdvancedOptions ? 'rotate-180' : ''}`} />
+                    </div>
+                  </div>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
-                  <CardContent className="pt-0">
-                    {/* Source Database Configuration */}
-                    <div className="mb-6">
-                      <h4 className="text-sm font-semibold mb-3 text-gray-700 flex items-center gap-2">
+                  <div className="card-content-professional space-y-6">
+                    {/* Source Configuration */}
+                    <div>
+                      <h4 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
                         <Database className="h-4 w-4" />
-                        Source Database Configuration
+                        Source Database Details
                       </h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="text-sm font-medium mb-2 block">Source Database Name</label>
+                      <div className="grid grid-2 gap-4">
+                        <div className="form-group">
+                          <label className="form-label">Database Name</label>
                           <Input
-                            placeholder="e.g., mysql_prod, postgres_db"
+                            placeholder="e.g., production_db, analytics_db"
                             value={sourceDatabaseName}
                             onChange={(e) => setSourceDatabaseName(e.target.value)}
+                            className="form-input"
                           />
                         </div>
-                        <div>
-                          <label className="text-sm font-medium mb-2 block">Source Schema Name</label>
+                        <div className="form-group">
+                          <label className="form-label">Schema Name</label>
                           <Input
-                            placeholder="e.g., public, dbo, schema1"
+                            placeholder="e.g., public, dbo, main"
                             value={sourceSchemaName}
                             onChange={(e) => setSourceSchemaName(e.target.value)}
+                            className="form-input"
                           />
                         </div>
                       </div>
                     </div>
 
-                    {/* Target Database Configuration */}
-                    <div className="mb-6">
-                      <h4 className="text-sm font-semibold mb-3 text-gray-700 flex items-center gap-2">
+                    {/* Target Configuration */}
+                    <div>
+                      <h4 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
                         <ArrowRight className="h-4 w-4" />
-                        Target Snowflake Configuration
+                        Snowflake Target Configuration
                       </h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="text-sm font-medium mb-2 block">Target Database Name</label>
+                      <div className="grid grid-2 gap-4">
+                        <div className="form-group">
+                          <label className="form-label">Target Database</label>
                           <Input
-                            placeholder="e.g., PROD_DB, ANALYTICS_DB"
+                            placeholder="e.g., ANALYTICS_DB, DATA_WAREHOUSE"
                             value={targetDatabaseName}
                             onChange={(e) => setTargetDatabaseName(e.target.value)}
+                            className="form-input"
                           />
                         </div>
-                        <div>
-                          <label className="text-sm font-medium mb-2 block">Target Schema Name</label>
+                        <div className="form-group">
+                          <label className="form-label">Target Schema</label>
                           <Input
                             placeholder="e.g., PUBLIC, STAGING, PROD"
                             value={targetSchemaName}
                             onChange={(e) => setTargetSchemaName(e.target.value)}
+                            className="form-input"
                           />
                         </div>
                       </div>
                     </div>
                     
-                    <div className="mb-4">
-                      <label className="text-sm font-medium mb-2 block">Custom Instructions</label>
+                    <div className="form-group">
+                      <label className="form-label">Custom Instructions</label>
                       <Textarea
-                        placeholder="e.g., Use warehouse COMPUTE_WH, Add clustering on date columns..."
+                        placeholder="e.g., Use warehouse COMPUTE_WH, add clustering on date columns, optimize for analytics workload..."
                         value={customInstructions}
                         onChange={(e) => setCustomInstructions(e.target.value)}
-                        className="min-h-[80px]"
+                        className="form-textarea"
+                        rows={3}
                       />
                     </div>
-                  </CardContent>
+                  </div>
                 </CollapsibleContent>
               </Collapsible>
-            </Card>
+            </div>
 
             {/* SQL Input */}
-            <Card className="mb-6">
-              <CardHeader>
-                <CardTitle>Input SQL</CardTitle>
-              </CardHeader>
-              <CardContent>
+            <div className="professional-card">
+              <div className="card-header-professional">
+                <h3 className="card-title-professional">
+                  <FileCode className="h-5 w-5" />
+                  SQL Input
+                </h3>
+                <p className="card-description-professional">
+                  Paste your SQL code for conversion to Snowflake syntax
+                </p>
+              </div>
+              <div className="card-content-professional">
                 <Textarea
                   data-testid="sql-input-textarea"
-                  placeholder="Paste your SQL code here..."
+                  placeholder="-- Paste your SQL code here
+CREATE TABLE users (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    created_at TIMESTAMP
+);"
                   value={sqlInput}
                   onChange={(e) => setSqlInput(e.target.value)}
-                  className="min-h-[200px] font-mono text-sm"
+                  className="form-textarea"
+                  style={{ minHeight: '250px' }}
                 />
                 
-                <div className="flex justify-center pt-4">
+                <div className="text-center mt-6">
                   <Button 
                     onClick={handleSqlConvert}
                     disabled={isProcessing || !sqlInput.trim() || !sourceDatabase}
-                    size="lg"
-                    className="bg-blue-600 hover:bg-blue-700"
+                    className="btn-primary"
                     data-testid="convert-btn"
                   >
                     {isProcessing ? (
                       <>
-                        <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                        Converting...
+                        <div className="loading-spinner"></div>
+                        Converting SQL...
                       </>
                     ) : (
                       <>
-                        <ArrowRight className="h-4 w-4 mr-2" />
+                        <ArrowRight className="h-5 w-5" />
                         Convert to Snowflake
                       </>
                     )}
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
             {/* SQL Results */}
             {convertedSql && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-green-600">SQL Conversion Complete</CardTitle>
-                </CardHeader>
-                <CardContent>
+              <div className="professional-card animate-fade-in">
+                <div className="card-header-professional">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="card-title-professional text-green-600">
+                        <ArrowRight className="h-5 w-5" />
+                        Conversion Complete
+                      </h3>
+                      <p className="card-description-professional">
+                        Successfully converted {sourceDatabase?.toUpperCase()} to Snowflake syntax
+                      </p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      onClick={() => navigator.clipboard.writeText(convertedSql)}
+                      className="btn-secondary"
+                    >
+                      <Download className="h-4 w-4" />
+                      Copy Result
+                    </Button>
+                  </div>
+                </div>
+                <div className="card-content-professional">
                   {warnings.length > 0 && (
-                    <Alert className="mb-6">
-                      <AlertDescription>
-                        <div className="space-y-2">
-                          <p className="font-semibold">Conversion Notes:</p>
-                          <ul className="space-y-1">
-                            {warnings.map((warning, index) => (
-                              <li key={index} className="text-sm">• {warning}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      </AlertDescription>
-                    </Alert>
+                    <div className="alert alert-warning mb-6">
+                      <div>
+                        <div className="font-semibold">Conversion Notes:</div>
+                        <ul className="mt-2 space-y-1 text-sm">
+                          {warnings.map((warning, index) => (
+                            <li key={index} className="flex items-start gap-2">
+                              <span className="text-warning-600">•</span>
+                              {warning}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
                   )}
 
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="grid grid-2 gap-6">
                     <div>
-                      <Badge variant="outline" className="mb-3">Original ({sourceDatabase?.toUpperCase()})</Badge>
-                      <div className="bg-gray-50 border rounded-lg p-4 max-h-96 overflow-auto">
-                        <pre className="text-sm font-mono whitespace-pre-wrap">{sqlInput}</pre>
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="badge badge-secondary">Original ({sourceDatabase?.toUpperCase()})</span>
+                      </div>
+                      <div className="code-container">
+                        <pre className="text-sm" data-testid="original-sql">{sqlInput}</pre>
                       </div>
                     </div>
                     <div>
-                      <Badge variant="outline" className="mb-3">Converted (Snowflake)</Badge>
-                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-h-96 overflow-auto">
-                        <pre className="text-sm font-mono whitespace-pre-wrap">{convertedSql}</pre>
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="badge badge-primary">Converted (Snowflake)</span>
+                      </div>
+                      <div className="code-container">
+                        <pre className="text-sm" data-testid="converted-sql">{convertedSql}</pre>
                       </div>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             )}
           </div>
         ) : activeMode === AI_TOOLS.CHAT ? (
-          <div>
-            {/* Chat Interface */}
-            <Card className="mb-6">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <MessageCircle className="h-5 w-5" />
-                  AI Chat Assistant
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {/* Chat Messages */}
-                <div className="border rounded-lg p-4 mb-4 h-96 overflow-y-auto bg-gray-50">
+          <div className="professional-card">
+            <div className="card-header-professional">
+              <h3 className="card-title-professional">
+                <MessageCircle className="h-5 w-5" />
+                AI Coding Assistant
+              </h3>
+              <p className="card-description-professional">
+                Interactive chat with AI for real-time coding help and guidance
+              </p>
+            </div>
+            <div className="card-content-professional">
+              <div className="chat-container">
+                <div className="chat-messages">
                   {chatMessages.length === 0 ? (
-                    <div className="flex items-center justify-center h-full text-gray-500">
-                      <p>Start a conversation with the AI assistant...</p>
+                    <div className="text-center text-gray-500 flex flex-col items-center justify-center h-full">
+                      <MessageCircle className="h-12 w-12 mb-4 opacity-50" />
+                      <p className="text-lg font-medium mb-2">Start a conversation</p>
+                      <p className="text-sm">Ask questions about coding, debugging, or development best practices</p>
                     </div>
                   ) : (
                     <div className="space-y-4">
                       {chatMessages.map((msg, index) => (
-                        <div key={index} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                          <div className={`max-w-[80%] p-3 rounded-lg ${
-                            msg.type === 'user' 
-                              ? 'bg-blue-600 text-white' 
-                              : 'bg-white border shadow-sm'
-                          }`}>
-                            <pre className="whitespace-pre-wrap text-sm font-mono">{msg.content}</pre>
+                        <div key={index} className={`chat-message ${msg.type}`}>
+                          <pre className="whitespace-pre-wrap text-sm">{msg.content}</pre>
+                          <div className="text-xs opacity-70 mt-2">
+                            {new Date(msg.timestamp).toLocaleTimeString()}
                           </div>
                         </div>
                       ))}
@@ -743,10 +812,9 @@ function App() {
                   )}
                 </div>
 
-                {/* Chat Input */}
-                <div className="flex gap-2">
+                <div className="chat-input-container">
                   <Textarea
-                    placeholder="Ask anything about coding..."
+                    placeholder="Ask anything about coding, debugging, or development..."
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
                     onKeyPress={(e) => {
@@ -755,25 +823,26 @@ function App() {
                         handleChat();
                       }
                     }}
-                    className="flex-1"
-                    rows={3}
+                    className="form-textarea"
+                    rows={2}
                   />
                   <Button 
                     onClick={handleChat}
                     disabled={isProcessing || !chatInput.trim()}
+                    className="btn-primary"
                   >
                     {isProcessing ? (
-                      <RefreshCw className="h-4 w-4 animate-spin" />
+                      <div className="loading-spinner"></div>
                     ) : (
-                      <ArrowRight className="h-4 w-4" />
+                      <ArrowRight className="h-5 w-5" />
                     )}
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         ) : (
-          <div>
+          <div className="space-y-6">
             {/* AI Tool Configuration */}
             <Card className="mb-6">
               <CardHeader>
