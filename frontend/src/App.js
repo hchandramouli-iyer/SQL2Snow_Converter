@@ -979,7 +979,7 @@ CREATE TABLE users (
             <Card className="professional-card">
               <CardHeader className="card-header-professional">
                 <CardTitle className="card-title-professional">
-                  <Network className="h-5 w-5" />
+                  <NetworkIcon className="h-5 w-5" />
                   SQL Input Configuration
                 </CardTitle>
                 <CardDescription className="card-description-professional">
