@@ -29,6 +29,8 @@ function App() {
   const [selectedFile, setSelectedFile] = useState(null);
   
   // New state for enhanced instructions
+  const [sourceDatabaseName, setSourceDatabaseName] = useState('');
+  const [sourceSchemaName, setSourceSchemaName] = useState('');
   const [targetDatabaseName, setTargetDatabaseName] = useState('');
   const [targetSchemaName, setTargetSchemaName] = useState('');
   const [customInstructions, setCustomInstructions] = useState('');
