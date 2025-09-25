@@ -296,7 +296,7 @@ function App() {
     setAiOutput('');
     setLanguage('');
     setTargetLanguage('');
-    setFramework('');
+    setFramework('none');
     setRequirements('');
     setChatMessages([]);
     setChatInput('');
