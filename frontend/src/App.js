@@ -319,16 +319,31 @@ function App() {
   const getToolTitle = (tool) => {
     const titles = {
       [AI_TOOLS.SQL_CONVERTER]: "SQL to Snowflake Converter",
-      [AI_TOOLS.CODE_GENERATOR]: "Code Generator",
-      [AI_TOOLS.CODE_ASSISTANT]: "Code Assistant", 
-      [AI_TOOLS.CODE_CONVERTER]: "Code Converter",
-      [AI_TOOLS.CODE_EXPLAINER]: "Code Explainer",
-      [AI_TOOLS.CODE_ENHANCER]: "Code Enhancer",
-      [AI_TOOLS.COMMENT_GENERATOR]: "Comment Generator",
+      [AI_TOOLS.CODE_GENERATOR]: "AI Code Generator",
+      [AI_TOOLS.CODE_ASSISTANT]: "Code Assistant & Debugger", 
+      [AI_TOOLS.CODE_CONVERTER]: "Language Converter",
+      [AI_TOOLS.CODE_EXPLAINER]: "Code Explainer & Analyzer",
+      [AI_TOOLS.CODE_ENHANCER]: "Code Optimizer & Enhancer",
+      [AI_TOOLS.COMMENT_GENERATOR]: "Documentation Generator",
       [AI_TOOLS.UNIT_TEST_GENERATOR]: "Unit Test Generator",
-      [AI_TOOLS.CHAT]: "AI Chat Assistant"
+      [AI_TOOLS.CHAT]: "AI Coding Assistant Chat"
     };
     return titles[tool];
+  };
+
+  const getToolShortName = (tool) => {
+    const shortNames = {
+      [AI_TOOLS.SQL_CONVERTER]: "SQL Converter",
+      [AI_TOOLS.CODE_GENERATOR]: "Code Generator",
+      [AI_TOOLS.CODE_ASSISTANT]: "Code Assistant", 
+      [AI_TOOLS.CODE_CONVERTER]: "Language Converter",
+      [AI_TOOLS.CODE_EXPLAINER]: "Code Explainer",
+      [AI_TOOLS.CODE_ENHANCER]: "Code Enhancer",
+      [AI_TOOLS.COMMENT_GENERATOR]: "Doc Generator",
+      [AI_TOOLS.UNIT_TEST_GENERATOR]: "Test Generator",
+      [AI_TOOLS.CHAT]: "AI Chat"
+    };
+    return shortNames[tool];
   };
 
   const getToolDescription = (tool) => {
