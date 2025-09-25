@@ -1053,7 +1053,7 @@ CREATE TABLE orders (
                       </>
                     ) : (
                       <>
-                        <Network className="h-5 w-5" />
+                        <NetworkIcon className="h-5 w-5" />
                         Generate ER Diagram
                       </>
                     )}
