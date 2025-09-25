@@ -46,6 +46,8 @@ class ConversionResponse(BaseModel):
     original_sql: str
     converted_sql: str
     source_database: str
+    source_database_name: Optional[str] = None
+    source_schema_name: Optional[str] = None
     target_database_name: Optional[str] = None
     target_schema_name: Optional[str] = None
     custom_instructions: Optional[str] = None
