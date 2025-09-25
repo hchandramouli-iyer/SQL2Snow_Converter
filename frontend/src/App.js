@@ -8,7 +8,10 @@ import { Textarea } from './components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
 import { Badge } from './components/ui/badge';
 import { Alert, AlertDescription } from './components/ui/alert';
-import { Download, Upload, FileText, Database, ArrowRight, Code2, RefreshCw } from 'lucide-react';
+import { Input } from './components/ui/input';
+import { Switch } from './components/ui/switch';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './components/ui/collapsible';
+import { Download, Upload, FileText, Database, ArrowRight, Code2, RefreshCw, Settings, ChevronDown } from 'lucide-react';
 import { useToast } from './hooks/use-toast';
 import { Toaster } from './components/ui/toaster';
 
