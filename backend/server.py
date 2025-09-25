@@ -880,6 +880,45 @@ async def convert_sql_file(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"File conversion failed: {str(e)}")
 
+# ER Diagram Routes
+@api_router.post("/er-diagram/generate", response_model=ERDiagramResponse)
+async def generate_er_diagram(request: ERDiagramRequest):
+    """Generate ER diagram from CREATE TABLE statements"""
+    try:
+        parser = ERDiagramParser()
+        diagram_data = parser.parse_sql_to_er(request.sql_content, request.database_type)
+        
+        # Save to database
+        diagram_dict = diagram_data.dict()
+        await db.er_diagrams.insert_one(diagram_dict)
+        
+        return diagram_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"ER diagram generation failed: {str(e)}")
+
+@api_router.post("/er-diagram/generate-file", response_model=ERDiagramResponse)
+async def generate_er_diagram_from_file(
+    file: UploadFile = File(...),
+    database_type: str = Form(default="mysql")
+):
+    """Generate ER diagram from uploaded SQL file"""
+    try:
+        # Read file content
+        content = await file.read()
+        sql_content = content.decode('utf-8')
+        
+        # Generate ER diagram
+        parser = ERDiagramParser()
+        diagram_data = parser.parse_sql_to_er(sql_content, database_type)
+        
+        # Save to database
+        diagram_dict = diagram_data.dict()
+        await db.er_diagrams.insert_one(diagram_dict)
+        
+        return diagram_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"ER diagram generation from file failed: {str(e)}")
+
 # New AI Routes
 @api_router.post("/ai/process", response_model=AIResponse)
 async def process_ai_request(request: AIRequest):
