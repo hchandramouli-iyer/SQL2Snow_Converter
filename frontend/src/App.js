@@ -143,6 +143,8 @@ function App() {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('source_database', sourceDatabase);
+      if (sourceDatabaseName) formData.append('source_database_name', sourceDatabaseName);
+      if (sourceSchemaName) formData.append('source_schema_name', sourceSchemaName);
       if (targetDatabaseName) formData.append('target_database_name', targetDatabaseName);
       if (targetSchemaName) formData.append('target_schema_name', targetSchemaName);
       if (customInstructions) formData.append('custom_instructions', customInstructions);
