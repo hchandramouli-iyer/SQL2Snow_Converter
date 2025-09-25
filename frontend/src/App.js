@@ -11,24 +11,40 @@ import { Alert, AlertDescription } from './components/ui/alert';
 import { Input } from './components/ui/input';
 import { Switch } from './components/ui/switch';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './components/ui/collapsible';
-import { Download, Upload, FileText, Database, ArrowRight, Code2, RefreshCw, Settings, ChevronDown } from 'lucide-react';
+import { 
+  Download, Upload, FileText, Database, ArrowRight, Code2, RefreshCw, 
+  Settings, ChevronDown, Wand2, Bot, MessageCircle, TestTube, 
+  FileCode, Lightbulb, MessageSquare, Cpu, Brain
+} from 'lucide-react';
 import { useToast } from './hooks/use-toast';
 import { Toaster } from './components/ui/toaster';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
+// Tool Types
+const AI_TOOLS = {
+  SQL_CONVERTER: "sql_converter",
+  CODE_GENERATOR: "code_generator", 
+  CODE_ASSISTANT: "code_assistant",
+  CODE_CONVERTER: "code_converter",
+  CODE_EXPLAINER: "code_explainer",
+  CODE_ENHANCER: "code_enhancer",
+  COMMENT_GENERATOR: "comment_generator",
+  UNIT_TEST_GENERATOR: "unit_test_generator",
+  CHAT: "chat"
+};
+
 function App() {
+  const [activeMode, setActiveMode] = useState(AI_TOOLS.SQL_CONVERTER);
+  
+  // SQL Converter state
   const [sourceDatabase, setSourceDatabase] = useState('');
   const [sqlInput, setSqlInput] = useState('');
   const [convertedSql, setConvertedSql] = useState('');
   const [warnings, setWarnings] = useState([]);
-  const [isConverting, setIsConverting] = useState(false);
   const [conversionId, setConversionId] = useState('');
-  const [activeTab, setActiveTab] = useState('text');
   const [selectedFile, setSelectedFile] = useState(null);
-  
-  // New state for enhanced instructions
   const [sourceDatabaseName, setSourceDatabaseName] = useState('');
   const [sourceSchemaName, setSourceSchemaName] = useState('');
   const [targetDatabaseName, setTargetDatabaseName] = useState('');
@@ -38,6 +54,29 @@ function App() {
   const [preserveCase, setPreserveCase] = useState(false);
   const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
   
+  // AI Tools state
+  const [aiInput, setAiInput] = useState('');
+  const [aiOutput, setAiOutput] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [language, setLanguage] = useState('');
+  const [targetLanguage, setTargetLanguage] = useState('');
+  const [framework, setFramework] = useState('');
+  const [requirements, setRequirements] = useState('');
+  const [llmProvider, setLlmProvider] = useState('openai');
+  const [llmModel, setLlmModel] = useState('gpt-4o-mini');
+  const [sessionId, setSessionId] = useState('');
+  
+  // Chat state
+  const [chatMessages, setChatMessages] = useState([]);
+  const [chatInput, setChatInput] = useState('');
+  
+  // Available models
+  const [availableModels, setAvailableModels] = useState({
+    openai: ['gpt-4o-mini', 'gpt-4o', 'gpt-5', 'o1-mini'],
+    anthropic: ['claude-3-5-sonnet-20241022', 'claude-3-5-haiku-20241022'],
+    gemini: ['gemini-2.0-flash', 'gemini-1.5-pro']
+  });
+
   const { toast } = useToast();
 
   // Sample SQL for different databases
@@ -72,13 +111,26 @@ function App() {
 );`
   };
 
+  React.useEffect(() => {
+    // Load available models on component mount
+    const loadModels = async () => {
+      try {
+        const response = await axios.get(`${API}/ai/models`);
+        setAvailableModels(response.data.models);
+      } catch (error) {
+        console.error('Failed to load models:', error);
+      }
+    };
+    loadModels();
+  }, []);
+
   const loadSampleSql = () => {
     if (sourceDatabase && sampleSql[sourceDatabase]) {
       setSqlInput(sampleSql[sourceDatabase]);
     }
   };
 
-  const handleConvert = async () => {
+  const handleSqlConvert = async () => {
     if (!sqlInput.trim() || !sourceDatabase) {
       toast({
         title: "Validation Error",
@@ -88,7 +140,7 @@ function App() {
       return;
     }
 
-    setIsConverting(true);
+    setIsProcessing(true);
     try {
       const response = await axios.post(`${API}/convert`, {
         sql_content: sqlInput,
@@ -119,100 +171,95 @@ function App() {
         variant: "destructive"
       });
     } finally {
-      setIsConverting(false);
+      setIsProcessing(false);
     }
   };
 
-  const handleFileUpload = useCallback(async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    if (!sourceDatabase) {
+  const handleAiProcess = async () => {
+    if (!aiInput.trim()) {
       toast({
-        title: "Select Database",
-        description: "Please select source database before uploading file",
+        title: "Validation Error",
+        description: "Please provide content to process",
         variant: "destructive"
       });
       return;
     }
 
-    setSelectedFile(file);
-    setIsConverting(true);
-
+    setIsProcessing(true);
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('source_database', sourceDatabase);
-      if (sourceDatabaseName) formData.append('source_database_name', sourceDatabaseName);
-      if (sourceSchemaName) formData.append('source_schema_name', sourceSchemaName);
-      if (targetDatabaseName) formData.append('target_database_name', targetDatabaseName);
-      if (targetSchemaName) formData.append('target_schema_name', targetSchemaName);
-      if (customInstructions) formData.append('custom_instructions', customInstructions);
-      formData.append('include_comments', includeComments);
-      formData.append('preserve_case', preserveCase);
-
-      const response = await axios.post(`${API}/convert-file`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+      const response = await axios.post(`${API}/ai/process`, {
+        tool_type: activeMode,
+        content: aiInput,
+        language: language || null,
+        target_language: targetLanguage || null,
+        framework: framework || null,
+        requirements: requirements || null,
+        llm_provider: llmProvider,
+        llm_model: llmModel,
+        session_id: sessionId || null
       });
 
-      setSqlInput(response.data.original_sql);
-      setConvertedSql(response.data.converted_sql);
-      setWarnings(response.data.warnings || []);
-      setConversionId(response.data.id);
+      setAiOutput(response.data.generated_content);
       
       toast({
-        title: "File Converted Successfully",
-        description: `${file.name} converted from ${sourceDatabase.toUpperCase()} to Snowflake`,
+        title: "Processing Complete",
+        description: `${getToolTitle(activeMode)} completed successfully`,
       });
     } catch (error) {
-      console.error('File conversion error:', error);
+      console.error('AI processing error:', error);
       toast({
-        title: "File Conversion Failed",
-        description: error.response?.data?.detail || "Failed to convert file",
+        title: "Processing Failed",
+        description: error.response?.data?.detail || "Failed to process request",
         variant: "destructive"
       });
     } finally {
-      setIsConverting(false);
+      setIsProcessing(false);
     }
-  }, [sourceDatabase, sourceDatabaseName, sourceSchemaName, targetDatabaseName, targetSchemaName, customInstructions, includeComments, preserveCase, toast]);
+  };
 
-  const handleDownload = async () => {
-    if (!conversionId) {
-      toast({
-        title: "No Conversion",
-        description: "Please convert SQL first before downloading",
-        variant: "destructive"
-      });
-      return;
-    }
+  const handleChat = async () => {
+    if (!chatInput.trim()) return;
 
+    const userMessage = chatInput;
+    setChatInput('');
+    
+    // Add user message to chat
+    setChatMessages(prev => [...prev, {
+      type: 'user',
+      content: userMessage,
+      timestamp: new Date()
+    }]);
+
+    setIsProcessing(true);
     try {
-      const response = await axios.get(`${API}/download/${conversionId}`, {
-        responseType: 'blob'
+      const response = await axios.post(`${API}/ai/chat`, {
+        content: userMessage,
+        llm_provider: llmProvider,
+        llm_model: llmModel,
+        session_id: sessionId || undefined
       });
 
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `snowflake_converted_${conversionId.substring(0, 8)}.sql`);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
+      // Add AI response to chat
+      setChatMessages(prev => [...prev, {
+        type: 'ai',
+        content: response.data.response,
+        timestamp: new Date()
+      }]);
 
-      toast({
-        title: "Download Started",
-        description: "Converted SQL file is being downloaded",
-      });
+      // Set session ID if not already set
+      if (!sessionId) {
+        setSessionId(response.data.session_id);
+      }
+      
     } catch (error) {
-      console.error('Download error:', error);
+      console.error('Chat error:', error);
       toast({
-        title: "Download Failed",
-        description: "Failed to download converted SQL",
+        title: "Chat Failed", 
+        description: error.response?.data?.detail || "Failed to send message",
         variant: "destructive"
       });
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -229,365 +276,552 @@ function App() {
     setCustomInstructions('');
     setIncludeComments(true);
     setPreserveCase(false);
+    setAiInput('');
+    setAiOutput('');
+    setLanguage('');
+    setTargetLanguage('');
+    setFramework('');
+    setRequirements('');
+    setChatMessages([]);
+    setChatInput('');
+  };
+
+  const getToolIcon = (tool) => {
+    const icons = {
+      [AI_TOOLS.SQL_CONVERTER]: <Database className="h-5 w-5" />,
+      [AI_TOOLS.CODE_GENERATOR]: <Wand2 className="h-5 w-5" />,
+      [AI_TOOLS.CODE_ASSISTANT]: <Bot className="h-5 w-5" />,
+      [AI_TOOLS.CODE_CONVERTER]: <ArrowRight className="h-5 w-5" />,
+      [AI_TOOLS.CODE_EXPLAINER]: <FileCode className="h-5 w-5" />,
+      [AI_TOOLS.CODE_ENHANCER]: <Lightbulb className="h-5 w-5" />,
+      [AI_TOOLS.COMMENT_GENERATOR]: <MessageSquare className="h-5 w-5" />,
+      [AI_TOOLS.UNIT_TEST_GENERATOR]: <TestTube className="h-5 w-5" />,
+      [AI_TOOLS.CHAT]: <MessageCircle className="h-5 w-5" />
+    };
+    return icons[tool];
+  };
+
+  const getToolTitle = (tool) => {
+    const titles = {
+      [AI_TOOLS.SQL_CONVERTER]: "SQL to Snowflake Converter",
+      [AI_TOOLS.CODE_GENERATOR]: "Code Generator",
+      [AI_TOOLS.CODE_ASSISTANT]: "Code Assistant", 
+      [AI_TOOLS.CODE_CONVERTER]: "Code Converter",
+      [AI_TOOLS.CODE_EXPLAINER]: "Code Explainer",
+      [AI_TOOLS.CODE_ENHANCER]: "Code Enhancer",
+      [AI_TOOLS.COMMENT_GENERATOR]: "Comment Generator",
+      [AI_TOOLS.UNIT_TEST_GENERATOR]: "Unit Test Generator",
+      [AI_TOOLS.CHAT]: "AI Chat Assistant"
+    };
+    return titles[tool];
+  };
+
+  const getToolDescription = (tool) => {
+    const descriptions = {
+      [AI_TOOLS.SQL_CONVERTER]: "Convert SQL from MySQL, PostgreSQL, SQL Server, and Oracle to Snowflake syntax",
+      [AI_TOOLS.CODE_GENERATOR]: "Generate efficient, clean, and custom code snippets based on your requirements",
+      [AI_TOOLS.CODE_ASSISTANT]: "Get help fixing issues, improving code quality, and adding features",
+      [AI_TOOLS.CODE_CONVERTER]: "Convert code between different programming languages and frameworks",
+      [AI_TOOLS.CODE_EXPLAINER]: "Understand code snippets and learn new concepts with detailed explanations",
+      [AI_TOOLS.CODE_ENHANCER]: "Get intelligent code suggestions and automatic enhancements",
+      [AI_TOOLS.COMMENT_GENERATOR]: "Generate detailed comments and documentation for your code",
+      [AI_TOOLS.UNIT_TEST_GENERATOR]: "Generate comprehensive unit tests to ensure code quality",
+      [AI_TOOLS.CHAT]: "Chat with AI assistant for instant help with coding queries"
+    };
+    return descriptions[tool];
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <Database className="h-8 w-8 text-blue-600" />
-            <ArrowRight className="h-6 w-6 text-gray-400" />
-            <div className="bg-blue-600 text-white px-3 py-1 rounded-lg font-semibold">Snowflake</div>
+            <Brain className="h-8 w-8 text-blue-600" />
+            <div className="bg-blue-600 text-white px-3 py-1 rounded-lg font-semibold">AI Coding Assistant</div>
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">SQL to Snowflake Converter</h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Transform your SQL from MySQL, PostgreSQL, SQL Server, and Oracle to Snowflake-compatible syntax
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">AI-Powered Development Tools</h1>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Complete suite of AI tools for code generation, conversion, enhancement, and SQL transformation
           </p>
         </div>
 
-        {/* Main Conversion Interface */}
-        <div className="max-w-7xl mx-auto">
-          {/* Controls */}
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Code2 className="h-5 w-5" />
-                Conversion Settings
-              </CardTitle>
-              <CardDescription>
-                Select your source database and input method
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-end">
-                <div className="flex-1">
-                  <label className="text-sm font-medium mb-2 block">Source Database</label>
-                  <Select value={sourceDatabase} onValueChange={setSourceDatabase}>
-                    <SelectTrigger data-testid="source-database-select">
-                      <SelectValue placeholder="Select source database" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="mysql">MySQL</SelectItem>
-                      <SelectItem value="postgresql">PostgreSQL</SelectItem>
-                      <SelectItem value="sqlserver">SQL Server</SelectItem>
-                      <SelectItem value="oracle">Oracle</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    onClick={loadSampleSql}
-                    disabled={!sourceDatabase}
-                    data-testid="load-sample-btn"
-                  >
-                    <FileText className="h-4 w-4 mr-2" />
-                    Load Sample
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    onClick={clearAll}
-                    data-testid="clear-all-btn"
-                  >
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Clear All
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Advanced Instructions Section */}
-          <Card className="mb-6">
-            <Collapsible open={showAdvancedOptions} onOpenChange={setShowAdvancedOptions}>
-              <CollapsibleTrigger asChild>
-                <CardHeader className="cursor-pointer hover:bg-gray-50 transition-colors">
-                  <CardTitle className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Settings className="h-5 w-5" />
-                      Advanced Options & Instructions
-                    </div>
-                    <ChevronDown className={`h-4 w-4 transition-transform ${showAdvancedOptions ? 'rotate-180' : ''}`} />
-                  </CardTitle>
-                  <CardDescription>
-                    Configure target database settings and provide custom conversion instructions
-                  </CardDescription>
-                </CardHeader>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <CardContent className="pt-0">
-                  {/* Source Database Configuration */}
-                  <div className="mb-6">
-                    <h4 className="text-sm font-semibold mb-3 text-gray-700 flex items-center gap-2">
-                      <Database className="h-4 w-4" />
-                      Source Database Configuration
-                    </h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Source Database Name</label>
-                        <Input
-                          placeholder="e.g., mysql_prod, postgres_db"
-                          value={sourceDatabaseName}
-                          onChange={(e) => setSourceDatabaseName(e.target.value)}
-                          data-testid="source-database-name-input"
-                        />
-                        <p className="text-xs text-gray-500 mt-1">Original database name (will be removed from references)</p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Source Schema Name</label>
-                        <Input
-                          placeholder="e.g., public, dbo, schema1"
-                          value={sourceSchemaName}
-                          onChange={(e) => setSourceSchemaName(e.target.value)}
-                          data-testid="source-schema-name-input"
-                        />
-                        <p className="text-xs text-gray-500 mt-1">Original schema name (will be replaced)</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Target Database Configuration */}
-                  <div className="mb-6">
-                    <h4 className="text-sm font-semibold mb-3 text-gray-700 flex items-center gap-2">
-                      <ArrowRight className="h-4 w-4" />
-                      Target Snowflake Configuration
-                    </h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Target Database Name</label>
-                        <Input
-                          placeholder="e.g., PROD_DB, ANALYTICS_DB"
-                          value={targetDatabaseName}
-                          onChange={(e) => setTargetDatabaseName(e.target.value)}
-                          data-testid="target-database-input"
-                        />
-                        <p className="text-xs text-gray-500 mt-1">Will add USE DATABASE statement</p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Target Schema Name</label>
-                        <Input
-                          placeholder="e.g., PUBLIC, STAGING, PROD"
-                          value={targetSchemaName}
-                          onChange={(e) => setTargetSchemaName(e.target.value)}
-                          data-testid="target-schema-input"
-                        />
-                        <p className="text-xs text-gray-500 mt-1">Will qualify table names with schema</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="mb-4">
-                    <label className="text-sm font-medium mb-2 block">Custom Instructions</label>
-                    <Textarea
-                      placeholder="e.g., Use warehouse COMPUTE_WH, Add clustering on date columns, Apply partitioning by year..."
-                      value={customInstructions}
-                      onChange={(e) => setCustomInstructions(e.target.value)}
-                      className="min-h-[80px]"
-                      data-testid="custom-instructions-textarea"
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                      Provide specific requirements like warehouse settings, clustering, partitioning, etc.
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="flex items-center justify-between p-3 border rounded-lg">
-                      <div>
-                        <label className="text-sm font-medium">Include Comments</label>
-                        <p className="text-xs text-gray-500">Preserve original comments in converted SQL</p>
-                      </div>
-                      <Switch
-                        checked={includeComments}
-                        onCheckedChange={setIncludeComments}
-                        data-testid="include-comments-switch"
-                      />
-                    </div>
-                    <div className="flex items-center justify-between p-3 border rounded-lg">
-                      <div>
-                        <label className="text-sm font-medium">Preserve Case</label>
-                        <p className="text-xs text-gray-500">Keep original object name casing</p>
-                      </div>
-                      <Switch
-                        checked={preserveCase}
-                        onCheckedChange={setPreserveCase}
-                        data-testid="preserve-case-switch"
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-              </CollapsibleContent>
-            </Collapsible>
-          </Card>
-
-          {/* Input Methods */}
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>Input SQL</CardTitle>
-              <CardDescription>
-                Choose to paste SQL directly or upload a .sql file
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Tabs value={activeTab} onValueChange={setActiveTab}>
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="text" data-testid="text-input-tab">Text Input</TabsTrigger>
-                  <TabsTrigger value="file" data-testid="file-upload-tab">File Upload</TabsTrigger>
-                </TabsList>
-                <TabsContent value="text" className="space-y-4">
-                  <Textarea
-                    data-testid="sql-input-textarea"
-                    placeholder="Paste your SQL code here..."
-                    value={sqlInput}
-                    onChange={(e) => setSqlInput(e.target.value)}
-                    className="min-h-[200px] font-mono text-sm"
-                  />
-                </TabsContent>
-                <TabsContent value="file" className="space-y-4">
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                    <Upload className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                    <div className="space-y-2">
-                      <p className="text-sm text-gray-600">Upload your .sql file</p>
-                      <input
-                        type="file"
-                        accept=".sql"
-                        onChange={handleFileUpload}
-                        className="hidden"
-                        id="file-upload"
-                        data-testid="file-upload-input"
-                      />
-                      <label htmlFor="file-upload">
-                        <Button variant="outline" className="cursor-pointer" data-testid="upload-btn">
-                          Choose File
-                        </Button>
-                      </label>
-                      {selectedFile && (
-                        <p className="text-sm text-green-600 mt-2">
-                          Selected: {selectedFile.name}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </TabsContent>
-              </Tabs>
-              
-              <div className="flex justify-center pt-4">
-                <Button 
-                  onClick={handleConvert}
-                  disabled={isConverting || !sqlInput.trim() || !sourceDatabase}
-                  size="lg"
-                  className="bg-blue-600 hover:bg-blue-700"
-                  data-testid="convert-btn"
+        {/* Tool Selection */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Cpu className="h-5 w-5" />
+              Select AI Tool
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+              {Object.values(AI_TOOLS).map((tool) => (
+                <Button
+                  key={tool}
+                  variant={activeMode === tool ? "default" : "outline"}
+                  onClick={() => setActiveMode(tool)}
+                  className="flex flex-col items-center gap-2 h-auto py-3 text-xs"
+                  data-testid={`tool-${tool}`}
                 >
-                  {isConverting ? (
-                    <>
-                      <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                      Converting...
-                    </>
-                  ) : (
-                    <>
-                      <ArrowRight className="h-4 w-4 mr-2" />
-                      Convert to Snowflake
-                    </>
-                  )}
+                  {getToolIcon(tool)}
+                  <span className="text-center leading-tight">
+                    {getToolTitle(tool).replace(/^(SQL to Snowflake |Code |Unit Test |Comment |AI Chat )/, '')}
+                  </span>
+                </Button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* AI Model Selection */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Settings className="h-5 w-5" />
+              AI Configuration
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="text-sm font-medium mb-2 block">LLM Provider</label>
+                <Select value={llmProvider} onValueChange={setLlmProvider}>
+                  <SelectTrigger data-testid="llm-provider-select">
+                    <SelectValue placeholder="Select provider" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="openai">OpenAI</SelectItem>
+                    <SelectItem value="anthropic">Anthropic (Claude)</SelectItem>
+                    <SelectItem value="gemini">Google (Gemini)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-2 block">Model</label>
+                <Select value={llmModel} onValueChange={setLlmModel}>
+                  <SelectTrigger data-testid="llm-model-select">
+                    <SelectValue placeholder="Select model" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {availableModels[llmProvider]?.map((model) => (
+                      <SelectItem key={model} value={model}>{model}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-end">
+                <Button 
+                  variant="outline" 
+                  onClick={clearAll}
+                  className="w-full"
+                  data-testid="clear-all-btn"
+                >
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Clear All
                 </Button>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </CardContent>
+        </Card>
 
-          {/* Results */}
-          {convertedSql && (
-            <Card>
+        {/* Current Tool Description */}
+        <Alert className="mb-6">
+          <div className="flex items-center gap-2">
+            {getToolIcon(activeMode)}
+            <AlertDescription className="font-medium">
+              {getToolTitle(activeMode)}: {getToolDescription(activeMode)}
+            </AlertDescription>
+          </div>
+        </Alert>
+
+        {/* Tool-specific Content */}
+        {activeMode === AI_TOOLS.SQL_CONVERTER ? (
+          <div>
+            {/* SQL Converter Controls */}
+            <Card className="mb-6">
               <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="text-green-600">Conversion Complete</CardTitle>
-                    <CardDescription>
-                      Your SQL has been converted to Snowflake syntax
-                    </CardDescription>
-                  </div>
-                  <Button onClick={handleDownload} data-testid="download-btn">
-                    <Download className="h-4 w-4 mr-2" />
-                    Download
-                  </Button>
-                </div>
+                <CardTitle className="flex items-center gap-2">
+                  <Code2 className="h-5 w-5" />
+                  SQL Conversion Settings
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                {/* Applied Instructions Summary */}
-                {(targetDatabaseName || targetSchemaName || customInstructions) && (
-                  <Alert className="mb-6 bg-blue-50 border-blue-200" data-testid="applied-instructions-alert">
-                    <Settings className="h-4 w-4" />
-                    <AlertDescription>
-                      <div className="space-y-2">
-                        <p className="font-semibold">Applied Instructions:</p>
-                        <ul className="space-y-1 text-sm">
-                          {targetDatabaseName && (
-                            <li>• Target Database: <code className="bg-blue-100 px-1 rounded">{targetDatabaseName}</code></li>
-                          )}
-                          {targetSchemaName && (
-                            <li>• Target Schema: <code className="bg-blue-100 px-1 rounded">{targetSchemaName}</code></li>
-                          )}
-                          {customInstructions && (
-                            <li>• Custom Instructions: <span className="italic">{customInstructions}</span></li>
-                          )}
-                          <li>• Comments: {includeComments ? 'Included' : 'Excluded'}</li>
-                          <li>• Case: {preserveCase ? 'Preserved' : 'Standardized'}</li>
-                        </ul>
-                      </div>
-                    </AlertDescription>
-                  </Alert>
-                )}
-
-                {/* Warnings */}
-                {warnings.length > 0 && (
-                  <Alert className="mb-6" data-testid="warnings-alert">
-                    <AlertDescription>
-                      <div className="space-y-2">
-                        <p className="font-semibold">Conversion Notes:</p>
-                        <ul className="space-y-1">
-                          {warnings.map((warning, index) => (
-                            <li key={index} className="text-sm">
-                              • {warning}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </AlertDescription>
-                  </Alert>
-                )}
-
-                {/* Side-by-side comparison */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200">
-                        Original ({sourceDatabase?.toUpperCase()})
-                      </Badge>
-                    </div>
-                    <div className="bg-gray-50 border rounded-lg p-4 max-h-96 overflow-auto">
-                      <pre className="text-sm font-mono text-gray-800 whitespace-pre-wrap" data-testid="original-sql">
-                        {sqlInput}
-                      </pre>
-                    </div>
+                <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-end">
+                  <div className="flex-1">
+                    <label className="text-sm font-medium mb-2 block">Source Database</label>
+                    <Select value={sourceDatabase} onValueChange={setSourceDatabase}>
+                      <SelectTrigger data-testid="source-database-select">
+                        <SelectValue placeholder="Select source database" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="mysql">MySQL</SelectItem>
+                        <SelectItem value="postgresql">PostgreSQL</SelectItem>
+                        <SelectItem value="sqlserver">SQL Server</SelectItem>
+                        <SelectItem value="oracle">Oracle</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
-                        Converted (Snowflake)
-                      </Badge>
-                    </div>
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-h-96 overflow-auto">
-                      <pre className="text-sm font-mono text-gray-800 whitespace-pre-wrap" data-testid="converted-sql">
-                        {convertedSql}
-                      </pre>
-                    </div>
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      onClick={loadSampleSql}
+                      disabled={!sourceDatabase}
+                      data-testid="load-sample-btn"
+                    >
+                      <FileText className="h-4 w-4 mr-2" />
+                      Load Sample
+                    </Button>
                   </div>
                 </div>
               </CardContent>
             </Card>
-          )}
-        </div>
+
+            {/* SQL Advanced Options */}
+            <Card className="mb-6">
+              <Collapsible open={showAdvancedOptions} onOpenChange={setShowAdvancedOptions}>
+                <CollapsibleTrigger asChild>
+                  <CardHeader className="cursor-pointer hover:bg-gray-50 transition-colors">
+                    <CardTitle className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Settings className="h-5 w-5" />
+                        Advanced Options & Instructions
+                      </div>
+                      <ChevronDown className={`h-4 w-4 transition-transform ${showAdvancedOptions ? 'rotate-180' : ''}`} />
+                    </CardTitle>
+                  </CardHeader>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <CardContent className="pt-0">
+                    {/* Source Database Configuration */}
+                    <div className="mb-6">
+                      <h4 className="text-sm font-semibold mb-3 text-gray-700 flex items-center gap-2">
+                        <Database className="h-4 w-4" />
+                        Source Database Configuration
+                      </h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-sm font-medium mb-2 block">Source Database Name</label>
+                          <Input
+                            placeholder="e.g., mysql_prod, postgres_db"
+                            value={sourceDatabaseName}
+                            onChange={(e) => setSourceDatabaseName(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium mb-2 block">Source Schema Name</label>
+                          <Input
+                            placeholder="e.g., public, dbo, schema1"
+                            value={sourceSchemaName}
+                            onChange={(e) => setSourceSchemaName(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Target Database Configuration */}
+                    <div className="mb-6">
+                      <h4 className="text-sm font-semibold mb-3 text-gray-700 flex items-center gap-2">
+                        <ArrowRight className="h-4 w-4" />
+                        Target Snowflake Configuration
+                      </h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-sm font-medium mb-2 block">Target Database Name</label>
+                          <Input
+                            placeholder="e.g., PROD_DB, ANALYTICS_DB"
+                            value={targetDatabaseName}
+                            onChange={(e) => setTargetDatabaseName(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium mb-2 block">Target Schema Name</label>
+                          <Input
+                            placeholder="e.g., PUBLIC, STAGING, PROD"
+                            value={targetSchemaName}
+                            onChange={(e) => setTargetSchemaName(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="mb-4">
+                      <label className="text-sm font-medium mb-2 block">Custom Instructions</label>
+                      <Textarea
+                        placeholder="e.g., Use warehouse COMPUTE_WH, Add clustering on date columns..."
+                        value={customInstructions}
+                        onChange={(e) => setCustomInstructions(e.target.value)}
+                        className="min-h-[80px]"
+                      />
+                    </div>
+                  </CardContent>
+                </CollapsibleContent>
+              </Collapsible>
+            </Card>
+
+            {/* SQL Input */}
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle>Input SQL</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Textarea
+                  data-testid="sql-input-textarea"
+                  placeholder="Paste your SQL code here..."
+                  value={sqlInput}
+                  onChange={(e) => setSqlInput(e.target.value)}
+                  className="min-h-[200px] font-mono text-sm"
+                />
+                
+                <div className="flex justify-center pt-4">
+                  <Button 
+                    onClick={handleSqlConvert}
+                    disabled={isProcessing || !sqlInput.trim() || !sourceDatabase}
+                    size="lg"
+                    className="bg-blue-600 hover:bg-blue-700"
+                    data-testid="convert-btn"
+                  >
+                    {isProcessing ? (
+                      <>
+                        <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                        Converting...
+                      </>
+                    ) : (
+                      <>
+                        <ArrowRight className="h-4 w-4 mr-2" />
+                        Convert to Snowflake
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* SQL Results */}
+            {convertedSql && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-green-600">SQL Conversion Complete</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {warnings.length > 0 && (
+                    <Alert className="mb-6">
+                      <AlertDescription>
+                        <div className="space-y-2">
+                          <p className="font-semibold">Conversion Notes:</p>
+                          <ul className="space-y-1">
+                            {warnings.map((warning, index) => (
+                              <li key={index} className="text-sm">• {warning}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </AlertDescription>
+                    </Alert>
+                  )}
+
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div>
+                      <Badge variant="outline" className="mb-3">Original ({sourceDatabase?.toUpperCase()})</Badge>
+                      <div className="bg-gray-50 border rounded-lg p-4 max-h-96 overflow-auto">
+                        <pre className="text-sm font-mono whitespace-pre-wrap">{sqlInput}</pre>
+                      </div>
+                    </div>
+                    <div>
+                      <Badge variant="outline" className="mb-3">Converted (Snowflake)</Badge>
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-h-96 overflow-auto">
+                        <pre className="text-sm font-mono whitespace-pre-wrap">{convertedSql}</pre>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        ) : activeMode === AI_TOOLS.CHAT ? (
+          <div>
+            {/* Chat Interface */}
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MessageCircle className="h-5 w-5" />
+                  AI Chat Assistant
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {/* Chat Messages */}
+                <div className="border rounded-lg p-4 mb-4 h-96 overflow-y-auto bg-gray-50">
+                  {chatMessages.length === 0 ? (
+                    <div className="flex items-center justify-center h-full text-gray-500">
+                      <p>Start a conversation with the AI assistant...</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {chatMessages.map((msg, index) => (
+                        <div key={index} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                          <div className={`max-w-[80%] p-3 rounded-lg ${
+                            msg.type === 'user' 
+                              ? 'bg-blue-600 text-white' 
+                              : 'bg-white border shadow-sm'
+                          }`}>
+                            <pre className="whitespace-pre-wrap text-sm font-mono">{msg.content}</pre>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Chat Input */}
+                <div className="flex gap-2">
+                  <Textarea
+                    placeholder="Ask anything about coding..."
+                    value={chatInput}
+                    onChange={(e) => setChatInput(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleChat();
+                      }
+                    }}
+                    className="flex-1"
+                    rows={3}
+                  />
+                  <Button 
+                    onClick={handleChat}
+                    disabled={isProcessing || !chatInput.trim()}
+                  >
+                    {isProcessing ? (
+                      <RefreshCw className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <ArrowRight className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        ) : (
+          <div>
+            {/* AI Tool Configuration */}
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  {getToolIcon(activeMode)}
+                  Tool Configuration
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {/* Language fields based on tool type */}
+                  {(activeMode === AI_TOOLS.CODE_GENERATOR || 
+                    activeMode === AI_TOOLS.CODE_ASSISTANT ||
+                    activeMode === AI_TOOLS.CODE_EXPLAINER ||
+                    activeMode === AI_TOOLS.CODE_ENHANCER ||
+                    activeMode === AI_TOOLS.COMMENT_GENERATOR ||
+                    activeMode === AI_TOOLS.UNIT_TEST_GENERATOR) && (
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Language</label>
+                      <Input
+                        placeholder="e.g., Python, JavaScript, Java"
+                        value={language}
+                        onChange={(e) => setLanguage(e.target.value)}
+                      />
+                    </div>
+                  )}
+
+                  {activeMode === AI_TOOLS.CODE_CONVERTER && (
+                    <>
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">Source Language</label>
+                        <Input
+                          placeholder="e.g., Python, JavaScript"
+                          value={language}
+                          onChange={(e) => setLanguage(e.target.value)}
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">Target Language</label>
+                        <Input
+                          placeholder="e.g., TypeScript, Go"
+                          value={targetLanguage}
+                          onChange={(e) => setTargetLanguage(e.target.value)}
+                        />
+                      </div>
+                    </>
+                  )}
+
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">Framework (Optional)</label>
+                    <Input
+                      placeholder="e.g., React, Flask, Spring"
+                      value={framework}
+                      onChange={(e) => setFramework(e.target.value)}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">Requirements (Optional)</label>
+                    <Input
+                      placeholder="e.g., Add error handling"
+                      value={requirements}
+                      onChange={(e) => setRequirements(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* AI Input/Output */}
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle>Input</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Textarea
+                  placeholder={`Enter your ${activeMode === AI_TOOLS.CODE_GENERATOR ? 'requirements' : 'code'} here...`}
+                  value={aiInput}
+                  onChange={(e) => setAiInput(e.target.value)}
+                  className="min-h-[200px] font-mono text-sm"
+                />
+                
+                <div className="flex justify-center pt-4">
+                  <Button 
+                    onClick={handleAiProcess}
+                    disabled={isProcessing || !aiInput.trim()}
+                    size="lg"
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    {isProcessing ? (
+                      <>
+                        <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        {getToolIcon(activeMode)}
+                        <span className="ml-2">Process with AI</span>
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* AI Output */}
+            {aiOutput && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-green-600">AI Output</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="bg-gray-50 border rounded-lg p-4 max-h-96 overflow-auto">
+                    <pre className="text-sm font-mono whitespace-pre-wrap">{aiOutput}</pre>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        )}
       </div>
       <Toaster />
     </div>
