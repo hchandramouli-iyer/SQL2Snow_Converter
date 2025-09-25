@@ -139,6 +139,11 @@ function App() {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('source_database', sourceDatabase);
+      if (targetDatabaseName) formData.append('target_database_name', targetDatabaseName);
+      if (targetSchemaName) formData.append('target_schema_name', targetSchemaName);
+      if (customInstructions) formData.append('custom_instructions', customInstructions);
+      formData.append('include_comments', includeComments);
+      formData.append('preserve_case', preserveCase);
 
       const response = await axios.post(`${API}/convert-file`, formData, {
         headers: {
@@ -165,7 +170,7 @@ function App() {
     } finally {
       setIsConverting(false);
     }
-  }, [sourceDatabase, toast]);
+  }, [sourceDatabase, targetDatabaseName, targetSchemaName, customInstructions, includeComments, preserveCase, toast]);
 
   const handleDownload = async () => {
     if (!conversionId) {
