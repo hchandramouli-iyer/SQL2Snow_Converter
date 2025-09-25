@@ -318,26 +318,63 @@ function App() {
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <CardContent className="pt-0">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">Target Database Name</label>
-                      <Input
-                        placeholder="e.g., PROD_DB, ANALYTICS_DB"
-                        value={targetDatabaseName}
-                        onChange={(e) => setTargetDatabaseName(e.target.value)}
-                        data-testid="target-database-input"
-                      />
-                      <p className="text-xs text-gray-500 mt-1">Will add USE DATABASE statement</p>
+                  {/* Source Database Configuration */}
+                  <div className="mb-6">
+                    <h4 className="text-sm font-semibold mb-3 text-gray-700 flex items-center gap-2">
+                      <Database className="h-4 w-4" />
+                      Source Database Configuration
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">Source Database Name</label>
+                        <Input
+                          placeholder="e.g., mysql_prod, postgres_db"
+                          value={sourceDatabaseName}
+                          onChange={(e) => setSourceDatabaseName(e.target.value)}
+                          data-testid="source-database-name-input"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">Original database name (will be removed from references)</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">Source Schema Name</label>
+                        <Input
+                          placeholder="e.g., public, dbo, schema1"
+                          value={sourceSchemaName}
+                          onChange={(e) => setSourceSchemaName(e.target.value)}
+                          data-testid="source-schema-name-input"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">Original schema name (will be replaced)</p>
+                      </div>
                     </div>
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">Target Schema Name</label>
-                      <Input
-                        placeholder="e.g., PUBLIC, STAGING, PROD"
-                        value={targetSchemaName}
-                        onChange={(e) => setTargetSchemaName(e.target.value)}
-                        data-testid="target-schema-input"
-                      />
-                      <p className="text-xs text-gray-500 mt-1">Will qualify table names with schema</p>
+                  </div>
+
+                  {/* Target Database Configuration */}
+                  <div className="mb-6">
+                    <h4 className="text-sm font-semibold mb-3 text-gray-700 flex items-center gap-2">
+                      <ArrowRight className="h-4 w-4" />
+                      Target Snowflake Configuration
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">Target Database Name</label>
+                        <Input
+                          placeholder="e.g., PROD_DB, ANALYTICS_DB"
+                          value={targetDatabaseName}
+                          onChange={(e) => setTargetDatabaseName(e.target.value)}
+                          data-testid="target-database-input"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">Will add USE DATABASE statement</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">Target Schema Name</label>
+                        <Input
+                          placeholder="e.g., PUBLIC, STAGING, PROD"
+                          value={targetSchemaName}
+                          onChange={(e) => setTargetSchemaName(e.target.value)}
+                          data-testid="target-schema-input"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">Will qualify table names with schema</p>
+                      </div>
                     </div>
                   </div>
                   
