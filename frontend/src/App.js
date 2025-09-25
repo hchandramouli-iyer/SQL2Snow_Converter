@@ -737,64 +737,101 @@ function App() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   {getToolIcon(activeMode)}
-                  Tool Configuration
+                  Configuration for {getToolTitle(activeMode)}
                 </CardTitle>
+                <CardDescription>
+                  Configure language, framework, and specific requirements for optimal AI assistance
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {/* Language fields based on tool type */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {/* Language Selection - Always show for relevant tools */}
                   {(activeMode === AI_TOOLS.CODE_GENERATOR || 
                     activeMode === AI_TOOLS.CODE_ASSISTANT ||
                     activeMode === AI_TOOLS.CODE_EXPLAINER ||
                     activeMode === AI_TOOLS.CODE_ENHANCER ||
                     activeMode === AI_TOOLS.COMMENT_GENERATOR ||
-                    activeMode === AI_TOOLS.UNIT_TEST_GENERATOR) && (
+                    activeMode === AI_TOOLS.UNIT_TEST_GENERATOR ||
+                    activeMode === AI_TOOLS.CODE_CONVERTER) && (
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Language</label>
-                      <Input
-                        placeholder="e.g., Python, JavaScript, Java"
-                        value={language}
-                        onChange={(e) => setLanguage(e.target.value)}
-                      />
+                      <label className="text-sm font-medium mb-2 block">
+                        {activeMode === AI_TOOLS.CODE_CONVERTER ? 'Source Language' : 'Programming Language'}
+                      </label>
+                      <Select value={language} onValueChange={setLanguage}>
+                        <SelectTrigger data-testid="language-select">
+                          <SelectValue placeholder="Select language" />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-60">
+                          {programmingLanguages.map((lang) => (
+                            <SelectItem key={lang} value={lang.toLowerCase()}>{lang}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                   )}
 
+                  {/* Target Language for Code Converter */}
                   {activeMode === AI_TOOLS.CODE_CONVERTER && (
-                    <>
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Source Language</label>
-                        <Input
-                          placeholder="e.g., Python, JavaScript"
-                          value={language}
-                          onChange={(e) => setLanguage(e.target.value)}
-                        />
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Target Language</label>
-                        <Input
-                          placeholder="e.g., TypeScript, Go"
-                          value={targetLanguage}
-                          onChange={(e) => setTargetLanguage(e.target.value)}
-                        />
-                      </div>
-                    </>
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Target Language</label>
+                      <Select value={targetLanguage} onValueChange={setTargetLanguage}>
+                        <SelectTrigger data-testid="target-language-select">
+                          <SelectValue placeholder="Select target language" />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-60">
+                          {programmingLanguages.map((lang) => (
+                            <SelectItem key={lang} value={lang.toLowerCase()}>{lang}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
                   )}
 
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Framework (Optional)</label>
-                    <Input
-                      placeholder="e.g., React, Flask, Spring"
-                      value={framework}
-                      onChange={(e) => setFramework(e.target.value)}
-                    />
-                  </div>
+                  {/* Framework Selection */}
+                  {(activeMode === AI_TOOLS.CODE_GENERATOR || 
+                    activeMode === AI_TOOLS.CODE_ASSISTANT ||
+                    activeMode === AI_TOOLS.CODE_CONVERTER ||
+                    activeMode === AI_TOOLS.CODE_ENHANCER ||
+                    activeMode === AI_TOOLS.UNIT_TEST_GENERATOR) && (
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">
+                        Framework/Library <span className="text-gray-400">(Optional)</span>
+                      </label>
+                      <Select value={framework} onValueChange={setFramework}>
+                        <SelectTrigger data-testid="framework-select">
+                          <SelectValue placeholder="Select framework" />
+                        </SelectTrigger>
+                        <SelectContent className="max-h-60">
+                          <SelectItem value="">No specific framework</SelectItem>
+                          {frameworks.map((fw) => (
+                            <SelectItem key={fw} value={fw.toLowerCase()}>{fw}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
 
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Requirements (Optional)</label>
+                  {/* Requirements/Instructions */}
+                  <div className={activeMode === AI_TOOLS.CODE_CONVERTER ? "md:col-span-1" : "md:col-span-2 lg:col-span-3"}>
+                    <label className="text-sm font-medium mb-2 block">
+                      {activeMode === AI_TOOLS.CODE_GENERATOR ? 'Additional Requirements' : 
+                       activeMode === AI_TOOLS.CODE_ASSISTANT ? 'Specific Focus Areas' :
+                       activeMode === AI_TOOLS.CODE_ENHANCER ? 'Enhancement Priorities' :
+                       activeMode === AI_TOOLS.UNIT_TEST_GENERATOR ? 'Testing Requirements' :
+                       'Special Instructions'} <span className="text-gray-400">(Optional)</span>
+                    </label>
                     <Input
-                      placeholder="e.g., Add error handling"
+                      placeholder={
+                        activeMode === AI_TOOLS.CODE_GENERATOR ? "e.g., Add error handling, use async/await" :
+                        activeMode === AI_TOOLS.CODE_ASSISTANT ? "e.g., Focus on performance, security issues" :
+                        activeMode === AI_TOOLS.CODE_ENHANCER ? "e.g., Performance, readability, security" :
+                        activeMode === AI_TOOLS.UNIT_TEST_GENERATOR ? "e.g., Include edge cases, mock external APIs" :
+                        activeMode === AI_TOOLS.CODE_CONVERTER ? "e.g., Preserve comments, optimize for target platform" :
+                        "e.g., Specific requirements or focus areas"
+                      }
                       value={requirements}
                       onChange={(e) => setRequirements(e.target.value)}
+                      data-testid="requirements-input"
                     />
                   </div>
                 </div>
