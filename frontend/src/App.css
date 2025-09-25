@@ -716,126 +716,49 @@ body::before {
   z-index: 1;
 }
 
-/* Enhanced 3D Professional Buttons */
+/* Clean Professional Buttons */
 .btn-primary {
   background: linear-gradient(135deg, 
     rgba(59, 130, 246, 1) 0%,
-    rgba(99, 102, 241, 1) 50%,
-    rgba(139, 92, 246, 1) 100%
+    rgba(99, 102, 241, 1) 100%
   );
-  background-size: 300% 300%;
   color: white;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: none;
   border-radius: var(--radius-lg);
   padding: 1rem 2.5rem;
   font-size: 0.95rem;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  position: relative;
-  overflow: hidden;
   
-  /* 3D Effects */
-  transform-style: preserve-3d;
-  perspective: 1000px;
-  
-  /* Enhanced Shadows */
-  box-shadow: 
-    0 15px 25px rgba(59, 130, 246, 0.3),
-    0 8px 15px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-  
-  /* Animation */
-  animation: buttonGradient 6s ease-in-out infinite;
+  /* Clean shadow */
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
 }
 
-/* Gradient Animation */
-@keyframes buttonGradient {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
-/* Holographic Shine Effect */
-.btn-primary::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: conic-gradient(
-    from 0deg,
-    transparent,
-    rgba(255, 255, 255, 0.4),
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
-  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  transform: rotate(0deg) scale(0);
-  pointer-events: none;
-}
-
-/* Enhanced Hover Effects */
+/* Simple Hover Effects */
 .btn-primary:hover {
   background: linear-gradient(135deg, 
     rgba(79, 150, 255, 1) 0%,
-    rgba(119, 122, 255, 1) 50%,
-    rgba(159, 112, 255, 1) 100%
+    rgba(119, 122, 255, 1) 100%
   );
-  transform: perspective(1000px) translateY(-4px) rotateX(5deg) scale(1.02);
-  box-shadow: 
-    0 25px 40px rgba(59, 130, 246, 0.4),
-    0 15px 25px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-  border-color: rgba(255, 255, 255, 0.4);
-}
-
-.btn-primary:hover::before {
-  transform: rotate(360deg) scale(1);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(59, 130, 246, 0.4);
 }
 
 /* Active State */
 .btn-primary:active {
-  transform: perspective(1000px) translateY(-1px) scale(0.98);
-  box-shadow: 
-    0 10px 20px rgba(59, 130, 246, 0.3),
-    0 5px 10px rgba(0, 0, 0, 0.1),
-    inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(0);
+  box-shadow: 0 6px 15px rgba(59, 130, 246, 0.3);
 }
 
 /* Disabled State */
 .btn-primary:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-  transform: perspective(1000px) scale(1);
-  animation: none;
-}
-
-/* Ripple Effect */
-.btn-primary::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
-  transform: translate(-50%, -50%);
-  transition: all 0.6s ease;
-  pointer-events: none;
-}
-
-.btn-primary:active::after {
-  width: 200px;
-  height: 200px;
-  opacity: 0;
+  transform: none;
 }
 
 .btn-secondary {
