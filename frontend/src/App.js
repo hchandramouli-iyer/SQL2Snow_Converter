@@ -14,7 +14,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './component
 import { 
   Download, Upload, FileText, Database, ArrowRight, Code2, RefreshCw, 
   Settings, ChevronDown, Wand2, Bot, MessageCircle, TestTube, 
-  FileCode, Lightbulb, MessageSquare, Cpu, Brain
+  FileCode, Lightbulb, MessageSquare, Cpu, Brain, Network
 } from 'lucide-react';
 import { useToast } from './hooks/use-toast';
 import { Toaster } from './components/ui/toaster';
