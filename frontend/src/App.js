@@ -24,6 +24,15 @@ function App() {
   const [conversionId, setConversionId] = useState('');
   const [activeTab, setActiveTab] = useState('text');
   const [selectedFile, setSelectedFile] = useState(null);
+  
+  // New state for enhanced instructions
+  const [targetDatabaseName, setTargetDatabaseName] = useState('');
+  const [targetSchemaName, setTargetSchemaName] = useState('');
+  const [customInstructions, setCustomInstructions] = useState('');
+  const [includeComments, setIncludeComments] = useState(true);
+  const [preserveCase, setPreserveCase] = useState(false);
+  const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
+  
   const { toast } = useToast();
 
   // Sample SQL for different databases
