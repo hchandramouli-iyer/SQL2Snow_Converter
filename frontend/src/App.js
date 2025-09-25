@@ -926,11 +926,48 @@ function App() {
             {aiOutput && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-green-600">AI Output</CardTitle>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="text-green-600 flex items-center gap-2">
+                        {getToolIcon(activeMode)}
+                        {getToolTitle(activeMode)} - Output
+                      </CardTitle>
+                      <CardDescription className="mt-2">
+                        {activeMode === AI_TOOLS.CODE_GENERATOR ? 
+                          `Generated ${language || 'code'} ${framework ? `using ${framework}` : ''}` :
+                         activeMode === AI_TOOLS.CODE_CONVERTER ?
+                          `Converted from ${language || 'source'} to ${targetLanguage || 'target language'}` :
+                         activeMode === AI_TOOLS.CODE_ASSISTANT ?
+                          'AI assistance and recommendations' :
+                         activeMode === AI_TOOLS.CODE_EXPLAINER ?
+                          'Detailed code explanation and analysis' :
+                         activeMode === AI_TOOLS.CODE_ENHANCER ?
+                          'Code optimizations and enhancements' :
+                         activeMode === AI_TOOLS.COMMENT_GENERATOR ?
+                          'Generated documentation and comments' :
+                         activeMode === AI_TOOLS.UNIT_TEST_GENERATOR ?
+                          `Generated unit tests ${framework ? `using ${framework}` : ''}` :
+                         'AI-generated output'
+                        }
+                      </CardDescription>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        onClick={() => navigator.clipboard.writeText(aiOutput)}
+                        className="flex items-center gap-2"
+                      >
+                        <FileCode className="h-4 w-4" />
+                        Copy Code
+                      </Button>
+                    </div>
+                  </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="bg-gray-50 border rounded-lg p-4 max-h-96 overflow-auto">
-                    <pre className="text-sm font-mono whitespace-pre-wrap">{aiOutput}</pre>
+                  <div className="bg-gray-50 border rounded-lg p-4 max-h-[500px] overflow-auto">
+                    <pre className="text-sm font-mono whitespace-pre-wrap text-gray-800" data-testid="ai-output">
+                      {aiOutput}
+                    </pre>
                   </div>
                 </CardContent>
               </Card>
