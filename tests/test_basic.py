@@ -49,11 +49,10 @@ class TestSQLConverter:
         from server import SQLToSnowflakeConverter
         converter = SQLToSnowflakeConverter()
         assert converter is not None
-        assert hasattr(converter, 'data_type_mappings')
-        assert 'mysql' in converter.data_type_mappings
-        assert 'postgresql' in converter.data_type_mappings
-        assert 'sqlserver' in converter.data_type_mappings
-        assert 'oracle' in converter.data_type_mappings
+        assert hasattr(converter, 'mysql_type_mappings')
+        assert hasattr(converter, 'postgresql_type_mappings')
+        assert hasattr(converter, 'sqlserver_type_mappings')
+        assert hasattr(converter, 'oracle_type_mappings')
 
 class TestERDiagramParser:
     """Test ER diagram parser functionality"""
