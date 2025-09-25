@@ -55,6 +55,9 @@ class ConversionHistory(BaseModel):
     original_sql: str
     converted_sql: str
     source_database: str
+    target_database_name: Optional[str] = None
+    target_schema_name: Optional[str] = None
+    custom_instructions: Optional[str] = None
     warnings: List[str] = []
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
