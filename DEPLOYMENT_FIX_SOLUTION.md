@@ -38,11 +38,11 @@ permissions:
 - Validated both workflow files with Python YAML parser
 - Ensured proper YAML structure and indentation
 ### 5. Fixed Node.js Cache Configuration
-- Removed problematic `cache-dependency-path` that was causing "unable to cache dependencies" errors
-- Simplified cache configuration to auto-detect yarn.lock files
-- Created no-cache fallback workflow for environments with caching issues
+- Removed problematic built-in yarn caching that couldn't find `frontend/yarn.lock`
+- Created manual cache solution for projects with non-standard directory structure
+- Simplified main deployments to use no caching (faster for small projects)
 
-### 6. Created Multiple Deployment Options
+### 6. Created Four Deployment Options
 - Added `deploy-backup.yml` for manual deployment if needed
 - Added `deploy-no-cache.yml` for environments with caching issues
 - Uses updated `peaceiris/actions-gh-pages@v4` with proper permissions
