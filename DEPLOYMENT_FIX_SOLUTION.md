@@ -32,7 +32,10 @@ permissions:
 - Changed `"predeploy": "npm run build"` to `"predeploy": "yarn build"`
 - Ensures consistency with yarn usage throughout the project
 
-### 4. Created Backup Deployment Method
+### 4. Fixed YAML Syntax Error
+- Removed accidental XML tags from deploy.yml line 57
+- Validated both workflow files with Python YAML parser
+- Ensured proper YAML structure and indentation
 - Added `deploy-backup.yml` for manual deployment if needed
 - Uses updated `peaceiris/actions-gh-pages@v4` with proper permissions
 
