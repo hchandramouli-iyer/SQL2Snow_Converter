@@ -43,9 +43,11 @@ permissions:
 - Simplified main deployments to use no caching (faster for small projects)
 
 ### 6. Created Four Deployment Options
-- Added `deploy-backup.yml` for manual deployment if needed
-- Added `deploy-no-cache.yml` for environments with caching issues
-- Uses updated `peaceiris/actions-gh-pages@v4` with proper permissions
+- Added `deploy.yml` for main deployment (no cache, fastest)
+- Added `deploy-backup.yml` for alternative deployment method
+- Added `deploy-no-cache.yml` for explicit no-cache deployment
+- Added `deploy-with-cache.yml` for manual yarn caching
+- Uses updated deployment methods with proper permissions
 
 ## Validation Results
 ✅ Frontend build completed successfully with no warnings
