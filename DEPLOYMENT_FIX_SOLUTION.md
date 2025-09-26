@@ -44,6 +44,7 @@ permissions:
 
 ### 6. Created Multiple Deployment Options
 - Added `deploy-backup.yml` for manual deployment if needed
+- Added `deploy-no-cache.yml` for environments with caching issues
 - Uses updated `peaceiris/actions-gh-pages@v4` with proper permissions
 
 ## Validation Results
