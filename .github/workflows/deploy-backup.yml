@@ -1,0 +1,36 @@
+name: Backup Deploy with gh-pages (if main deploy fails)
+
+on:
+  workflow_dispatch: # Only manual trigger for this backup method
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          cache-dependency-path: frontend/yarn.lock
+          
+      - name: Install and Build
+        run: |
+          cd frontend
+          yarn install --frozen-lockfile
+          yarn build
+          
+      - name: Deploy to GitHub Pages (Alternative Method)
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./frontend/build
+          cname: hchandramouli-iyer.github.io
+</absolute_file_name>
+    </file>
