@@ -37,7 +37,12 @@ permissions:
 - Removed accidental XML tags from deploy.yml line 57
 - Validated both workflow files with Python YAML parser
 - Ensured proper YAML structure and indentation
-### 5. Created Backup Deployment Method
+### 5. Fixed Node.js Cache Configuration
+- Removed problematic `cache-dependency-path` that was causing "unable to cache dependencies" errors
+- Simplified cache configuration to auto-detect yarn.lock files
+- Created no-cache fallback workflow for environments with caching issues
+
+### 6. Created Multiple Deployment Options
 - Added `deploy-backup.yml` for manual deployment if needed
 - Uses updated `peaceiris/actions-gh-pages@v4` with proper permissions
 
