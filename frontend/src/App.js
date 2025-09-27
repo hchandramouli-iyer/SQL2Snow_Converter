@@ -13,6 +13,8 @@ import { Alert, AlertDescription } from './components/ui/alert';
 import { Input } from './components/ui/input';
 import { Switch } from './components/ui/switch';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './components/ui/collapsible';
+import { Popover, PopoverContent, PopoverTrigger } from './components/ui/popover';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from './components/ui/command';
 import { 
   Download, Upload, FileText, Database, ArrowRight, Code2, RefreshCw, 
   Settings, ChevronDown, Wand2, Bot, MessageCircle, TestTube, 
