@@ -41,111 +41,202 @@ const AI_TOOLS = {
   CHAT: "chat"
 };
 
-// ER Diagram Visualization Component
+// Enhanced ER Diagram Visualization Component
 const ERDiagramVisualization = ({ diagramData }) => {
   const containerRef = useRef(null);
   const networkRef = useRef(null);
+  const [selectedTable, setSelectedTable] = useState(null);
+  const [showTableDetails, setShowTableDetails] = useState(false);
 
   useEffect(() => {
     if (!diagramData || !containerRef.current) return;
 
-    // Prepare nodes (tables)
+    // Prepare nodes (tables) with enhanced styling
     const nodes = new DataSet(
       diagramData.tables.map(table => ({
         id: table.name,
-        label: createTableLabel(table),
+        label: createEnhancedTableLabel(table),
         shape: 'box',
         color: {
           background: '#ffffff',
           border: '#2563eb',
           highlight: {
-            background: '#eff6ff',
+            background: '#dbeafe',
             border: '#1d4ed8'
+          },
+          hover: {
+            background: '#f0f9ff',
+            border: '#3b82f6'
           }
         },
         font: {
-          face: 'monospace',
-          size: 12,
-          align: 'left'
+          face: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+          size: 11,
+          align: 'left',
+          color: '#1f2937'
         },
-        margin: 10,
-        widthConstraint: { minimum: 200, maximum: 300 },
+        margin: 12,
+        borderWidth: 2,
+        borderWidthSelected: 3,
+        widthConstraint: { minimum: 220, maximum: 350 },
+        heightConstraint: { minimum: 80 },
         x: table.x || undefined,
-        y: table.y || undefined
+        y: table.y || undefined,
+        shadow: {
+          enabled: true,
+          color: 'rgba(0,0,0,0.1)',
+          size: 8,
+          x: 2,
+          y: 2
+        }
       }))
     );
 
-    // Prepare edges (relationships)
+    // Prepare edges (relationships) with enhanced styling
     const edges = new DataSet(
       diagramData.relationships.map((rel, index) => ({
         id: index,
         from: rel.from_table,
         to: rel.to_table,
-        label: `${rel.from_column} → ${rel.to_column}`,
-        arrows: 'to',
+        label: `${rel.from_column} ↔ ${rel.to_column}`,
+        arrows: {
+          to: {
+            enabled: true,
+            type: 'arrow',
+            scaleFactor: 1.2
+          }
+        },
         color: {
-          color: '#6b7280',
-          highlight: '#374151'
+          color: '#6366f1',
+          highlight: '#4f46e5',
+          hover: '#3730a3'
         },
         font: {
           size: 10,
-          color: '#4b5563'
+          color: '#4b5563',
+          background: 'rgba(255,255,255,0.8)',
+          strokeWidth: 0
         },
+        width: 2,
         smooth: {
-          type: 'continuous'
+          type: 'cubicBezier',
+          forceDirection: 'none',
+          roundness: 0.4
+        },
+        shadow: {
+          enabled: true,
+          color: 'rgba(0,0,0,0.1)',
+          size: 4,
+          x: 1,
+          y: 1
         }
       }))
     );
 
-    // Network options
+    // Enhanced network options
     const options = {
       layout: {
         improvedLayout: true,
-        randomSeed: 2
+        randomSeed: 42,
+        clusterThreshold: 150
       },
       physics: {
         enabled: true,
         stabilization: {
           enabled: true,
-          iterations: 200
+          iterations: 300,
+          updateInterval: 25
         },
         barnesHut: {
-          gravitationalConstant: -2000,
-          centralGravity: 0.3,
+          gravitationalConstant: -3000,
+          centralGravity: 0.2,
           springLength: 200,
-          springConstant: 0.04
-        }
+          springConstant: 0.05,
+          damping: 0.95,
+          avoidOverlap: 0.2
+        },
+        maxVelocity: 50,
+        minVelocity: 0.1,
+        timestep: 0.5
       },
       nodes: {
         borderWidth: 2,
         shadow: true,
-        chosen: true
+        chosen: {
+          node: function(values, id, selected, hovering) {
+            values.borderWidth = 3;
+            values.color = '#1d4ed8';
+          }
+        }
       },
       edges: {
         width: 2,
         shadow: true,
-        smooth: true
+        smooth: true,
+        chosen: {
+          edge: function(values, id, selected, hovering) {
+            values.width = 3;
+            values.color = '#4f46e5';
+          }
+        }
       },
       interaction: {
         dragNodes: true,
         dragView: true,
         zoomView: true,
         selectConnectedEdges: true,
-        hover: true
+        hover: true,
+        hoverConnectedEdges: true,
+        multiselect: false,
+        navigationButtons: true,
+        keyboard: {
+          enabled: true,
+          bindToWindow: false
+        }
+      },
+      manipulation: {
+        enabled: false
       }
     };
 
     // Create network
     networkRef.current = new Network(containerRef.current, { nodes, edges }, options);
 
-    // Add click event listener
+    // Enhanced click event listener
     networkRef.current.on('click', (event) => {
       if (event.nodes.length > 0) {
         const nodeId = event.nodes[0];
         const table = diagramData.tables.find(t => t.name === nodeId);
         if (table) {
-          showTableDetails(table);
+          setSelectedTable(table);
+          setShowTableDetails(true);
         }
+      } else {
+        setShowTableDetails(false);
+        setSelectedTable(null);
+      }
+    });
+
+    // Add hover events for enhanced interactivity
+    networkRef.current.on('hoverNode', (event) => {
+      containerRef.current.style.cursor = 'pointer';
+    });
+
+    networkRef.current.on('blurNode', (event) => {
+      containerRef.current.style.cursor = 'default';
+    });
+
+    // Double click for zoom to node
+    networkRef.current.on('doubleClick', (event) => {
+      if (event.nodes.length > 0) {
+        const nodeId = event.nodes[0];
+        networkRef.current.focus(nodeId, {
+          scale: 1.5,
+          animation: {
+            duration: 1000,
+            easingFunction: 'easeInOutQuad'
+          }
+        });
       }
     });
 
@@ -158,33 +249,34 @@ const ERDiagramVisualization = ({ diagramData }) => {
     };
   }, [diagramData]);
 
-  const createTableLabel = (table) => {
-    let label = `📊 ${table.name}\n${'─'.repeat(Math.max(20, table.name.length + 4))}\n`;
+  const createEnhancedTableLabel = (table) => {
+    let label = `📊 ${table.name}\n`;
+    label += `${'─'.repeat(Math.max(20, table.name.length + 4))}\n`;
     
-    table.columns.forEach(column => {
-      let icon = '📄';
-      if (column.is_primary_key) icon = '🔑';
-      else if (column.is_foreign_key) icon = '🔗';
-      
+    // Group columns by type for better organization
+    const primaryKeys = table.columns.filter(col => col.is_primary_key);
+    const foreignKeys = table.columns.filter(col => col.is_foreign_key && !col.is_primary_key);
+    const regularColumns = table.columns.filter(col => !col.is_primary_key && !col.is_foreign_key);
+    
+    // Primary Keys first
+    primaryKeys.forEach(column => {
       const nullable = column.is_nullable ? '' : ' NOT NULL';
-      label += `${icon} ${column.name}: ${column.data_type}${nullable}\n`;
+      label += `🔑 ${column.name}: ${column.data_type}${nullable}\n`;
+    });
+    
+    // Foreign Keys second
+    foreignKeys.forEach(column => {
+      const nullable = column.is_nullable ? '' : ' NOT NULL';
+      label += `🔗 ${column.name}: ${column.data_type}${nullable}\n`;
+    });
+    
+    // Regular columns last
+    regularColumns.forEach(column => {
+      const nullable = column.is_nullable ? '' : ' NOT NULL';
+      label += `📄 ${column.name}: ${column.data_type}${nullable}\n`;
     });
 
     return label;
-  };
-
-  const showTableDetails = (table) => {
-    const details = `
-Table: ${table.name}
-Columns: ${table.columns.length}
-
-Column Details:
-${table.columns.map(col => 
-  `• ${col.name} (${col.data_type})${col.is_primary_key ? ' [PK]' : ''}${col.is_foreign_key ? ' [FK]' : ''}${!col.is_nullable ? ' [NOT NULL]' : ''}`
-).join('\n')}
-    `;
-    
-    alert(details.trim());
   };
 
   const exportDiagram = (format) => {
@@ -193,12 +285,56 @@ ${table.columns.map(col =>
     if (format === 'png') {
       const canvas = networkRef.current.canvas.getContext().canvas;
       const link = document.createElement('a');
-      link.download = 'er-diagram.png';
-      link.href = canvas.toDataURL();
+      link.download = `er-diagram-${new Date().getTime()}.png`;
+      link.href = canvas.toDataURL('image/png', 1.0);
       link.click();
-    } else if (format === 'svg') {
-      // For SVG export, we'd need additional libraries
-      alert('SVG export requires additional setup. PNG export is available.');
+    } else if (format === 'json') {
+      const positions = networkRef.current.getPositions();
+      const exportData = {
+        ...diagramData,
+        positions: positions,
+        exportDate: new Date().toISOString()
+      };
+      
+      const dataStr = JSON.stringify(exportData, null, 2);
+      const dataBlob = new Blob([dataStr], {type: 'application/json'});
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `er-diagram-${new Date().getTime()}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+  };
+
+  const zoomToFit = () => {
+    if (networkRef.current) {
+      networkRef.current.fit({
+        animation: {
+          duration: 1000,
+          easingFunction: 'easeInOutQuad'
+        }
+      });
+    }
+  };
+
+  const resetZoom = () => {
+    if (networkRef.current) {
+      networkRef.current.moveTo({
+        position: {x: 0, y: 0},
+        scale: 1,
+        animation: {
+          duration: 1000,
+          easingFunction: 'easeInOutQuad'
+        }
+      });
+    }
+  };
+
+  const togglePhysics = () => {
+    if (networkRef.current) {
+      const isEnabled = networkRef.current.physics.physicsEnabled;
+      networkRef.current.setOptions({ physics: { enabled: !isEnabled } });
     }
   };
 
