@@ -862,8 +862,8 @@ function App() {
               <p className="text-gray-600">{getToolDescription(activeMode)}</p>
             </div>
 
-        {/* Tool-specific Content */}
-        {activeMode === AI_TOOLS.SQL_CONVERTER ? (
+            {/* Tool-specific Content */}
+            {activeMode === AI_TOOLS.SQL_CONVERTER ? (
           <div className="space-y-6">
             {/* SQL Converter Controls */}
             <Card className="professional-card">
