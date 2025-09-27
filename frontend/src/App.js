@@ -1098,6 +1098,7 @@ function App() {
                         <DatabaseInputWithHistory
                           value={targetDatabaseName}
                           onValueChange={handleTargetDatabaseNameChange}
+                          onBlur={handleTargetDatabaseBlur}
                           placeholder="e.g., ANALYTICS_DB"
                           history={targetDatabaseHistory}
                           className="form-input"
@@ -1109,6 +1110,7 @@ function App() {
                         <DatabaseInputWithHistory
                           value={targetSchemaName}
                           onValueChange={handleTargetSchemaNameChange}
+                          onBlur={handleTargetSchemaBlur}
                           placeholder="e.g., PUBLIC, STAGING, PROD"
                           history={targetSchemaHistory}
                           className="form-input"
