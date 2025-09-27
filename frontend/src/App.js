@@ -758,130 +758,109 @@ function App() {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="container" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
-        {/* AI Configuration Panel */}
-        <div className="professional-card">
-          <div className="card-header-professional">
-            <h2 className="card-title-professional">
-              <Settings className="h-6 w-6" />
-              AI Configuration
-            </h2>
-            <p className="card-description-professional">
-              Configure your AI assistant with preferred provider and model for optimal results
-            </p>
-          </div>
-          <div className="card-content-professional">
-            <div className="grid grid-3 gap-6">
-              <div className="form-group">
-                <label className="form-label">AI Provider</label>
-                <Select value={llmProvider} onValueChange={setLlmProvider}>
-                  <SelectTrigger className="form-select" data-testid="llm-provider-select">
-                    <SelectValue placeholder="Select AI provider" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="openai">
-                      <div className="flex items-center gap-2">
-                        <div className="status-dot status-online"></div>
-                        OpenAI (GPT)
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="anthropic">
-                      <div className="flex items-center gap-2">
-                        <div className="status-dot status-online"></div>
-                        Anthropic (Claude)
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="gemini">
-                      <div className="flex items-center gap-2">
-                        <div className="status-dot status-online"></div>
-                        Google (Gemini)
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="form-group">
-                <label className="form-label">Model Version</label>
-                <Select value={llmModel} onValueChange={setLlmModel}>
-                  <SelectTrigger className="form-select" data-testid="llm-model-select">
-                    <SelectValue placeholder="Select model" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {availableModels[llmProvider]?.map((model) => (
-                      <SelectItem key={model} value={model}>
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono text-sm">{model}</span>
-                          {model.includes('gpt-5') || model.includes('claude-4') || model.includes('2.0') ? (
-                            <span className="badge badge-primary text-xs">Latest</span>
-                          ) : null}
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Actions</label>
-                <Button 
-                  variant="outline" 
-                  onClick={clearAll}
-                  className="btn-secondary w-full"
-                  data-testid="clear-all-btn"
-                >
-                  <RefreshCw className="h-4 w-4" />
-                  Reset All Fields
-                </Button>
+      {/* Main Content with Sidebar Layout */}
+      <div className="flex min-h-screen bg-gray-50">
+        {/* Left Sidebar */}
+        <aside className="w-80 bg-white border-r border-gray-200 shadow-sm">
+          <div className="p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-6">Development Tools</h2>
+            
+            {/* AI Configuration in Sidebar */}
+            <div className="mb-8 p-4 bg-gray-50 rounded-lg">
+              <h3 className="text-sm font-semibold text-gray-700 mb-3">AI Configuration</h3>
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Provider</label>
+                  <Select value={llmProvider} onValueChange={setLlmProvider}>
+                    <SelectTrigger className="h-8 text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="openai">OpenAI (GPT)</SelectItem>
+                      <SelectItem value="anthropic">Anthropic (Claude)</SelectItem>
+                      <SelectItem value="gemini">Google (Gemini)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Model</label>
+                  <Select value={llmModel} onValueChange={setLlmModel}>
+                    <SelectTrigger className="h-8 text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableModels[llmProvider]?.map((model) => (
+                        <SelectItem key={model} value={model}>{model}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* Tool Selection */}
-        <div className="professional-card">
-          <div className="card-header-professional">
-            <h2 className="card-title-professional">
-              <Cpu className="h-6 w-6" />
-              Development Tools
-            </h2>
-            <p className="card-description-professional">
-              Select from our comprehensive suite of AI-powered development tools
-            </p>
-          </div>
-          <div className="card-content-professional">
-            <div className="tool-grid">
-              {Object.values(AI_TOOLS).map((tool) => (
-                <div
-                  key={tool}
-                  className={`tool-card ${activeMode === tool ? 'active' : ''}`}
-                  onClick={() => setActiveMode(tool)}
-                  data-testid={`tool-${tool}`}
-                >
-                  <div className="tool-icon">
-                    {getToolIcon(tool)}
-                  </div>
-                  <div className="tool-name">
-                    {getToolShortName(tool)}
-                  </div>
+            {/* Tool Categories */}
+            <nav className="space-y-2">
+              {Object.entries(toolCategories).map(([sectionKey, section]) => (
+                <div key={sectionKey} className="space-y-1">
+                  <button
+                    onClick={() => setActiveSection(sectionKey)}
+                    className={`w-full flex items-center gap-3 px-3 py-2 text-left rounded-lg transition-colors ${
+                      activeSection === sectionKey 
+                        ? 'bg-blue-50 text-blue-700 border border-blue-200' 
+                        : 'hover:bg-gray-50 text-gray-700'
+                    }`}
+                  >
+                    {section.icon}
+                    <span className="font-medium">{section.title}</span>
+                  </button>
+                  
+                  {activeSection === sectionKey && (
+                    <div className="ml-8 space-y-1">
+                      {section.tools.map((tool) => (
+                        <button
+                          key={tool.key}
+                          onClick={() => setActiveMode(tool.key)}
+                          className={`w-full flex items-center gap-2 px-3 py-2 text-sm text-left rounded-md transition-colors ${
+                            activeMode === tool.key 
+                              ? 'bg-blue-100 text-blue-800' 
+                              : 'hover:bg-gray-100 text-gray-600'
+                          }`}
+                        >
+                          {tool.icon}
+                          <span>{tool.title}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
+            </nav>
+
+            {/* Reset Button */}
+            <div className="mt-8 pt-6 border-t border-gray-200">
+              <Button 
+                variant="outline" 
+                onClick={clearAll}
+                className="w-full text-sm"
+              >
+                <RefreshCw className="h-4 w-4" />
+                Reset All Fields
+              </Button>
             </div>
           </div>
-        </div>
+        </aside>
 
-        {/* Current Tool Information */}
-        <div className="alert alert-info animate-fade-in">
-          <div className="flex items-center gap-2">
-            {getToolIcon(activeMode)}
-            <div className="status-dot status-processing"></div>
-          </div>
-          <div>
-            <div className="font-semibold">{getToolTitle(activeMode)}</div>
-            <div className="text-sm opacity-90">{getToolDescription(activeMode)}</div>
-          </div>
-        </div>
+        {/* Right Main Content */}
+        <main className="flex-1 p-8">
+          <div className="max-w-4xl mx-auto">
+            {/* Current Tool Header */}
+            <div className="mb-6">
+              <div className="flex items-center gap-3 mb-2">
+                {getToolIcon(activeMode)}
+                <h1 className="text-2xl font-bold text-gray-900">{getToolTitle(activeMode)}</h1>
+              </div>
+              <p className="text-gray-600">{getToolDescription(activeMode)}</p>
+            </div>
 
         {/* Tool-specific Content */}
         {activeMode === AI_TOOLS.SQL_CONVERTER ? (
