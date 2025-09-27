@@ -1122,8 +1122,21 @@ body::before {
 .border-gray-200 { border-color: #e5e7eb; }
 .border-blue-200 { border-color: #bfdbfe; }
 
-/* Icon Sizes */
-.h-3 { height: 0.75rem; }
+/* Layout and Positioning */
+.relative { position: relative; }
+.absolute { position: absolute; }
+.z-10 { z-index: 10; }
+.mt-1 { margin-top: 0.25rem; }
+.max-h-60 { max-height: 15rem; }
+.overflow-auto { overflow: auto; }
+
+/* Border Radius */
+.rounded-l-none { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.rounded-r-none { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.rounded-sm { border-radius: 0.125rem; }
+
+/* Border */
+.border-l-0 { border-left-width: 0; }
 .w-3 { width: 0.75rem; }
 
 /* Justify Between */
