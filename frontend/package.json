@@ -1,8 +1,11 @@
 {
-  "name": "frontend",
-  "homepage": "https://hchandramouli-iyer.github.io/SQL2Snow_Converter",
-  "version": "0.1.0",
+  "name": "codecraft-ai-desktop",
+  "productName": "CodeCraft AI",
+  "description": "AI-Powered Development Suite - Desktop Edition",
+  "author": "CodeCraft AI Team",
+  "version": "1.0.0",
   "private": true,
+  "main": "electron.js",
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
     "@radix-ui/react-accordion": "^1.2.8",
