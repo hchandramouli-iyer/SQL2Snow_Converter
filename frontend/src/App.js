@@ -708,10 +708,9 @@ function App() {
               </div>
               <div className="brand-text">CodeCraft AI</div>
             </div>
-            <h1 className="hero-title">AI-Powered Development Suite</h1>
+            <h1 className="hero-title">AI Development Tools</h1>
             <p className="hero-subtitle">
-              Professional-grade AI tools for code generation, conversion, enhancement, and SQL transformation. 
-              Streamline your development workflow with intelligent automation.
+              Code generation, SQL conversion, and intelligent development automation.
             </p>
           </div>
         </div>
