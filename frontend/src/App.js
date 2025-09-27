@@ -1079,23 +1079,23 @@ function App() {
                     <div className="grid grid-2 gap-4">
                       <div className="form-group">
                         <label className="form-label">Target Database Name</label>
-                        <DatabaseComboBox
+                        <DatabaseInputWithHistory
                           value={targetDatabaseName}
                           onValueChange={handleTargetDatabaseNameChange}
                           placeholder="e.g., ANALYTICS_DB"
                           history={targetDatabaseHistory}
-                          className="form-select"
+                          className="form-input"
                         />
                       </div>
                       
                       <div className="form-group">
                         <label className="form-label">Target Schema Name</label>
-                        <DatabaseComboBox
+                        <DatabaseInputWithHistory
                           value={targetSchemaName}
                           onValueChange={handleTargetSchemaNameChange}
                           placeholder="e.g., PUBLIC, STAGING, PROD"
                           history={targetSchemaHistory}
-                          className="form-select"
+                          className="form-input"
                         />
                       </div>
                     </div>
