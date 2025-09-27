@@ -1363,12 +1363,13 @@ CREATE TABLE orders (
               </Card>
             )}
           </div>
-        </main>
-      </div>
-      
-      <Toaster />
+        )}
+      </main>
     </div>
-  );
+      
+    <Toaster />
+  </div>
+);
 }
 
 export default App;
