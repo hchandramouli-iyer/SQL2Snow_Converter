@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-## user_problem_statement: Continue implementing stunning visual effects and interactive elements to the AI-powered SQL conversion platform. User requested bold, eye-catching effects including particle systems, advanced animations, and interactive 3D elements. Also requested to make "CodeCraft AI" headline more robust and clean.
+## user_problem_statement: Clean the GitHub repository with clean version of files and structure them properly for a clean build and deploy. Remove duplicate files, consolidate documentation, organize project structure professionally, and ensure clean deployment configuration.
 
 ## frontend:
   - task: "Enhanced Visual Effects Implementation"
