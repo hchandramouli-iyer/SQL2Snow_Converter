@@ -362,6 +362,24 @@ function App() {
 
   const { toast } = useToast();
 
+  // Copy to clipboard function
+  const copyToClipboard = async (text, successMessage = 'Copied to clipboard!') => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({
+        title: "Success",
+        description: successMessage,
+      });
+    } catch (error) {
+      console.error('Failed to copy to clipboard:', error);
+      toast({
+        title: "Copy Failed",
+        description: "Failed to copy to clipboard",
+        variant: "destructive"
+      });
+    }
+  };
+
   // Sample SQL for different databases
   const sampleSql = {
     mysql: `CREATE TABLE users (
