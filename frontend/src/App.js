@@ -274,12 +274,6 @@ function App() {
   const [preserveCase, setPreserveCase] = useState(false);
   const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
   
-  // History states for database and schema names
-  const [sourceDatabaseHistory, setSourceDatabaseHistory] = useState([]);
-  const [sourceSchemaHistory, setSourceSchemaHistory] = useState([]);
-  const [targetDatabaseHistory, setTargetDatabaseHistory] = useState([]);
-  const [targetSchemaHistory, setTargetSchemaHistory] = useState([]);
-  
   // AI Tools state
   const [aiInput, setAiInput] = useState('');
   const [aiOutput, setAiOutput] = useState('');
