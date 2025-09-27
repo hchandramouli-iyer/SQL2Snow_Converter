@@ -223,15 +223,18 @@
 
   - task: "Database and Schema Dropdown Functionality with History Storage"
     implemented: true
-    working: true
+    working: false
     file: "/app/frontend/src/App.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
         - working: true
           agent: "testing"
           comment: "COMPREHENSIVE DROPDOWN FUNCTIONALITY TESTING COMPLETED SUCCESSFULLY: Tested all requested functionality with 100% success rate. ✅ VERIFIED FEATURES: 1) Database Dropdown Interaction - Source Database Name dropdown opens correctly, accepts text input ('my_ecommerce_db'), shows search functionality with 'Search or type' placeholder, and saves values successfully. 2) Schema Dropdown Interaction - Source Schema Name dropdown functional, accepts 'public' input, proper search interface. 3) Target Database Configuration - Target Database Name accepts 'ANALYTICS_DW', Target Schema Name accepts 'STAGING', both dropdowns functional. 4) History Storage Mechanism - LocalStorage integration implemented with keys for sourceDatabaseHistory, sourceSchemaHistory, targetDatabaseHistory, targetSchemaHistory. 5) Navigation Persistence - Values persist correctly when navigating between SQL Converter and ER Diagram tools. 6) Dropdown Functionality - All ComboBox components open/close correctly, search input fields visible, 'Use' buttons appear for new values. 7) UI Components - All dropdowns use proper shadcn/ui components (Popover, Command, CommandInput, CommandItem) with correct ARIA attributes and role='combobox'. The ComboBox implementation with history storage is fully functional and provides excellent user experience for database/schema name management."
+        - working: false
+          agent: "testing"
+          comment: "ENHANCED DATABASE/SCHEMA INPUT FIELDS TESTING COMPLETED - CRITICAL ISSUES FOUND: Comprehensive testing of the enhanced database/schema input fields revealed mixed results. ✅ WORKING FEATURES: 1) Direct Typing Test - All input fields accept direct typing perfectly (ecommerce_db, public, DW_ANALYTICS, PROD), 2) Navigation Persistence - Values persist correctly when navigating between SQL Converter and ER Diagram tools, 3) Form Integration - Load Sample SQL and Reset All Fields functionality working correctly, 4) UI Components - All input fields properly rendered with correct placeholders and styling. ❌ CRITICAL ISSUES: 1) History Storage Mechanism FAILED - Values are not being saved to localStorage despite blur events being triggered, localStorage arrays remain empty (sourceDatabaseHistory, sourceSchemaHistory, targetDatabaseHistory, targetSchemaHistory all show []), 2) Dropdown History Functionality FAILED - Dropdown buttons are present with ChevronDown icons but not opening history dropdown when clicked, 'Recently Used' section not appearing. The DatabaseInputWithHistory component renders correctly but the core history storage and dropdown functionality is not working as expected. While basic input and state persistence work, the enhanced history features that were specifically requested are not functional."
 
   - task: "SQL Converter Copy Functionality"
     implemented: true
