@@ -65,7 +65,15 @@
     "build": "craco build",
     "test": "craco test",
     "predeploy": "yarn build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "electron": "electron .",
+    "electron-dev": "concurrently \"yarn start\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron-pack": "yarn build && electron-builder build --publish=never",
+    "electron-build": "yarn build && electron-builder build --publish=always",
+    "dist": "yarn build && electron-builder --publish=never",
+    "dist-win": "yarn build && electron-builder --win --publish=never",
+    "dist-mac": "yarn build && electron-builder --mac --publish=never",
+    "dist-linux": "yarn build && electron-builder --linux --publish=never"
   },
   "browserslist": {
     "production": [
