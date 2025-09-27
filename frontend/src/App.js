@@ -316,6 +316,50 @@ function App() {
     'Electron', 'Ionic', 'Cordova', 'GraphQL', 'Apollo', 'Redux', 'Vuex', 'MobX'
   ];
 
+  // Tool Categories for Sidebar
+  const toolCategories = {
+    'sql-database': {
+      title: 'SQL & Database',
+      icon: <Database className="h-5 w-5" />,
+      tools: [
+        { key: AI_TOOLS.SQL_CONVERTER, title: 'SQL Converter', icon: <Database className="h-4 w-4" /> },
+        { key: AI_TOOLS.ER_DIAGRAM, title: 'ER Diagram', icon: <NetworkIcon className="h-4 w-4" /> }
+      ]
+    },
+    'code-generation': {
+      title: 'Code Generation',
+      icon: <Wand2 className="h-5 w-5" />,
+      tools: [
+        { key: AI_TOOLS.CODE_GENERATOR, title: 'Code Generator', icon: <Wand2 className="h-4 w-4" /> },
+        { key: AI_TOOLS.CODE_ASSISTANT, title: 'Code Assistant', icon: <Bot className="h-4 w-4" /> }
+      ]
+    },
+    'code-analysis': {
+      title: 'Code Analysis',
+      icon: <FileCode className="h-5 w-5" />,
+      tools: [
+        { key: AI_TOOLS.CODE_EXPLAINER, title: 'Code Explainer', icon: <FileCode className="h-4 w-4" /> },
+        { key: AI_TOOLS.CODE_ENHANCER, title: 'Code Enhancer', icon: <Lightbulb className="h-4 w-4" /> },
+        { key: AI_TOOLS.CODE_CONVERTER, title: 'Language Converter', icon: <ArrowRight className="h-4 w-4" /> }
+      ]
+    },
+    'documentation': {
+      title: 'Documentation',
+      icon: <MessageSquare className="h-5 w-5" />,
+      tools: [
+        { key: AI_TOOLS.COMMENT_GENERATOR, title: 'Doc Generator', icon: <MessageSquare className="h-4 w-4" /> },
+        { key: AI_TOOLS.UNIT_TEST_GENERATOR, title: 'Test Generator', icon: <TestTube className="h-4 w-4" /> }
+      ]
+    },
+    'ai-assistant': {
+      title: 'AI Assistant',
+      icon: <MessageCircle className="h-5 w-5" />,
+      tools: [
+        { key: AI_TOOLS.CHAT, title: 'AI Chat', icon: <MessageCircle className="h-4 w-4" /> }
+      ]
+    }
+  };
+
   const { toast } = useToast();
 
   // Sample SQL for different databases
