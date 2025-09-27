@@ -212,4 +212,3 @@ echo "  4. Deploy: yarn deploy (for GitHub Pages)"
 echo ""
 echo "🌐 Your CodeCraft AI is now a clean web application!"
 echo "   Ready for GitHub Pages deployment at: https://hchandramouli-iyer.github.io/SQL2Snow_Converter"
-EOF
