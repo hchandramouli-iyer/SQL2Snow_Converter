@@ -139,8 +139,15 @@
         {
           "target": "portable",
           "arch": ["x64", "ia32"]
+        },
+        {
+          "target": "zip",
+          "arch": ["x64", "ia32"]
         }
-      ]
+      ],
+      "publisherName": "CodeCraft AI Team",
+      "verifyUpdateCodeSignature": false,
+      "requestedExecutionLevel": "asInvoker"
     },
     "linux": {
       "icon": "assets/icon.png",
