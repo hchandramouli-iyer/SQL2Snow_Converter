@@ -1088,8 +1088,19 @@ CREATE TABLE users (
                       </div>
                     </div>
                     <div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="badge badge-primary">Converted (Snowflake)</span>
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="badge badge-primary">Converted (Snowflake)</span>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => copyToClipboard(convertedSql, 'Converted SQL copied to clipboard!')}
+                          className="flex items-center gap-2 text-xs"
+                        >
+                          <Copy className="h-3 w-3" />
+                          Copy SQL
+                        </Button>
                       </div>
                       <div className="code-container">
                         <pre className="text-sm" data-testid="converted-sql">{convertedSql}</pre>
