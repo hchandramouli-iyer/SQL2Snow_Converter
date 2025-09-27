@@ -18,7 +18,8 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '
 import { 
   Download, Upload, FileText, Database, ArrowRight, Code2, RefreshCw, 
   Settings, ChevronDown, Wand2, Bot, MessageCircle, TestTube, 
-  FileCode, Lightbulb, MessageSquare, Cpu, Brain, Network as NetworkIcon, Copy
+  FileCode, Lightbulb, MessageSquare, Cpu, Brain, Network as NetworkIcon, Copy,
+  Check, ChevronsUpDown
 } from 'lucide-react';
 import { useToast } from './hooks/use-toast';
 import { Toaster } from './components/ui/toaster';
