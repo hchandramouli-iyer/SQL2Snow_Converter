@@ -173,7 +173,6 @@
       "allowElevation": false,
       "installerIcon": "assets/icon.ico",
       "uninstallerIcon": "assets/icon.ico",
-      "installerHeaderIcon": "assets/icon.ico",
       "deleteAppDataOnUninstall": false,
       "runAfterFinish": true,
       "menuCategory": "Development"
