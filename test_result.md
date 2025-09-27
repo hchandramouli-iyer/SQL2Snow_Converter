@@ -221,6 +221,18 @@
   test_all: false
   test_priority: "high_first"
 
+  - task: "Database and Schema Dropdown Functionality with History Storage"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "COMPREHENSIVE DROPDOWN FUNCTIONALITY TESTING COMPLETED SUCCESSFULLY: Tested all requested functionality with 100% success rate. ✅ VERIFIED FEATURES: 1) Database Dropdown Interaction - Source Database Name dropdown opens correctly, accepts text input ('my_ecommerce_db'), shows search functionality with 'Search or type' placeholder, and saves values successfully. 2) Schema Dropdown Interaction - Source Schema Name dropdown functional, accepts 'public' input, proper search interface. 3) Target Database Configuration - Target Database Name accepts 'ANALYTICS_DW', Target Schema Name accepts 'STAGING', both dropdowns functional. 4) History Storage Mechanism - LocalStorage integration implemented with keys for sourceDatabaseHistory, sourceSchemaHistory, targetDatabaseHistory, targetSchemaHistory. 5) Navigation Persistence - Values persist correctly when navigating between SQL Converter and ER Diagram tools. 6) Dropdown Functionality - All ComboBox components open/close correctly, search input fields visible, 'Use' buttons appear for new values. 7) UI Components - All dropdowns use proper shadcn/ui components (Popover, Command, CommandInput, CommandItem) with correct ARIA attributes and role='combobox'. The ComboBox implementation with history storage is fully functional and provides excellent user experience for database/schema name management."
+
   - task: "SQL Converter Copy Functionality"
     implemented: true
     working: false
