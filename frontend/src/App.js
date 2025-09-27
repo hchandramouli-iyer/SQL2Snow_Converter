@@ -1098,8 +1098,19 @@ CREATE TABLE users (
                 <CardContent className="card-content-professional">
                   <div className="grid grid-2 gap-6">
                     <div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="badge badge-secondary">Original ({sourceDatabase?.toUpperCase()})</span>
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="badge badge-secondary">Original ({sourceDatabase?.toUpperCase()})</span>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => copyToClipboard(sqlInput, 'Original SQL copied to clipboard!')}
+                          className="flex items-center gap-2 text-xs"
+                        >
+                          <Copy className="h-3 w-3" />
+                          Copy SQL
+                        </Button>
                       </div>
                       <div className="code-container">
                         <pre className="text-sm" data-testid="original-sql">{sqlInput}</pre>
