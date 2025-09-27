@@ -233,10 +233,9 @@
 
 ## test_plan:
   current_focus:
-    - "GitHub Repository Cleanup and Structure Organization"
     - "Clean Build and Deployment Verification"
   stuck_tasks: []
-  test_all: true
+  test_all: false
   test_priority: "high_first"
 
   - task: "Enhanced ER Diagram Functionality with Improved Interactivity"
