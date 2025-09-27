@@ -393,23 +393,29 @@ function App() {
           </Button>
         </div>
         
-        {showHistory && history.length > 0 && (
+        {showHistory && (
           <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto">
             <div className="p-2">
-              <div className="text-xs font-semibold text-gray-600 mb-2">Recently Used ({history.length})</div>
-              {history.map((item, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-sm transition-colors"
-                  onClick={() => {
-                    onValueChange(item);
-                    setShowHistory(false);
-                  }}
-                >
-                  {item}
-                </button>
-              ))}
+              {history.length > 0 ? (
+                <>
+                  <div className="text-xs font-semibold text-gray-600 mb-2">Recently Used ({history.length})</div>
+                  {history.map((item, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-sm transition-colors"
+                      onClick={() => {
+                        onValueChange(item);
+                        setShowHistory(false);
+                      }}
+                    >
+                      {item}
+                    </button>
+                  ))}
+                </>
+              ) : (
+                <div className="text-xs text-gray-500 py-2">No recent entries yet. Type a value and press Tab or click away to save it to history.</div>
+              )}
             </div>
           </div>
         )}
