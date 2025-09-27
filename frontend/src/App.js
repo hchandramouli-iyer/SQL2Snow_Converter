@@ -877,33 +877,140 @@ function App() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="card-content-professional">
-                <div className="grid grid-2 gap-6">
-                  <div className="form-group">
-                    <label className="form-label">Source Database Type</label>
-                    <Select value={sourceDatabase} onValueChange={setSourceDatabase}>
-                      <SelectTrigger className="form-select" data-testid="source-database-select">
-                        <SelectValue placeholder="Choose database type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="mysql">MySQL</SelectItem>
-                        <SelectItem value="postgresql">PostgreSQL</SelectItem>
-                        <SelectItem value="sqlserver">SQL Server</SelectItem>
-                        <SelectItem value="oracle">Oracle</SelectItem>
-                      </SelectContent>
-                    </Select>
+                <div className="space-y-6">
+                  {/* Source Database Configuration */}
+                  <div>
+                    <h4 className="text-md font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                      <Database className="h-4 w-4" />
+                      Source Database Details
+                    </h4>
+                    <div className="grid grid-2 gap-4">
+                      <div className="form-group">
+                        <label className="form-label">Source Database Type *</label>
+                        <Select value={sourceDatabase} onValueChange={setSourceDatabase}>
+                          <SelectTrigger className="form-select" data-testid="source-database-select">
+                            <SelectValue placeholder="Choose database type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="mysql">MySQL</SelectItem>
+                            <SelectItem value="postgresql">PostgreSQL</SelectItem>
+                            <SelectItem value="sqlserver">SQL Server</SelectItem>
+                            <SelectItem value="oracle">Oracle</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="form-group">
+                        <label className="form-label">Source Database Name</label>
+                        <Input
+                          placeholder="e.g., my_production_db"
+                          value={sourceDatabaseName}
+                          onChange={(e) => setSourceDatabaseName(e.target.value)}
+                          className="form-input"
+                        />
+                      </div>
+                      
+                      <div className="form-group">
+                        <label className="form-label">Source Schema Name</label>
+                        <Input
+                          placeholder="e.g., public, dbo, main"
+                          value={sourceSchemaName}
+                          onChange={(e) => setSourceSchemaName(e.target.value)}
+                          className="form-input"
+                        />
+                      </div>
+                      
+                      <div className="form-group">
+                        <Button 
+                          variant="outline" 
+                          onClick={loadSampleSql}
+                          disabled={!sourceDatabase}
+                          className="btn-secondary w-full mt-6"
+                          data-testid="load-sample-btn"
+                        >
+                          <FileText className="h-4 w-4" />
+                          Load Sample SQL
+                        </Button>
+                      </div>
+                    </div>
                   </div>
-                  
-                  <div className="form-group">
-                    <Button 
-                      variant="outline" 
-                      onClick={loadSampleSql}
-                      disabled={!sourceDatabase}
-                      className="btn-secondary w-full mt-6"
-                      data-testid="load-sample-btn"
-                    >
-                      <FileText className="h-4 w-4" />
-                      Load Sample SQL
-                    </Button>
+
+                  {/* Target Database Configuration */}
+                  <div className="border-t border-gray-200 pt-6">
+                    <h4 className="text-md font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                      <ArrowRight className="h-4 w-4" />
+                      Target Database Details (Snowflake)
+                    </h4>
+                    <div className="grid grid-2 gap-4">
+                      <div className="form-group">
+                        <label className="form-label">Target Database Name</label>
+                        <Input
+                          placeholder="e.g., ANALYTICS_DB"
+                          value={targetDatabaseName}
+                          onChange={(e) => setTargetDatabaseName(e.target.value)}
+                          className="form-input"
+                        />
+                      </div>
+                      
+                      <div className="form-group">
+                        <label className="form-label">Target Schema Name</label>
+                        <Input
+                          placeholder="e.g., PUBLIC, STAGING, PROD"
+                          value={targetSchemaName}
+                          onChange={(e) => setTargetSchemaName(e.target.value)}
+                          className="form-input"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Advanced Options */}
+                  <div className="border-t border-gray-200 pt-6">
+                    <Collapsible open={showAdvancedOptions} onOpenChange={setShowAdvancedOptions}>
+                      <CollapsibleTrigger className="flex items-center gap-2 text-md font-semibold text-gray-800 hover:text-blue-600 transition-colors">
+                        <Settings className="h-4 w-4" />
+                        Advanced Configuration Options
+                        <ChevronDown className={`h-4 w-4 transition-transform ${showAdvancedOptions ? 'rotate-180' : ''}`} />
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-4">
+                        <div className="grid grid-2 gap-4">
+                          <div className="form-group">
+                            <label className="form-label">Custom Instructions</label>
+                            <Textarea
+                              placeholder="e.g., Preserve original column comments, use specific data types..."
+                              value={customInstructions}
+                              onChange={(e) => setCustomInstructions(e.target.value)}
+                              className="form-textarea"
+                              style={{ minHeight: '80px' }}
+                            />
+                          </div>
+                          
+                          <div className="space-y-4">
+                            <div className="form-group">
+                              <div className="flex items-center justify-between">
+                                <label className="form-label">Include Comments</label>
+                                <Switch
+                                  checked={includeComments}
+                                  onCheckedChange={setIncludeComments}
+                                />
+                              </div>
+                              <p className="text-xs text-gray-500 mt-1">Generate comments for tables and columns</p>
+                            </div>
+                            
+                            <div className="form-group">
+                              <div className="flex items-center justify-between">
+                                <label className="form-label">Preserve Case</label>
+                                <Switch
+                                  checked={preserveCase}
+                                  onCheckedChange={setPreserveCase}
+                                />
+                              </div>
+                              <p className="text-xs text-gray-500 mt-1">Maintain original case for identifiers</p>
+                            </div>
+                          </div>
+                        </div>
+                      </CollapsibleContent>
+                    </Collapsible>
                   </div>
                 </div>
               </CardContent>
