@@ -253,6 +253,7 @@ ${table.columns.map(col =>
 
 function App() {
   const [activeMode, setActiveMode] = useState(AI_TOOLS.SQL_CONVERTER);
+  const [activeSection, setActiveSection] = useState('sql-database');
   
   // SQL Converter state
   const [sourceDatabase, setSourceDatabase] = useState('');
