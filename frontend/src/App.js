@@ -758,8 +758,8 @@ function App() {
         </div>
       </header>
 
-      {/* Main Content with Sidebar Layout */}
-      <div className="flex min-h-screen bg-gray-50">
+      {/* Main Layout with Sidebar */}
+      <div className="flex bg-gray-50" style={{ minHeight: 'calc(100vh - 200px)' }}>
         {/* Left Sidebar */}
         <aside className="w-80 bg-white border-r border-gray-200 shadow-sm">
           <div className="p-6">
@@ -798,7 +798,7 @@ function App() {
               </div>
             </div>
 
-            {/* Tool Categories */}
+            {/* Tool Categories Navigation */}
             <nav className="space-y-2">
               {Object.entries(toolCategories).map(([sectionKey, section]) => (
                 <div key={sectionKey} className="space-y-1">
