@@ -1363,8 +1363,8 @@ CREATE TABLE orders (
               </Card>
             )}
           </div>
-        )}
-      </main>
+        </main>
+      </div>
       
       <Toaster />
     </div>
