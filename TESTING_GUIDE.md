@@ -183,7 +183,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'backend'))
 ### **Issue**: API tests failing with connection errors
 **Solution**: Verify the API endpoint URL in `backend_test.py`:
 ```python
-def __init__(self, base_url="https://sqlsnowcraft.preview.emergentagent.com"):
+def __init__(self, base_url="https://codecraft-ai-20.preview.emergentagent.com"):
 ```
 
 ## 📋 Test Maintenance
