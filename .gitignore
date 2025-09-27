@@ -188,3 +188,6 @@ frontend/dist/linux-unpacked/electron
 frontend/dist/linux-unpacked/resources/app.asar
 frontend/dist/linux-unpacked/codecraft-ai-desktop
 frontend/dist/win-unpacked/electron.exe
+frontend/dist/win-unpacked/resources/app.asar
+frontend/dist/win-unpacked/CodeCraft
+AI.exe

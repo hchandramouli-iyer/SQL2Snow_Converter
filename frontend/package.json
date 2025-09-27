@@ -131,6 +131,7 @@
     },
     "win": {
       "icon": "assets/icon.ico",
+      "executableName": "CodeCraftAI",
       "target": [
         {
           "target": "nsis",
