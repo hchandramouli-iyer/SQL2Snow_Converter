@@ -527,10 +527,6 @@ const ERDiagramVisualization = ({ diagramData }) => {
       </div>
     </div>
   );
-        </div>
-      </div>
-    </div>
-  );
 };
 
 function App() {
