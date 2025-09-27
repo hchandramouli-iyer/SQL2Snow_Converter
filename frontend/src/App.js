@@ -1362,6 +1362,7 @@ CREATE TABLE orders (
                 </CardContent>
               </Card>
             )}
+            </div>
           </div>
         </main>
       </div>
