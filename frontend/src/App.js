@@ -369,63 +369,50 @@ function App() {
     }
   };
 
-  // ComboBox component for database/schema names with history
-  const DatabaseComboBox = ({ value, onValueChange, placeholder, history, className }) => {
-    const [open, setOpen] = useState(false);
+  // ComboBox component for database/schema names with history - simplified version
+  const DatabaseInputWithHistory = ({ value, onValueChange, placeholder, history, className }) => {
+    const [showHistory, setShowHistory] = useState(false);
     
     return (
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
+      <div className="relative">
+        <div className="flex">
+          <Input
+            value={value}
+            onChange={(e) => onValueChange(e.target.value)}
+            placeholder={placeholder}
+            className={`${className} rounded-r-none`}
+          />
           <Button
+            type="button"
             variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className={`justify-between ${className}`}
+            className="rounded-l-none border-l-0 px-3"
+            onClick={() => setShowHistory(!showHistory)}
           >
-            {value || placeholder}
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            <ChevronDown className={`h-4 w-4 transition-transform ${showHistory ? 'rotate-180' : ''}`} />
           </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[300px] p-0">
-          <Command>
-            <CommandInput 
-              placeholder={`Search or type ${placeholder.toLowerCase()}...`}
-              value={value}
-              onValueChange={onValueChange}
-            />
-            <CommandEmpty>
-              <div className="p-2">
-                <Button
-                  variant="ghost"
-                  className="w-full text-left"
+        </div>
+        
+        {showHistory && history.length > 0 && (
+          <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto">
+            <div className="p-2">
+              <div className="text-xs font-semibold text-gray-600 mb-2">Recently Used</div>
+              {history.map((item, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-sm transition-colors"
                   onClick={() => {
-                    onValueChange(value);
-                    setOpen(false);
+                    onValueChange(item);
+                    setShowHistory(false);
                   }}
                 >
-                  Use "{value}"
-                </Button>
-              </div>
-            </CommandEmpty>
-            {history.length > 0 && (
-              <CommandGroup heading="Recently Used">
-                {history.map((item, index) => (
-                  <CommandItem
-                    key={index}
-                    onSelect={() => {
-                      onValueChange(item);
-                      setOpen(false);
-                    }}
-                  >
-                    <Check className={`mr-2 h-4 w-4 ${value === item ? "opacity-100" : "opacity-0"}`} />
-                    {item}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            )}
-          </Command>
-        </PopoverContent>
-      </Popover>
+                  {item}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     );
   };
 
