@@ -1370,6 +1370,5 @@ CREATE TABLE orders (
     </div>
   );
 }
-}
 
 export default App;
