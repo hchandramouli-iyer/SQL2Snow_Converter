@@ -702,14 +702,11 @@ function App() {
       <header className="app-header">
         <div className="container">
           <div className="text-center">
-            <div className="brand-section">
-              <div className="brand-icon">
-                <Brain className="h-6 w-6" />
-              </div>
-              <div className="brand-text">CodeCraft AI</div>
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <Brain className="h-8 w-8 text-blue-600" />
+              <h1 className="text-2xl font-bold text-gray-900">CodeCraft AI - AI Development Tools</h1>
             </div>
-            <h1 className="hero-title">AI Development Tools</h1>
-            <p className="hero-subtitle">
+            <p className="text-base text-gray-600 max-w-2xl mx-auto">
               Code generation, SQL conversion, and intelligent development automation.
             </p>
           </div>
