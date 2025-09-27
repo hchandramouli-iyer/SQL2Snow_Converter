@@ -1075,6 +1075,26 @@ body::before {
 
 .select-none { user-select: none; }
 
+/* Flex Utilities */
+.flex { display: flex; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 0.75rem; }
+.gap-4 { gap: 1rem; }
+
+/* Spacing */
+.mb-4 { margin-bottom: 1rem; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.max-w-2xl { max-width: 42rem; }
+
+/* Colors */
+.text-gray-900 { color: var(--gray-900); }
+.text-gray-600 { color: var(--gray-600); }
+.text-blue-600 { color: var(--primary-600); }
+
+.select-none { user-select: none; }
+
 /* Animation Classes */
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
