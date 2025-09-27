@@ -451,29 +451,42 @@ function App() {
   // Handlers for database/schema input changes
   const handleSourceDatabaseNameChange = (value) => {
     setSourceDatabaseName(value);
-    if (value && value.trim()) {
-      addToHistory(value, sourceDatabaseHistory, setSourceDatabaseHistory, 'sourceDatabaseHistory');
-    }
   };
 
   const handleSourceSchemaNameChange = (value) => {
     setSourceSchemaName(value);
-    if (value && value.trim()) {
-      addToHistory(value, sourceSchemaHistory, setSourceSchemaHistory, 'sourceSchemaHistory');
-    }
   };
 
   const handleTargetDatabaseNameChange = (value) => {
     setTargetDatabaseName(value);
-    if (value && value.trim()) {
-      addToHistory(value, targetDatabaseHistory, setTargetDatabaseHistory, 'targetDatabaseHistory');
-    }
   };
 
   const handleTargetSchemaNameChange = (value) => {
     setTargetSchemaName(value);
-    if (value && value.trim()) {
-      addToHistory(value, targetSchemaHistory, setTargetSchemaHistory, 'targetSchemaHistory');
+  };
+
+  // Handlers to save to history when user finishes typing (onBlur)
+  const handleSourceDatabaseBlur = () => {
+    if (sourceDatabaseName && sourceDatabaseName.trim()) {
+      addToHistory(sourceDatabaseName, sourceDatabaseHistory, setSourceDatabaseHistory, 'sourceDatabaseHistory');
+    }
+  };
+
+  const handleSourceSchemaBlur = () => {
+    if (sourceSchemaName && sourceSchemaName.trim()) {
+      addToHistory(sourceSchemaName, sourceSchemaHistory, setSourceSchemaHistory, 'sourceSchemaHistory');
+    }
+  };
+
+  const handleTargetDatabaseBlur = () => {
+    if (targetDatabaseName && targetDatabaseName.trim()) {
+      addToHistory(targetDatabaseName, targetDatabaseHistory, setTargetDatabaseHistory, 'targetDatabaseHistory');
+    }
+  };
+
+  const handleTargetSchemaBlur = () => {
+    if (targetSchemaName && targetSchemaName.trim()) {
+      addToHistory(targetSchemaName, targetSchemaHistory, setTargetSchemaHistory, 'targetSchemaHistory');
     }
   };
 
