@@ -1097,24 +1097,20 @@ function App() {
                     <div className="grid grid-2 gap-4">
                       <div className="form-group">
                         <label className="form-label">Target Database Name</label>
-                        <DatabaseInputWithHistory
+                        <Input
                           value={targetDatabaseName}
-                          onValueChange={handleTargetDatabaseNameChange}
-                          onBlur={handleTargetDatabaseBlur}
+                          onChange={(e) => setTargetDatabaseName(e.target.value)}
                           placeholder="e.g., ANALYTICS_DB"
-                          history={targetDatabaseHistory}
                           className="form-input"
                         />
                       </div>
                       
                       <div className="form-group">
                         <label className="form-label">Target Schema Name</label>
-                        <DatabaseInputWithHistory
+                        <Input
                           value={targetSchemaName}
-                          onValueChange={handleTargetSchemaNameChange}
-                          onBlur={handleTargetSchemaBlur}
+                          onChange={(e) => setTargetSchemaName(e.target.value)}
                           placeholder="e.g., PUBLIC, STAGING, PROD"
-                          history={targetSchemaHistory}
                           className="form-input"
                         />
                       </div>
