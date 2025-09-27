@@ -369,6 +369,66 @@ function App() {
     }
   };
 
+  // ComboBox component for database/schema names with history
+  const DatabaseComboBox = ({ value, onValueChange, placeholder, history, className }) => {
+    const [open, setOpen] = useState(false);
+    
+    return (
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className={`justify-between ${className}`}
+          >
+            {value || placeholder}
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[300px] p-0">
+          <Command>
+            <CommandInput 
+              placeholder={`Search or type ${placeholder.toLowerCase()}...`}
+              value={value}
+              onValueChange={onValueChange}
+            />
+            <CommandEmpty>
+              <div className="p-2">
+                <Button
+                  variant="ghost"
+                  className="w-full text-left"
+                  onClick={() => {
+                    onValueChange(value);
+                    setOpen(false);
+                  }}
+                >
+                  Use "{value}"
+                </Button>
+              </div>
+            </CommandEmpty>
+            {history.length > 0 && (
+              <CommandGroup heading="Recently Used">
+                {history.map((item, index) => (
+                  <CommandItem
+                    key={index}
+                    onSelect={() => {
+                      onValueChange(item);
+                      setOpen(false);
+                    }}
+                  >
+                    <Check className={`mr-2 h-4 w-4 ${value === item ? "opacity-100" : "opacity-0"}`} />
+                    {item}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+          </Command>
+        </PopoverContent>
+      </Popover>
+    );
+  };
+
   const { toast } = useToast();
 
   // Load history from localStorage on component mount
