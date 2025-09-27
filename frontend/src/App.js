@@ -1362,7 +1362,8 @@ CREATE TABLE orders (
                 </CardContent>
               </Card>
             )}
-            </div>
+          </div>
+        ) : null}
           </div>
         </main>
       </div>
