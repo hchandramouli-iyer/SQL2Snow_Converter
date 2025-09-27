@@ -1055,24 +1055,20 @@ function App() {
                       
                       <div className="form-group">
                         <label className="form-label">Source Database Name</label>
-                        <DatabaseInputWithHistory
+                        <Input
                           value={sourceDatabaseName}
-                          onValueChange={handleSourceDatabaseNameChange}
-                          onBlur={handleSourceDatabaseBlur}
+                          onChange={(e) => setSourceDatabaseName(e.target.value)}
                           placeholder="e.g., my_production_db"
-                          history={sourceDatabaseHistory}
                           className="form-input"
                         />
                       </div>
                       
                       <div className="form-group">
                         <label className="form-label">Source Schema Name</label>
-                        <DatabaseInputWithHistory
+                        <Input
                           value={sourceSchemaName}
-                          onValueChange={handleSourceSchemaNameChange}
-                          onBlur={handleSourceSchemaBlur}
+                          onChange={(e) => setSourceSchemaName(e.target.value)}
                           placeholder="e.g., public, dbo, main"
-                          history={sourceSchemaHistory}
                           className="form-input"
                         />
                       </div>
