@@ -370,7 +370,7 @@ function App() {
   };
 
   // ComboBox component for database/schema names with history - simplified version
-  const DatabaseInputWithHistory = ({ value, onValueChange, placeholder, history, className }) => {
+  const DatabaseInputWithHistory = ({ value, onValueChange, onBlur, placeholder, history, className }) => {
     const [showHistory, setShowHistory] = useState(false);
     
     return (
@@ -379,6 +379,7 @@ function App() {
           <Input
             value={value}
             onChange={(e) => onValueChange(e.target.value)}
+            onBlur={onBlur}
             placeholder={placeholder}
             className={`${className} rounded-r-none`}
           />
@@ -395,7 +396,7 @@ function App() {
         {showHistory && history.length > 0 && (
           <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto">
             <div className="p-2">
-              <div className="text-xs font-semibold text-gray-600 mb-2">Recently Used</div>
+              <div className="text-xs font-semibold text-gray-600 mb-2">Recently Used ({history.length})</div>
               {history.map((item, index) => (
                 <button
                   key={index}
