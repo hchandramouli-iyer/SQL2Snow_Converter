@@ -864,7 +864,7 @@ function App() {
 
             {/* Tool-specific Content */}
             {activeMode === AI_TOOLS.SQL_CONVERTER ? (
-          <div className="space-y-6">
+              <div className="space-y-6">
             {/* SQL Converter Controls */}
             <Card className="professional-card">
               <CardHeader className="card-header-professional">
