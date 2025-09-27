@@ -1035,23 +1035,23 @@ function App() {
                       
                       <div className="form-group">
                         <label className="form-label">Source Database Name</label>
-                        <DatabaseComboBox
+                        <DatabaseInputWithHistory
                           value={sourceDatabaseName}
                           onValueChange={handleSourceDatabaseNameChange}
                           placeholder="e.g., my_production_db"
                           history={sourceDatabaseHistory}
-                          className="form-select"
+                          className="form-input"
                         />
                       </div>
                       
                       <div className="form-group">
                         <label className="form-label">Source Schema Name</label>
-                        <DatabaseComboBox
+                        <DatabaseInputWithHistory
                           value={sourceSchemaName}
                           onValueChange={handleSourceSchemaNameChange}
                           placeholder="e.g., public, dbo, main"
                           history={sourceSchemaHistory}
-                          className="form-select"
+                          className="form-input"
                         />
                       </div>
                       
