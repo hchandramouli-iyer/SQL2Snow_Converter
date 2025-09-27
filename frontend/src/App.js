@@ -1092,21 +1092,23 @@ function App() {
                     <div className="grid grid-2 gap-4">
                       <div className="form-group">
                         <label className="form-label">Target Database Name</label>
-                        <Input
-                          placeholder="e.g., ANALYTICS_DB"
+                        <DatabaseComboBox
                           value={targetDatabaseName}
-                          onChange={(e) => setTargetDatabaseName(e.target.value)}
-                          className="form-input"
+                          onValueChange={handleTargetDatabaseNameChange}
+                          placeholder="e.g., ANALYTICS_DB"
+                          history={targetDatabaseHistory}
+                          className="form-select"
                         />
                       </div>
                       
                       <div className="form-group">
                         <label className="form-label">Target Schema Name</label>
-                        <Input
-                          placeholder="e.g., PUBLIC, STAGING, PROD"
+                        <DatabaseComboBox
                           value={targetSchemaName}
-                          onChange={(e) => setTargetSchemaName(e.target.value)}
-                          className="form-input"
+                          onValueChange={handleTargetSchemaNameChange}
+                          placeholder="e.g., PUBLIC, STAGING, PROD"
+                          history={targetSchemaHistory}
+                          className="form-select"
                         />
                       </div>
                     </div>
