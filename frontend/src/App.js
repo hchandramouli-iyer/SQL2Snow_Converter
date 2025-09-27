@@ -1363,7 +1363,7 @@ CREATE TABLE orders (
               </Card>
             )}
           </div>
-        ) : null}
+        )}
           </div>
         </main>
       </div>
