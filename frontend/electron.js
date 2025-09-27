@@ -225,7 +225,11 @@ function createMenu() {
 }
 
 // This method will be called when Electron has finished initialization
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  // Handle sandbox restrictions in containers
+  app.commandLine.appendSwitch('--no-sandbox');
+  createWindow();
+});
 
 // Quit when all windows are closed
 app.on('window-all-closed', () => {
