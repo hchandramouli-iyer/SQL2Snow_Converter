@@ -1,0 +1,12 @@
+CodeCraft AI Desktop - Windows Edition
+Version: 1.0.0
+Build Date: Sat Sep 27 20:32:00 UTC 2025
+Platform: Windows (64-bit/32-bit compatible)
+License: MIT
+No Admin Rights Required: YES
+
+File Information:
+- CodeCraftAI.exe: Main application (202M)
+- start-codecraft-ai.bat: Launcher script
+- README.txt: Complete usage guide
+- resources/: Application assets

@@ -191,3 +191,5 @@ frontend/dist/win-unpacked/electron.exe
 frontend/dist/win-unpacked/resources/app.asar
 frontend/dist/win-unpacked/CodeCraft
 AI.exe
+frontend/CodeCraft-AI-Windows-v1.0.0/CodeCraftAI.exe
+frontend/CodeCraft-AI-Windows-v1.0.0.zip
