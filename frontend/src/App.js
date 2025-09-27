@@ -1052,6 +1052,7 @@ function App() {
                         <DatabaseInputWithHistory
                           value={sourceDatabaseName}
                           onValueChange={handleSourceDatabaseNameChange}
+                          onBlur={handleSourceDatabaseBlur}
                           placeholder="e.g., my_production_db"
                           history={sourceDatabaseHistory}
                           className="form-input"
@@ -1063,6 +1064,7 @@ function App() {
                         <DatabaseInputWithHistory
                           value={sourceSchemaName}
                           onValueChange={handleSourceSchemaNameChange}
+                          onBlur={handleSourceSchemaBlur}
                           placeholder="e.g., public, dbo, main"
                           history={sourceSchemaHistory}
                           className="form-input"
