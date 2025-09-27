@@ -375,15 +375,43 @@ class SQLToSnowflakeConverter:
         
         warnings.extend(db_warnings)
 
-        if target_database_name:
+        # Add target database and schema qualifications
+        if target_database_name and target_schema_name:
+            # Use full database.schema.object format
+            full_prefix = f"{target_database_name}.{target_schema_name}"
+            
+            # Pattern for CREATE statements (CREATE TABLE, CREATE FUNCTION, CREATE PROCEDURE, etc.)
+            pattern = r'CREATE\s+(TABLE|FUNCTION|PROCEDURE|VIEW|INDEX)\s+(["`]?)(\w+)\2'
+            replacement = rf'CREATE \1 \2{full_prefix}.\3\2'
+            converted_sql = re.sub(pattern, replacement, converted_sql, flags=re.IGNORECASE)
+            
+            # Pattern for object references (FROM, JOIN, INTO, UPDATE, etc.)
+            pattern = r'(FROM|JOIN|INTO|UPDATE|TABLE|FUNCTION)\s+(["`]?)(\w+)\2'
+            replacement = rf'\1 \2{full_prefix}.\3\2'
+            converted_sql = re.sub(pattern, replacement, converted_sql, flags=re.IGNORECASE)
+            
+            warnings.append(f"Added full qualification: {full_prefix}")
+            
+        elif target_database_name:
             converted_sql = f"USE DATABASE {target_database_name};\n\n{converted_sql}"
             warnings.append(f"Added USE DATABASE {target_database_name} statement")
-        
-        if target_schema_name:
-            pattern = r'CREATE TABLE\s+(["`]?)(\w+)\1'
-            replacement = rf'CREATE TABLE \1{target_schema_name}.\2\1'
+            
+            if target_schema_name:
+                # Add schema qualification only
+                pattern = r'CREATE\s+(TABLE|FUNCTION|PROCEDURE|VIEW|INDEX)\s+(["`]?)(\w+)\2'
+                replacement = rf'CREATE \1 \2{target_schema_name}.\3\2'
+                converted_sql = re.sub(pattern, replacement, converted_sql, flags=re.IGNORECASE)
+                pattern = r'(FROM|JOIN|INTO|UPDATE|TABLE|FUNCTION)\s+(["`]?)(\w+)\2'
+                replacement = rf'\1 \2{target_schema_name}.\3\2'
+                converted_sql = re.sub(pattern, replacement, converted_sql, flags=re.IGNORECASE)
+                warnings.append(f"Added schema qualification: {target_schema_name}")
+                
+        elif target_schema_name:
+            # Add schema qualification only
+            pattern = r'CREATE\s+(TABLE|FUNCTION|PROCEDURE|VIEW|INDEX)\s+(["`]?)(\w+)\2'
+            replacement = rf'CREATE \1 \2{target_schema_name}.\3\2'
             converted_sql = re.sub(pattern, replacement, converted_sql, flags=re.IGNORECASE)
-            pattern = r'(FROM|JOIN|INTO|UPDATE|TABLE)\s+(["`]?)(\w+)\2'
+            pattern = r'(FROM|JOIN|INTO|UPDATE|TABLE|FUNCTION)\s+(["`]?)(\w+)\2'
             replacement = rf'\1 \2{target_schema_name}.\3\2'
             converted_sql = re.sub(pattern, replacement, converted_sql, flags=re.IGNORECASE)
             warnings.append(f"Added schema qualification: {target_schema_name}")
