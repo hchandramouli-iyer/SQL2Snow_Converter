@@ -340,50 +340,193 @@ const ERDiagramVisualization = ({ diagramData }) => {
 
   return (
     <div className="er-diagram-wrapper">
-      <div className="er-diagram-controls mb-4">
-        <div className="flex gap-2">
-          <Button onClick={() => exportDiagram('png')} className="btn-secondary">
-            <Download className="h-4 w-4" />
-            Export PNG
-          </Button>
-          <Button onClick={() => networkRef.current?.fit()} className="btn-secondary">
-            Fit to View
-          </Button>
-          <Button onClick={() => networkRef.current?.redraw()} className="btn-secondary">
-            Refresh
-          </Button>
-        </div>
-      </div>
-      <div 
-        ref={containerRef} 
-        className="er-diagram-canvas"
-        style={{ 
-          width: '100%', 
-          height: '600px', 
-          border: '1px solid #e5e7eb',
-          borderRadius: '8px',
-          background: '#fafafa'
-        }}
-      />
-      <div className="er-diagram-legend mt-4">
-        <div className="text-sm text-gray-600">
-          <div className="grid grid-3 gap-4">
-            <div className="flex items-center gap-2">
-              <span>🔑</span>
-              <span>Primary Key</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span>🔗</span>
-              <span>Foreign Key</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span>📄</span>
-              <span>Regular Column</span>
+      {/* Enhanced Control Panel */}
+      <div className="er-diagram-controls mb-6 p-4 bg-gray-50 rounded-lg border">
+        <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+          <Database className="h-5 w-5" />
+          Interactive Diagram Controls
+        </h3>
+        
+        <div className="grid grid-2 gap-4">
+          {/* Export Options */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Export Options</label>
+            <div className="flex gap-2">
+              <Button onClick={() => exportDiagram('png')} className="btn-secondary text-xs">
+                <Download className="h-3 w-3" />
+                PNG
+              </Button>
+              <Button onClick={() => exportDiagram('json')} className="btn-secondary text-xs">
+                <FileCode className="h-3 w-3" />
+                JSON
+              </Button>
             </div>
           </div>
-          <p className="mt-2 text-xs">
-            💡 Click on tables for detailed information. Use mouse to zoom and pan around the diagram.
-          </p>
+          
+          {/* View Controls */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">View Controls</label>
+            <div className="flex gap-2">
+              <Button onClick={zoomToFit} className="btn-secondary text-xs">
+                <ArrowRight className="h-3 w-3" />
+                Fit View
+              </Button>
+              <Button onClick={resetZoom} className="btn-secondary text-xs">
+                <RefreshCw className="h-3 w-3" />
+                Reset Zoom
+              </Button>
+              <Button onClick={togglePhysics} className="btn-secondary text-xs">
+                <Settings className="h-3 w-3" />
+                Physics
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Layout: Diagram + Table Details */}
+      <div className="flex gap-6">
+        {/* ER Diagram Canvas */}
+        <div className="flex-1">
+          <div 
+            ref={containerRef} 
+            className="er-diagram-canvas"
+            style={{ 
+              width: '100%', 
+              height: '650px', 
+              border: '2px solid #e5e7eb',
+              borderRadius: '12px',
+              background: 'linear-gradient(135deg, #fafafa 0%, #f0f9ff 100%)',
+              cursor: 'grab'
+            }}
+          />
+          
+          {/* Enhanced Legend */}
+          <div className="er-diagram-legend mt-4 p-4 bg-white rounded-lg border shadow-sm">
+            <h4 className="font-semibold text-gray-800 mb-3">Legend & Instructions</h4>
+            <div className="grid grid-3 gap-4 mb-3">
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-lg">🔑</span>
+                <span className="font-medium text-gray-700">Primary Key</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-lg">🔗</span>
+                <span className="font-medium text-gray-700">Foreign Key</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-lg">📄</span>
+                <span className="font-medium text-gray-700">Regular Column</span>
+              </div>
+            </div>
+            <div className="text-xs text-gray-600 space-y-1">
+              <p>💡 <strong>Single Click:</strong> View detailed table information in the side panel</p>
+              <p>🔍 <strong>Double Click:</strong> Zoom and focus on a specific table</p>
+              <p>🖱️ <strong>Mouse Drag:</strong> Pan around the diagram | <strong>Mouse Wheel:</strong> Zoom in/out</p>
+              <p>⌨️ <strong>Keyboard:</strong> Arrow keys for navigation when focused</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Enhanced Table Details Panel */}
+        {showTableDetails && selectedTable && (
+          <div className="w-96 bg-white rounded-lg border shadow-lg">
+            <div className="p-4 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
+              <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+                <Database className="h-5 w-5 text-blue-600" />
+                {selectedTable.name}
+              </h3>
+              <p className="text-sm text-gray-600 mt-1">
+                {selectedTable.columns.length} columns • Click outside to close
+              </p>
+            </div>
+            
+            <div className="p-4 max-h-96 overflow-y-auto">
+              {/* Column Categories */}
+              {selectedTable.columns.filter(col => col.is_primary_key).length > 0 && (
+                <div className="mb-4">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                    <span className="text-base">🔑</span>
+                    Primary Keys
+                  </h4>
+                  <div className="space-y-1">
+                    {selectedTable.columns.filter(col => col.is_primary_key).map((column, idx) => (
+                      <div key={idx} className="bg-blue-50 border border-blue-200 rounded p-2">
+                        <div className="font-medium text-blue-800">{column.name}</div>
+                        <div className="text-xs text-blue-600">
+                          {column.data_type} {!column.is_nullable && '• NOT NULL'}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {selectedTable.columns.filter(col => col.is_foreign_key && !col.is_primary_key).length > 0 && (
+                <div className="mb-4">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                    <span className="text-base">🔗</span>
+                    Foreign Keys
+                  </h4>
+                  <div className="space-y-1">
+                    {selectedTable.columns.filter(col => col.is_foreign_key && !col.is_primary_key).map((column, idx) => (
+                      <div key={idx} className="bg-purple-50 border border-purple-200 rounded p-2">
+                        <div className="font-medium text-purple-800">{column.name}</div>
+                        <div className="text-xs text-purple-600">
+                          {column.data_type} {!column.is_nullable && '• NOT NULL'}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {selectedTable.columns.filter(col => !col.is_primary_key && !col.is_foreign_key).length > 0 && (
+                <div className="mb-4">
+                  <h4 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
+                    <span className="text-base">📄</span>
+                    Regular Columns
+                  </h4>
+                  <div className="space-y-1">
+                    {selectedTable.columns.filter(col => !col.is_primary_key && !col.is_foreign_key).map((column, idx) => (
+                      <div key={idx} className="bg-gray-50 border border-gray-200 rounded p-2">
+                        <div className="font-medium text-gray-800">{column.name}</div>
+                        <div className="text-xs text-gray-600">
+                          {column.data_type} {!column.is_nullable && '• NOT NULL'}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Summary Statistics */}
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                <h4 className="text-sm font-semibold text-gray-700 mb-2">Summary</h4>
+                <div className="grid grid-2 gap-2 text-xs">
+                  <div className="bg-blue-50 p-2 rounded">
+                    <div className="font-medium text-blue-800">Primary Keys</div>
+                    <div className="text-blue-600">{selectedTable.columns.filter(col => col.is_primary_key).length}</div>
+                  </div>
+                  <div className="bg-purple-50 p-2 rounded">
+                    <div className="font-medium text-purple-800">Foreign Keys</div>
+                    <div className="text-purple-600">{selectedTable.columns.filter(col => col.is_foreign_key).length}</div>
+                  </div>
+                  <div className="bg-gray-50 p-2 rounded">
+                    <div className="font-medium text-gray-800">Regular Columns</div>
+                    <div className="text-gray-600">{selectedTable.columns.filter(col => !col.is_primary_key && !col.is_foreign_key).length}</div>
+                  </div>
+                  <div className="bg-green-50 p-2 rounded">
+                    <div className="font-medium text-green-800">Total Columns</div>
+                    <div className="text-green-600">{selectedTable.columns.length}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
         </div>
       </div>
     </div>
