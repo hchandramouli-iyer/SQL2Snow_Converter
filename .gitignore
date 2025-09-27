@@ -198,3 +198,4 @@ frontend/CodeCraft-AI-Windows-v1.0.0.zip
 *.env
 *.env.*
 frontend/dist/win-unpacked/CodeCraftAI.exe
+frontend/CodeCraft-AI-Desktop-v1.0.0-Windows.zip
