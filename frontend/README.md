@@ -1,70 +1,153 @@
-# Getting Started with Create React App
+# CodeCraft AI - Web Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 🚀 AI-Powered Development Suite
 
-## Available Scripts
+A comprehensive web-based platform for AI-powered development tools, featuring SQL conversion, ER diagram generation, and advanced AI coding assistance.
 
-In the project directory, you can run:
+## ✨ Features
 
-### `npm start`
+### 🔧 Core Tools
+- **SQL to Snowflake Converter** - Convert SQL from MySQL, PostgreSQL, SQL Server, Oracle to Snowflake
+- **Interactive ER Diagram Generator** - Generate visual database schemas with relationships
+- **AI Code Generator** - Generate code in multiple programming languages
+- **AI Code Assistant** - Get help with coding questions and debugging
+- **Code Converter** - Convert code between different programming languages
+- **Code Explainer** - Get detailed explanations of code functionality
+- **Code Enhancer** - Improve code quality and performance
+- **Comment Generator** - Auto-generate meaningful code comments
+- **Unit Test Generator** - Create comprehensive unit tests
+- **AI Chat Assistant** - Interactive AI assistant for development help
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 🎨 Advanced UI Features
+- **Visual Effects** - Particle systems, 3D animations, morphing backgrounds
+- **Interactive Elements** - Hover effects, smooth transitions, glassmorphism design
+- **Responsive Design** - Works perfectly on desktop and mobile devices
+- **Professional UI** - Modern design with shadcn/ui components
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🏗️ Technology Stack
 
-### `npm test`
+- **React 19** - Modern React with hooks
+- **Vite/CRA** - Fast build tool and development server
+- **Tailwind CSS** - Utility-first CSS framework
+- **Shadcn UI** - Modern component library
+- **Vis.js Network** - Interactive network visualization for ER diagrams
+- **Lucide React** - Beautiful icon library
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🚀 Quick Start
 
-### `npm run build`
+### Prerequisites
+- Node.js 18+
+- Yarn package manager
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Installation
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. **Clone the repository**
+```bash
+git clone https://github.com/hchandramouli-iyer/SQL2Snow_Converter.git
+cd SQL2Snow_Converter/frontend
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. **Install dependencies**
+```bash
+yarn install
+```
 
-### `npm run eject`
+3. **Start development server**
+```bash
+yarn start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+4. **Build for production**
+```bash
+yarn build
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+5. **Deploy to GitHub Pages**
+```bash
+yarn deploy
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 🌐 Live Demo
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Visit the live application: [https://hchandramouli-iyer.github.io/SQL2Snow_Converter](https://hchandramouli-iyer.github.io/SQL2Snow_Converter)
 
-## Learn More
+## 📁 Project Structure
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```
+frontend/
+├── public/           # Static assets
+├── src/
+│   ├── components/   # Reusable UI components
+│   ├── hooks/        # Custom React hooks
+│   ├── utils/        # Utility functions
+│   ├── App.js        # Main application component
+│   └── index.js      # Application entry point
+├── package.json      # Dependencies and scripts
+└── README.md         # This file
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 🎯 Usage
 
-### Code Splitting
+### SQL Conversion
+1. Select your source database type
+2. Configure database and schema names
+3. Paste or upload your SQL
+4. Convert to Snowflake-compatible syntax
+5. Copy or download results
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### ER Diagram Generation
+1. Navigate to ER Diagram tool
+2. Select database type
+3. Input CREATE TABLE statements
+4. Generate interactive diagram
+5. Export as PNG or JSON
 
-### Analyzing the Bundle Size
+### AI Tools
+1. Choose from 9 AI development tools
+2. Configure AI provider and model
+3. Enter your prompt or code
+4. Get AI-powered results
+5. Copy and use in your projects
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## 🔧 Available Scripts
 
-### Making a Progressive Web App
+- `yarn start` - Start development server
+- `yarn build` - Build for production
+- `yarn test` - Run tests
+- `yarn deploy` - Deploy to GitHub Pages
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## 🎨 Customization
 
-### Advanced Configuration
+The application uses Tailwind CSS for styling and shadcn/ui for components. You can customize:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- **Colors**: Update `tailwind.config.js`
+- **Components**: Modify files in `src/components/`
+- **Animations**: Edit CSS animations in `src/App.css`
 
-### Deployment
+## 🤝 Contributing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-### `npm run build` fails to minify
+## 📄 License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+- Create an issue for bug reports
+- Check existing issues for solutions
+- Join our community discussions
+
+## 🎉 Acknowledgments
+
+- Built with modern web technologies
+- Powered by advanced AI models
+- Designed for developer productivity
+
+---
+
+**CodeCraft AI** - Empowering developers with AI-powered tools for modern development workflows.
