@@ -368,6 +368,65 @@ function App() {
 
   const { toast } = useToast();
 
+  // Load history from localStorage on component mount
+  useEffect(() => {
+    try {
+      const loadHistory = (key, setHistory) => {
+        const saved = localStorage.getItem(key);
+        if (saved) {
+          setHistory(JSON.parse(saved));
+        }
+      };
+      
+      loadHistory('sourceDatabaseHistory', setSourceDatabaseHistory);
+      loadHistory('sourceSchemaHistory', setSourceSchemaHistory);
+      loadHistory('targetDatabaseHistory', setTargetDatabaseHistory);
+      loadHistory('targetSchemaHistory', setTargetSchemaHistory);
+    } catch (error) {
+      console.error('Error loading database history:', error);
+    }
+  }, []);
+
+  // Function to add value to history and update localStorage
+  const addToHistory = (value, history, setHistory, storageKey) => {
+    if (!value || !value.trim()) return;
+    
+    const trimmedValue = value.trim();
+    const updatedHistory = [trimmedValue, ...history.filter(item => item !== trimmedValue)].slice(0, 10); // Keep last 10 entries
+    
+    setHistory(updatedHistory);
+    localStorage.setItem(storageKey, JSON.stringify(updatedHistory));
+  };
+
+  // Handlers for database/schema input changes
+  const handleSourceDatabaseNameChange = (value) => {
+    setSourceDatabaseName(value);
+    if (value && value.trim()) {
+      addToHistory(value, sourceDatabaseHistory, setSourceDatabaseHistory, 'sourceDatabaseHistory');
+    }
+  };
+
+  const handleSourceSchemaNameChange = (value) => {
+    setSourceSchemaName(value);
+    if (value && value.trim()) {
+      addToHistory(value, sourceSchemaHistory, setSourceSchemaHistory, 'sourceSchemaHistory');
+    }
+  };
+
+  const handleTargetDatabaseNameChange = (value) => {
+    setTargetDatabaseName(value);
+    if (value && value.trim()) {
+      addToHistory(value, targetDatabaseHistory, setTargetDatabaseHistory, 'targetDatabaseHistory');
+    }
+  };
+
+  const handleTargetSchemaNameChange = (value) => {
+    setTargetSchemaName(value);
+    if (value && value.trim()) {
+      addToHistory(value, targetSchemaHistory, setTargetSchemaHistory, 'targetSchemaHistory');
+    }
+  };
+
   // Copy to clipboard function
   const copyToClipboard = async (text, successMessage = 'Copied to clipboard!') => {
     try {
